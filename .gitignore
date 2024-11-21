@@ -3,6 +3,7 @@
 
 # Build output
 /.next/
+/.astro/
 /out/
 /build/
 
