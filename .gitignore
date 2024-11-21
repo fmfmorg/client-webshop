@@ -2,10 +2,9 @@
 /node_modules/
 
 # Build output
-/.next/
-/.astro/
+/dist/
 /out/
-/build/
+/.astro/
 
 # Local environment variables
 .env
@@ -30,11 +29,8 @@ logs/
 *.pem
 *.tgz
 
-# TypeScript build info files
+# TypeScript build info files (if using TypeScript)
 *.tsbuildinfo
 
 # Coverage reports (if using testing frameworks)
 coverage/
-
-# Vercel deployment files
-.vercel/
