@@ -1,0 +1,22 @@
+---
+import { submitBtnClass } from '@misc';
+
+interface Props {
+    orderStatus:string;
+    trackingNumber:string;
+}
+
+const { orderStatus, trackingNumber } = Astro.props as Props
+---
+
+<p class="my-4 uppercase tracking-widest text-xs sm:text-sm font-light [word-spacing:0.1rem] sm:[word-spacing:0.2rem]">
+    Status: <span class="font-semibold ">{orderStatus}</span>
+</p>
+{!!trackingNumber && <a 
+    href={`https://www.royalmail.com/track-your-item#/tracking-results/${trackingNumber}`} 
+    target="_blank" 
+    rel="noreferrer noopener"
+    class={`${submitBtnClass.replace('tracking-[0.4rem]','tracking-[0.2rem]')} text-xs px-2 sm:px-4`}
+>
+    Track Delivery
+</a>}

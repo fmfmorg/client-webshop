@@ -1,0 +1,105 @@
+---
+import TextInput from '@components/input-fields/text-input';
+import CountrySelect from './country-select';
+import type { ICountry, INoServiceCountryMap, IUserAddress } from '@misc';
+import Checkbox from '@components/input-fields/checkbox';
+
+interface Props {
+    formID:string;
+    countries:ICountry[];
+    noServiceCountryMap:INoServiceCountryMap;
+    address?:IUserAddress;
+    userAlreadyHasAddress?:boolean;
+}
+
+const { formID, countries, noServiceCountryMap, address, userAlreadyHasAddress = false } = Astro.props as Props
+---
+
+<form id={formID}>
+    <TextInput 
+        client:only="solid-js"
+        type="text"
+        id="first-name"
+        name="first-name"
+        required
+        placeholder='First Name'
+        className='my-8'
+        value={address?.firstName || ''}
+        maxLength={50}
+    />
+    <TextInput 
+        client:only="solid-js"
+        type="text"
+        id="last-name"
+        name="last-name"
+        required
+        placeholder='Last Name'
+        className='my-8'
+        value={address?.lastName || ''}
+        maxLength={50}
+    />
+    <TextInput 
+        client:only="solid-js"
+        type="text"
+        id="line-one"
+        name="line-one"
+        required
+        placeholder='Address Line 1'
+        className='my-8'
+        value={address?.line1 || ''}
+        maxLength={100}
+    />
+    <TextInput 
+        client:only="solid-js"
+        type="text"
+        id="line-two"
+        name="line-two"
+        placeholder='Address Line 2'
+        className='my-8'
+        value={address?.line2 || ''}
+        maxLength={100}
+    />
+    <TextInput 
+        type='text' 
+        id='city' 
+        name='city' 
+        placeholder="City" 
+        required
+        className='mb-8'
+        client:only="solid-js"
+        value={address?.city || ''}
+        maxLength={50}
+    />
+    <TextInput 
+        type='text' 
+        id='region' 
+        name='region' 
+        placeholder="Region" 
+        required={false}
+        className='mb-8'
+        client:only="solid-js"
+        value={address?.stateProvince || ''}
+        maxLength={50}
+    />
+    <TextInput 
+        type='text' 
+        id='postcode' 
+        name='postcode' 
+        placeholder="Postcode / ZIP Code" 
+        required
+        className='mb-10'
+        client:only="solid-js"
+        value={address?.postcode || ''}
+        maxLength={20}
+    />
+    <CountrySelect {...{countries,noServiceCountryMap,selectedID:address?.countryID}} client:only="solid-js" />
+    {((!!address && !address.isDefault) || (!address && userAlreadyHasAddress)) && 
+        <Checkbox id="is-default" name="is-default" client:only="solid-js">
+            <p class='font-light text-xs tracking-wider pl-6 mt-4'>Set this as default address.</p>
+        </Checkbox>
+    }
+    <div class="flex justify-center mt-6">
+        <input type="submit" value="Submit" class="w-full max-w-24 uppercase font-serif tracking-widest [word-spacing:0.2em] cursor-pointer text-white bg-gray-600 border border-gray-600 mouse:hover:bg-black mouse:hover:border-black duration-300 font-semibold text-sm p-2" />
+    </div>
+    <p class="mt-4 font-light text-sm text-red-700 tracking-wider text-center invisible" id="error-msg">Server error. Please try again later.</p>
+</form>

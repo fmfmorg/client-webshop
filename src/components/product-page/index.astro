@@ -1,0 +1,340 @@
+---
+import ImagesHorizontal from "./images-horizontal.astro";
+import ImagesVertical from "./images-vertical.astro";
+import CatalogueItem from '@components/catalogue-item/index.astro'
+import Text from './text.astro'
+import type { ICartItemMap } from "@components/cart/interfaces";
+import type { ICatalogueMap } from "@misc";
+
+interface Props {
+    id:string;
+    productObj?:ICatalogueMap;
+    cartItemObj?:ICartItemMap;
+    relatedProductIDs:string[];
+}
+
+const { id, productObj, cartItemObj, relatedProductIDs } = Astro.props
+const { images, stockQuantities } = productObj[id]
+const qtyInCart = cartItemObj[id]?.quantity || 0
+---
+
+<astro-main-product 
+    id=`catalogue-${id}` 
+    data-id={id} 
+    data-related-products={JSON.stringify(relatedProductIDs)} 
+    data-stock-quantities={JSON.stringify(stockQuantities)} 
+    data-qty-in-cart={qtyInCart}
+>
+    <div id="product-container" class="space-y-2 md:space-y-0 md:w-screen md:-ml-4 md:grid md:grid-cols-5 md:gap-4 md:overflow-y-hidden lg:grid-cols-8">
+        <div class="md:col-span-3 lg:col-span-5 md:overflow-y-auto hide-scrollbar">
+            <div class="md:hidden">
+                <ImagesHorizontal id={id} images={images} />
+            </div>
+            <div class="hidden md:block">
+                <ImagesVertical images={images} />
+            </div>
+        </div>
+        <div class="text-container px-3 md:col-span-2 lg:col-span-3 md:overflow-y-auto md:pt-4 hide-scrollbar">
+            <Text productDetails={productObj[id]} />
+        </div>
+    </div>
+    <div class=`w-full px-3 ${!!relatedProductIDs.length ? '' : 'hidden'}`>
+        <h2 class="text-center font-serif my-6 uppercase [letter-spacing:0.3rem] [word-spacing:0.3rem] text-base sm:text-lg md:text-xl">You may also like ...</h2>
+        <div class="px-2 grid grid-cols-2 gap-x-1 2xs:gap-x-2 xs:grid-cols-3 md:gap-x-4 lg:grid-cols-4 2xl:grid-cols-6 gap-y-8">
+            {
+                relatedProductIDs.map(e=>(
+                    <CatalogueItem 
+                        id={e} 
+                        productPageProduct 
+                        productDetails={productObj[e]} 
+                        productCartDetails={cartItemObj[e]} 
+                        group={0}
+                        observe={false}
+                    />
+                ))
+            }
+        </div>
+    </div>
+</astro-main-product>
+
+<script>
+import type { IAddToBagResponse } from "@components/cart/interfaces"
+import type { IProduct, IStockQuantity } from "@components/catalogue-item/interfaces"
+import { catalogueItemsOnResize, dispatchInternalEvent, formatPrice, httpRequestHeader, sessionLost, showErrorModal } from "@misc"
+import { ADD_TO_BAG_FROM_CATALOGUE, CART_QTY_UPDATE, CART_UPDATE, PRODUCT_UPDATE } from "@misc/event-keys"
+import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } from "@stores"
+
+    const container = document.getElementById('product-container')
+    const header = document.getElementsByTagName('header')[0]
+    const isDesktop = window.matchMedia && matchMedia("(pointer:fine)").matches;
+
+
+    class MainProduct extends HTMLElement {
+        constructor(){
+            super();
+
+            const id = this.dataset.id
+            const relatedProductIDs = JSON.parse(this.dataset.relatedProducts) as string[]
+
+            const stockQuantityMap = new Map((JSON.parse(this.dataset.stockQuantities) as IStockQuantity[]).map(e=>([e.address,e.quantity])))
+
+            const getMaxStockQty = () => {
+                let result = 0
+                stockQuantityMap.forEach(v=>{
+                    if (v > result) result = v
+                })
+                return result
+            }
+            let maxStockQty = getMaxStockQty()
+
+            let qtyInCart = +this.dataset.qtyInCart
+            let addQty = 1
+
+            const textContainer = this.getElementsByClassName('text-container')[0] as HTMLDivElement
+            const textContent = textContainer.firstElementChild as HTMLDivElement
+
+            const addToBagBtns = this.getElementsByClassName('add-to-bag-buttons')[0]
+            const addToBagBtnsContainer = addToBagBtns.parentElement as HTMLDivElement
+            const minusBtn = addToBagBtns.getElementsByTagName('button')[0]
+            const plusBtn = addToBagBtns.getElementsByTagName('button')[2]
+            const addToBagBtn = addToBagBtns.getElementsByTagName('button')[1]
+            const addQtySpan = addToBagBtns.getElementsByClassName('add-to-bag-quantity')[0] as HTMLSpanElement
+            const addToBagText = addToBagBtns.getElementsByTagName('p')[0]
+            const loadingIcon = addToBagBtns.getElementsByClassName('animate-spin')[0] as SVGSVGElement
+            const minusIcon = minusBtn.getElementsByTagName('svg')[0]
+            const plusIcon = plusBtn.getElementsByTagName('svg')[0]
+
+            const noStockDiv = this.getElementsByClassName('product-no-stock')[0]
+
+            const noMoreToAddDiv = this.getElementsByClassName('product-no-more-to-add')[0]
+            const maxStockQtySpan = noMoreToAddDiv.getElementsByClassName('stock-qty')[0] as HTMLSpanElement
+
+            const otherClientPaymentInProcessMessage = this.getElementsByClassName('other-client-payment-in-process-msg')[0] as HTMLParagraphElement
+            const subtextCheckboxes = this.getElementsByClassName('product-subtext-checkbox') as HTMLCollectionOf<HTMLInputElement>
+            const subtextsLen = subtextCheckboxes.length
+
+            let resizeTimeout;
+
+            const setLoading = (loading:boolean) => {
+                minusBtn.disabled = loading
+                plusBtn.disabled = loading
+                addToBagBtn.disabled = loading
+
+                addToBagText.classList.toggle('hidden',loading)
+                loadingIcon.classList.toggle('hidden',!loading)
+                minusIcon.classList.toggle('hidden',loading)
+                plusIcon.classList.toggle('hidden',loading)
+            }
+
+            const updateAddToBagQty = () => {
+                addQtySpan.innerText = `${addQty}`
+                maxStockQtySpan.innerText = `${maxStockQty}`
+                if (otherClientPaymentInProcess.get()) {
+                    otherClientPaymentInProcessMessage.classList.remove('hidden')
+                    addToBagBtns.classList.add('hidden')
+                    addToBagBtns.classList.remove('flex')
+                    noMoreToAddDiv.classList.add('hidden')
+                    noStockDiv.classList.add('hidden')
+                } else if (!maxStockQty) {
+                    otherClientPaymentInProcessMessage.classList.add('hidden')
+                    addToBagBtns.classList.add('hidden')
+                    addToBagBtns.classList.remove('flex')
+                    noMoreToAddDiv.classList.add('hidden')
+                    noStockDiv.classList.remove('hidden')
+                } else if (maxStockQty === qtyInCart){
+                    otherClientPaymentInProcessMessage.classList.add('hidden')
+                    addToBagBtns.classList.add('hidden')
+                    addToBagBtns.classList.remove('flex')
+                    noMoreToAddDiv.classList.remove('hidden')
+                    noStockDiv.classList.add('hidden')
+                } else {
+                    otherClientPaymentInProcessMessage.classList.add('hidden')
+                    addToBagBtns.classList.remove('hidden')
+                    addToBagBtns.classList.add('flex')
+                    noMoreToAddDiv.classList.add('hidden')
+                    noStockDiv.classList.add('hidden')
+                }
+            }
+
+            const onCartQtyUpdate = (e:CustomEvent) => {
+                const { id:_id, qtyInCart:_qtyInCart } = e.detail as {id:string;qtyInCart:number}
+                if (_id !== id) return
+                qtyInCart = _qtyInCart
+                updateAddToBagQty()
+            }
+
+            const onMinus = () => {
+                if (addQty === 1) return
+                addQty--
+                updateAddToBagQty()
+            }
+            const onPlus = () => {
+                if (addQty === maxStockQty - qtyInCart) return
+                addQty++
+                updateAddToBagQty()
+            }
+            const onAddToCart = async () => {
+                const currentCollectionPoint = selectedCollectionPoint.get()
+                const qtyAvailable = !!currentCollectionPoint ? stockQuantityMap.get(currentCollectionPoint) : maxStockQty
+
+                if (qtyInCart + addQty <= qtyAvailable){
+                    setLoading(true)
+                    const resp = await fetch('/api/webshop/product-add-qty',{
+                        method:"POST",
+                        headers:httpRequestHeader(false,'client',true,true),
+                        body:JSON.stringify({id,changeInQuantity:addQty,dateAdded:Date.now()})
+                    })
+                    if (!resp.ok) {
+                        if (await sessionLost(resp.status)) return
+                        showErrorModal('Failed to update your shopping bag. Please try again later.')
+                        setLoading(false)
+                        return
+                    }
+                    const json = await resp.json()
+                    const { apiResponse } = json as {apiResponse:IAddToBagResponse}
+
+                    dispatchInternalEvent(ADD_TO_BAG_FROM_CATALOGUE,apiResponse)
+                    qtyInCart = apiResponse.cartItemMap[id].quantity
+                    addQty = 1
+                    updateAddToBagQty()
+                    setLoading(false)
+                } else if (!!currentCollectionPoint){
+                    const collectionPontOnQtyIncreaseCheckbox = document.getElementById("collection-point-on-qty-increase") as HTMLInputElement
+                    const collectionPointNameElem = document.getElementById('current-collection-point-name') as HTMLSpanElement
+                    if (!collectionPontOnQtyIncreaseCheckbox || !collectionPointNameElem) return
+                    collectionPointNameElem.innerText = currentCollectionPoint === 1 ? 'our warehouse' : `${shopNameMap.get()[currentCollectionPoint]} store`
+                    collectionPontOnQtyIncreaseCheckbox.dataset.changeInQuantity = `${addQty}`
+                    collectionPontOnQtyIncreaseCheckbox.dataset.productId = id
+                    collectionPontOnQtyIncreaseCheckbox.dataset.dt = `${Date.now()}`
+                    collectionPontOnQtyIncreaseCheckbox.checked = true
+                    addQty = 1
+                }
+            }
+
+            const onWsCartUpdate = (e:CustomEvent) => {
+                const { cartItemMap } = e.detail as IAddToBagResponse
+                qtyInCart = cartItemMap[id]?.quantity || 0
+                addQty = Math.min(addQty, maxStockQty - qtyInCart)
+                updateAddToBagQty()
+            }
+
+            const onProductUpdate = (ev:CustomEvent) => {
+                const productDetailsArr = ev.detail as IProduct[]
+                const productDetails = productDetailsArr.find(e=>e.id === id)
+                if (!productDetails) return
+
+                maxStockQty = Math.max(...productDetails.stockQuantities.map(e=>e.quantity))
+                if (qtyInCart > maxStockQty) qtyInCart = maxStockQty
+                updateAddToBagQty()
+
+                const { price, discountedPrice } = productDetails
+
+                const originalPriceElems = this.getElementsByClassName('original-price')
+                for (let i=0; i<originalPriceElems.length; i++){
+                    (originalPriceElems.item(i) as HTMLParagraphElement|HTMLSpanElement).innerText = formatPrice(price)
+                }
+                const discountedPriceElems = this.getElementsByClassName('discounted-price')
+                for (let i=0; i<discountedPriceElems.length; i++){
+                    (discountedPriceElems.item(i) as HTMLParagraphElement|HTMLSpanElement).innerText = formatPrice(discountedPrice)
+                }
+
+                const wDiscount = price !== discountedPrice
+                const noDiscountElem = this.getElementsByClassName('without-discount')[0] as HTMLParagraphElement
+                const wDiscountElem = this.getElementsByClassName('with-discount')[0] as HTMLParagraphElement
+                noDiscountElem.classList.toggle('hidden',wDiscount)
+                wDiscountElem.classList.toggle('hidden',!wDiscount)
+            }
+
+            const qtyBtnsOnPress = (elem:HTMLElement) => {
+                const isMinusBtn = elem.closest('#' + minusBtn.id)
+                const isPlusBtn = elem.closest('#' + plusBtn.id)
+                const isAddToBagBtn = elem.closest('#' + addToBagBtn.id)
+                if (isMinusBtn) onMinus()
+                else if (isPlusBtn) onPlus()
+                else if (isAddToBagBtn) onAddToCart()
+            }
+
+            const qtyBtnsOnClick = (e:MouseEvent) => qtyBtnsOnPress(e.target as HTMLElement)
+            const qtyBtnsOnTouch = (e:TouchEvent) => qtyBtnsOnPress(e.changedTouches[0].target as HTMLElement)
+
+            const resizeContainer = () => {
+                const { innerWidth, innerHeight } = window
+                if (innerWidth >= 768) {
+                    const headerHeight = header.getBoundingClientRect().height
+                    for (let i=0; i<subtextsLen; i++){
+                        if (subtextCheckboxes.item(i).checked) {
+                            const textContainerTop = textContainer.getBoundingClientRect().top
+                            const { height: textContentHeight, top: textContentTop } = textContent.getBoundingClientRect()
+                            container.style.height = `${Math.max(innerHeight - headerHeight, (textContentTop - textContainerTop) * 2 + textContentHeight)}px`
+                            return
+                        }
+                    }
+                    container.style.height = `${innerHeight - headerHeight}px`
+                } else container.style.height = null
+            }
+
+            const resizeEverything = () => {
+                resizeContainer()
+                catalogueItemsOnResize()
+            }
+
+            const subtextCheckboxesOnChange = (e:Event) => {
+                const targetElem = e.target as HTMLElement
+                for (let i=0; i<subtextsLen; i++){
+                    const elem = targetElem.closest('#' + subtextCheckboxes.item(i).id)
+                    if (!!elem) {
+                        resizeContainer()
+                        return
+                    }
+                }
+            }
+
+            const onOnline = async() => {
+                const resp = await fetch('/api/webshop/shop-page',{
+                    method:"POST",
+                    headers:httpRequestHeader(false,'client',false,true),
+                    body:JSON.stringify({ids:[id,...relatedProductIDs]})
+                })
+                if (!resp.ok) return
+                const {apiResponse:{productDetails}} = await resp.json() as {apiResponse:{productDetails:IProduct[]}}
+                dispatchInternalEvent(PRODUCT_UPDATE,productDetails)
+            }
+
+            const onResize = () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(resizeEverything, 200);
+            }
+
+            const onLoad = () => {
+                updateAddToBagQty()
+                resizeEverything()
+            }
+
+            window.addEventListener('online',onOnline,true)
+            window.addEventListener('load',onLoad,{once:true})
+            otherClientPaymentInProcess.subscribe(updateAddToBagQty)
+            document.addEventListener(CART_QTY_UPDATE,onCartQtyUpdate,true)
+            document.addEventListener(CART_UPDATE,onWsCartUpdate,true)
+            document.addEventListener(PRODUCT_UPDATE,onProductUpdate,true)
+
+            document.addEventListener('change',subtextCheckboxesOnChange,true)
+
+            window.addEventListener('resize', onResize,true);
+
+            if (isDesktop) document.addEventListener('click',qtyBtnsOnClick,true)
+            else document.addEventListener('touchend',qtyBtnsOnTouch,{passive:false})
+
+            const addToBagBtnsContainerResizeCallback = (entries:ResizeObserverEntry[]) => entries.forEach(entry=>{
+                const { height, bottom } = entry.target.getBoundingClientRect()
+                if ( bottom === window.innerHeight ) document.body.style.marginBottom = `${ height }px`
+                else document.body.style.marginBottom = null
+            })
+
+            const addToBagBtnsContainerResizeObserver = new ResizeObserver(addToBagBtnsContainerResizeCallback)
+
+            addToBagBtnsContainerResizeObserver.observe(addToBagBtnsContainer)
+        }
+    }
+
+    customElements.define('astro-main-product',MainProduct)
+</script>

@@ -1,0 +1,17 @@
+---
+import ImageVertical from "./image-vertical.astro";
+import type { IProductImages } from "@components/catalogue-item/interfaces";
+
+interface Props {
+    images: IProductImages[];
+}
+
+const { images } = Astro.props as Props
+---
+<div>
+    {
+        images.map(({name,ext})=>(
+            <ImageVertical name={name} ext={ext} />
+        ))
+    }
+</div>

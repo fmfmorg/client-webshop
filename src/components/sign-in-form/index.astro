@@ -1,0 +1,107 @@
+---
+import Checkbox from "@components/input-fields/checkbox"
+import TextInput from "@components/input-fields/text-input"
+import { submitBtnClass } from "@misc"
+
+const idPrefix="sign-in"
+---
+
+<div>
+    <h2 class="font-display text-3xl tracking-[-0.1em] [word-spacing:0.3em] mb-6">Sign In</h2>
+    <form id={idPrefix}>
+        <p id={`${idPrefix}-error-message`} class='mb-7 text-[0.8rem] tracking-wider text-red-700 invisible'>.</p>
+        <input type='text' id={`${idPrefix}-phone`} name='phone' class='fixed top-[-100px] right-0' placeholder="Phone number" />
+        <TextInput 
+            idPrefix={idPrefix} 
+            type='email' 
+            id='email' 
+            name='email' 
+            placeholder="Email Address" 
+            required 
+            className='mb-8'
+            client:only="solid-js"
+            maxLength={100}
+        />
+        <TextInput 
+            idPrefix={idPrefix} 
+            type='password' 
+            id='password' 
+            name='password' 
+            placeholder="Password" 
+            required 
+            className='mb-6'
+            client:only="solid-js"
+            maxLength={100}
+        />
+        <Checkbox client:only="solid-js" id='private-device' name='private-device' idPrefix={idPrefix}>
+            <p class='font-light text-xs tracking-wider pl-6'>Keep me signed in on this device for easier shopping next time.</p>
+        </Checkbox>
+        <input type='submit' value='Sign In' class={submitBtnClass} />
+    </form>
+</div>
+
+<script>
+import { dispatchInternalEvent, httpRequestHeader, sessionLost } from "@misc"
+import { TEXT_INPUT_SET_NEW_VALUE } from "@misc/event-keys"
+import { pageToken } from "@stores"
+
+    const signInForm = document.getElementById('sign-in') as HTMLFormElement
+    const errorMsg = document.getElementById('sign-in-error-message') as HTMLParagraphElement
+    const bc = new BroadcastChannel('reload')
+
+    const onSubmit = async (e:SubmitEvent) => {
+        e.preventDefault()
+        
+        const form = e.target as HTMLFormElement
+        const phoneElem = form.elements.namedItem('phone') as HTMLInputElement
+
+        if (phoneElem.value !== "") {
+            window.location.assign('/bot')
+            return
+        }
+
+        const emailElem = form.elements.namedItem('email') as HTMLInputElement
+        const passwordElem = form.elements.namedItem('password') as HTMLInputElement
+        const privateDeviceElem = form.elements.namedItem('private-device') as HTMLInputElement
+        
+        const email = emailElem.value.trim()
+        const password = passwordElem.value.trim()
+        const privateDevice = privateDeviceElem.checked
+
+        passwordElem.value = ''
+        dispatchInternalEvent(TEXT_INPUT_SET_NEW_VALUE,{id:passwordElem.id,value:''})
+
+        const resp = await fetch('/api/webshop/sign-in',{
+            method:'POST',
+            headers:httpRequestHeader(false,'client',false,true),
+            body:JSON.stringify({email,password,privateDevice})
+        })
+        const { status, ok } = resp
+        if (ok) {
+            bc.postMessage(pageToken.get())
+            const searchParams = new URLSearchParams(window.location.search)
+            if (searchParams.has('rd')) window.location.assign(decodeURIComponent(searchParams.get('rd')));
+            else window.location.assign('/');
+        } else {
+            if (await sessionLost(resp.status)) return
+            switch (status) {
+                case 400:
+                    errorMsg.innerText = 'Incorrect email address or password.'
+                    break
+                case 401: 
+                    errorMsg.innerHTML = 'Email address not verified.<br /><a href="/"><strong><i><u>Verify your email address here.</u></i></strong></a>'
+                    break
+                case 429:
+                    errorMsg.innerText = await resp.text()
+                    break
+                default:
+                    errorMsg.innerText = 'Server error. Please try again later.'
+                    break
+                }
+            errorMsg.classList.remove('invisible')
+            errorMsg.classList.add('visible')
+        }
+    }
+
+    signInForm.addEventListener('submit',onSubmit,true)
+</script>

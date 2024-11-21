@@ -1,0 +1,79 @@
+---
+import type { ICartContent } from '@components/cart/interfaces';
+import { formatPrice, type IOrderDetails, type IUserAddress } from '@misc';
+import OrderDetail from './order-detail.astro';
+
+interface Props {
+    shippingAddress: IUserAddress;
+    orderDetails: IOrderDetails;
+    cartContent: ICartContent;
+    orderID:number;
+}
+
+const { shippingAddress:{ 
+    firstName,
+    lastName,
+    line1,
+    line2,
+    city,
+    stateProvince,
+    postcode,
+    countryName
+}, orderDetails:{
+    deliveryCost,
+    deliveryMethod,
+    paymentMethod,
+    location,
+    orderDate
+}, cartContent: {
+    staffDiscount,
+    memberDiscount,
+    memberDiscountRate,
+    campaignDiscount,
+    campaignName,
+    subtotalBeforeDelivery
+}, orderID } = Astro.props as Props
+---
+
+<div class="mt-6 border border-gray-300 p-3 rounded-md grid text-sm tracking-wider">
+    <input type="checkbox" class="peer" checked hidden id="show-order-details" />
+    <label for="show-order-details" class="cursor-pointer flex justify-between uppercase text-sm tracking-widest font-semibold peer-checked:[&>svg]:rotate-180">
+        <p>Order Details</p>
+        <svg viewBox='0 0 100 100' height='0.8em' fill='none' stroke='black' stroke-width='0.4rem' class='my-auto duration-300'>
+            <polyline points='5,30 50,70 95,30' />
+        </svg>
+    </label>
+    <div class="max-h-0 overflow-y-hidden peer-checked:max-h-fit peer-checked:mt-4 grid gap-y-4">
+        <OrderDetail title="Order Number">
+            <p>{orderID}</p>
+        </OrderDetail>
+        <OrderDetail title="Purchased at">
+            <p>{location}</p>
+        </OrderDetail>
+        <OrderDetail title="Date of Purchase">
+            <p>{new Intl.DateTimeFormat('en-GB',{year:'numeric',month:'long',day:'numeric'}).format(orderDate)}</p>
+        </OrderDetail>
+        <OrderDetail title="Payment Method">
+            <p>{paymentMethod}</p>
+        </OrderDetail>
+        <OrderDetail title="Delivery Method">
+            <p>{deliveryMethod}</p>
+        </OrderDetail>
+        {!!line1 && <OrderDetail title='Shipping Address'>
+            <p>{`${firstName} ${lastName}`.trim()}</p>
+            <p>{[line1,line2].filter(e=>!!e).join(', ')}</p>
+            <p>{[city,stateProvince,postcode].filter(e=>!!e).join(', ')}</p>
+            <p>{countryName}</p>
+        </OrderDetail>}
+        {!!staffDiscount && <OrderDetail title="Staff Discount">{formatPrice(staffDiscount)}</OrderDetail>}
+        {!!campaignDiscount && <OrderDetail title={`Discount: ${campaignName}`}>{formatPrice(campaignDiscount)}</OrderDetail>}
+        {!!memberDiscount && <OrderDetail title={`Member Discount: ${memberDiscountRate * 100}% off`}>{formatPrice(memberDiscount)}</OrderDetail>}
+        <OrderDetail title='Subtotal'>{formatPrice(subtotalBeforeDelivery)}</OrderDetail>
+        {!!deliveryCost && <OrderDetail title='Delivery Cost'>{formatPrice(deliveryCost)}</OrderDetail>}
+        <hr class="border-black border-[1px]" />
+        <div class="flex justify-between">
+            <p class="font-semibold">Total</p>
+            <p class="text-xl font-bold">{formatPrice(subtotalBeforeDelivery + deliveryCost)}</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,204 @@
+---
+import CartList from "@components/cart";
+import type { ICartContent, ICartItemMap } from "@components/cart/interfaces";
+import GuestShipping from "./guest";
+import type { 
+    ICatalogueMap, 
+    ICountry, 
+    IDeliveryMethodMap, 
+    INoServiceCountryMap, 
+    IShopAddressMap, 
+    IUserAddressMap, 
+} from "@misc";
+import CardField from "./card-field.astro";
+import DeliveryMethods from "./delivery"
+import PayButton from "./pay-btn";
+import NewAddressForm from "./member/new-address-form.astro";
+import EditAddressForm from "./member/edit-address-form.astro";
+import Checkbox from "@components/input-fields/checkbox";
+import PaymentInProcess from "./payment-in-process.astro";
+import PaymentFailed from "./payment-failed.astro";
+import CollectOrDeliveryInputLabel from "./collect-or-delivery-input-label.astro";
+import EmailPassword from "./guest/email-password.astro";
+import OnlineStockIssue from "./online-stock-issue";
+import SelectClickCollectPoint from "./select-click-collect-point";
+import SelectedCollectionPoint from "./selected-collection-point";
+import UserAlreadyExists from "./guest/user-already-exists.astro";
+import GuestBillingAddress from "./guest/billing-address";
+import BillingAddressWrapper from "./billing-address-wrapper.astro";
+import MemberEmail from './member/email-address.astro'
+import LoadingSmall from "@components/layout/header/icons/loading-small.astro";
+import MemberShippingAddresses from "./member";
+import MemberBillingAddresses from "./member/billing-addresses";
+import OrderSummary from "./order-summary";
+
+interface Props {
+    itemsMap: ICartItemMap;
+    productDetailsMap: ICatalogueMap;
+    isSignedIn: boolean;
+    freeShippingLimit: number;
+    cartCalculation: ICartContent;
+    isCheckoutPage:boolean;
+    countries:ICountry[];
+    userCountry:string;
+    deliveryMethodMap:IDeliveryMethodMap;
+    addressMap:IUserAddressMap;
+    selectedAddressID:string;
+    selectedDeliveryID:number;
+    noServiceCountryMap:INoServiceCountryMap;
+    total:number;
+    email:string;
+    shopAddressMap:IShopAddressMap;
+}
+
+const { 
+    itemsMap, 
+    productDetailsMap, 
+    isSignedIn,
+    freeShippingLimit, 
+    cartCalculation, 
+    isCheckoutPage, 
+    countries, 
+    userCountry, 
+    deliveryMethodMap,
+    addressMap,
+    selectedAddressID,
+    selectedDeliveryID,
+    noServiceCountryMap,
+    total,
+    email,
+    shopAddressMap,
+} = Astro.props as Props
+
+const hasPOS = !!Object.keys(shopAddressMap).length
+---
+
+<div id="checkout-form-container" style="display:none;" class="max-w-96 lg:max-w-fit lg:flex lg:space-x-4 mx-auto py-4 space-y-4 lg:space-y-0" data-shop-count={Object.keys(shopAddressMap).length}>
+    <div class="bg-white max-h-fit rounded-md px-3 lg:w-80 xl:w-96  w-full">
+        <div id="shopping-bag-loading" class="px-2 py-10">
+            <LoadingSmall className="animate-spin h-20 w-20 fill-gray-400 mx-auto mb-2" />
+            <p class="text-center text-xs uppercase tracking-widest">Loading your shopping bag...</p>
+        </div>
+        <CartList {...{itemsMap, productDetailsMap, isSignedIn, freeShippingLimit, cartCalculation, isCheckoutPage}} client:only="solid-js" />
+    </div>
+    <form id="checkout-form" class="space-y-4 lg:space-y-0 lg:flex lg:space-x-4">
+        <div class="space-y-4 lg:w-80 xl:w-96">
+            <div class="bg-white rounded-md px-3 pb-3">
+                {isSignedIn ? <MemberEmail {...{email}} /> : <EmailPassword />}
+            </div>
+            <div class="bg-white rounded-md p-3">
+                <div class='uppercase text-xs tracking-widest xs:text-sm xs:tracking-[0.2rem]'>
+                    3. Delivery
+                </div>
+                {hasPOS && <CollectOrDeliveryInputLabel id="collect" labelText="Click and Collect">
+                    <SelectedCollectionPoint slot="under-title" client:only="solid-js" {...{shopAddressMap}} />
+                </CollectOrDeliveryInputLabel>}
+                <CollectOrDeliveryInputLabel id="delivery" labelText="Home Delivery" hasPOS={hasPOS}>
+                    {
+                        isSignedIn ? 
+                        <MemberShippingAddresses 
+                            {...{addressMap,selectedAddressID,noServiceCountryMap,hasPOS}} 
+                            client:only="solid-js"
+                        /> : 
+                        <GuestShipping 
+                            {...{countries,userCountry,noServiceCountryMap,hasPOS}} 
+                            client:only="solid-js" 
+                        />
+                    }
+                    <DeliveryMethods 
+                        shippingMethodsMap={deliveryMethodMap} 
+                        selectedDeliveryID={selectedDeliveryID} 
+                        client:only="solid-js" 
+                    />
+                </CollectOrDeliveryInputLabel>
+            </div>
+        </div>
+        <div class="space-y-4 lg:w-80 xl:w-96 w-full">
+            <div class="bg-white rounded-md p-3">
+                <BillingAddressWrapper>
+                    {
+                        isSignedIn ?
+                        <MemberBillingAddresses 
+                            client:only="solid-js" 
+                            {...{addressMap,selectedAddressID}} 
+                        /> :
+                        <GuestBillingAddress 
+                            client:only="solid-js" 
+                            {...{countries,userCountry,noServiceCountryMap}} 
+                        />
+                    }
+                </BillingAddressWrapper>
+            </div>
+            <div class="bg-white rounded-md p-3">
+                <OrderSummary cartCalculation={cartCalculation} client:only="solid-js" />
+            </div>
+            <CardField />
+            <div id="guest-sign-up-subscribe-newsletter-container" class="hidden bg-white rounded-md p-3">
+                <Checkbox id="guest-sign-up-subscribe-newsletter" name="guest-sign-up-subscribe-newsletter" client:only="solid-js">
+                    <p class='font-light text-xs tracking-wider pl-6'>Stay in the loop! Subscribe to our newsletter and receive exclusive offers, just for you &hearts;</p>
+                </Checkbox>
+            </div>
+            <PayButton client:only="solid-js" />
+        </div>
+    </form>
+</div>
+<PaymentInProcess />
+<PaymentFailed />
+{isSignedIn ? 
+<>
+    <NewAddressForm {...{countries, noServiceCountryMap,idPrefix:'shipping'}} />
+    <NewAddressForm {...{countries, noServiceCountryMap,idPrefix:'billing'}} />
+    <EditAddressForm {...{countries,noServiceCountryMap}} />
+</> : 
+<UserAlreadyExists />}
+{!!Object.keys(shopAddressMap).length && 
+    <>
+    <SelectClickCollectPoint client:only="solid-js" {...{shopAddressMap,itemsMap,productDetailsMap}} />
+    <OnlineStockIssue client:only="solid-js" {...{itemsMap,productDetailsMap}} />
+    </>
+}
+
+<script>
+import { SHOPPING_BAG_LOADED } from "@misc/event-keys"
+import { cartHasItems, checkoutGuestSignUp, selectedCollectionPoint, otherClientPaymentInProcess } from "@stores"
+
+// show or hide checkout form
+let timeout
+const checkoutFormContainer = document.getElementById("checkout-form-container") as HTMLDivElement
+const guestSignUpSubscribeContainer = document.getElementById('guest-sign-up-subscribe-newsletter-container') as HTMLDivElement
+const toggleHidden = () => {
+    const v = cartHasItems.get() && !otherClientPaymentInProcess.get()
+    checkoutFormContainer.style.display = v ? null : 'none'
+}
+
+cartHasItems.subscribe(toggleHidden)
+otherClientPaymentInProcess.subscribe(toggleHidden)
+checkoutGuestSignUp.subscribe(v=>guestSignUpSubscribeContainer.classList.toggle('hidden',!v))
+
+// toggle click & collect vs home deivery
+const _selectedCollectionPoint = +document.body.dataset.selectedCollectionPoint
+const shopCount = isNaN(+checkoutFormContainer.dataset.shopCount) ? 0 : +checkoutFormContainer.dataset.shopCount
+const clickCollectCheckbox = document.getElementById('collect') as HTMLInputElement
+const clickCollectOnClick = async () => {
+
+    const currentCollectionPoint = selectedCollectionPoint.get()
+    if (currentCollectionPoint === 1) (document.getElementById('delivery') as HTMLInputElement).checked = true
+    if (shopCount < 2 && currentCollectionPoint > 1) return
+    if (currentCollectionPoint < 2) clickCollectCheckbox.checked = false
+    const modalCheckbox = document.getElementById("select-click-collect-point-modal-checkbox") as HTMLInputElement
+    if (!!modalCheckbox) modalCheckbox.checked = true
+}
+if (!!clickCollectCheckbox) clickCollectCheckbox.addEventListener('click',clickCollectOnClick,true)
+
+if (_selectedCollectionPoint === 1){
+    const homeDeliveryCheckbox = document.getElementById('delivery') as HTMLInputElement
+    if (!!homeDeliveryCheckbox) homeDeliveryCheckbox.checked = true
+} else if (_selectedCollectionPoint > 1){
+    if (!!clickCollectCheckbox) clickCollectCheckbox.checked = true
+}
+
+// cart loading spinner
+const spinnerContainer = document.getElementById('shopping-bag-loading') as HTMLDivElement
+const onShoppingBagLoaded = () => spinnerContainer.classList.add('hidden')
+document.addEventListener(SHOPPING_BAG_LOADED,onShoppingBagLoaded)
+</script>

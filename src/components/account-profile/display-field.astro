@@ -1,0 +1,12 @@
+---
+interface Props {
+    name:string;
+    content:string;
+}
+
+const { name, content } = Astro.props as Props
+---
+<div class="mb-4">
+    <p class="text-2xs sm:text-xs uppercase tracking-widest text-gray-400">{name}</p>
+    <p class="tracking-wider text-xs xs:text-sm sm:text-base break-words">{content}</p>
+</div>

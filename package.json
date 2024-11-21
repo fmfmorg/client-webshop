@@ -1,0 +1,18 @@
+{
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/node": "^8.3.4",
+    "@astrojs/solid-js": "^4.4.2",
+    "@astrojs/tailwind": "^5.1.2",
+    "@nanostores/solid": "^0.4.2",
+    "@revolut/checkout": "^1.1.18",
+    "astro": "^4.16.10",
+    "nanostores": "^0.11.2",
+    "tailwindcss": "^3.4.10"
+  }
+}

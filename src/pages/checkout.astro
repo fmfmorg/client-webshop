@@ -1,0 +1,110 @@
+---
+import { 
+    getCookieValueWithKey,
+    httpRequestHeader,
+    sessionCookieOption, 
+    type ICountry, 
+    type IDeliveryMethodMap, 
+    type IMdwResponse, 
+    type INoServiceCountryMap, 
+    type IUserAddressMap,
+} from '@misc'
+import Layout from '@components/layout/index.astro'
+import EmptyCart from '@components/checkout/empty-cart.astro'
+import CheckoutForm from '@components/checkout/index.astro'
+import CartLocked from '@components/checkout/cart-locked.astro';
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
+
+interface IApiResponse {
+    addressMap:IUserAddressMap;
+    selectedAddressID:string;
+    countries:ICountry[];
+    userCountry:string;
+    deliveryMethodMap:IDeliveryMethodMap;
+    selectedDeliveryID:number;
+    noServiceCountryMap:INoServiceCountryMap;
+    total:number;
+    email:string;
+}
+
+const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
+
+const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/checkout-page-init`,{
+    headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,false)
+})
+if (!resp.ok) return Astro.redirect('/')
+
+const json = await resp.json()
+
+const {mdwResponse,apiResponse} = json as {mdwResponse: IMdwResponse; apiResponse:IApiResponse; }
+const {
+    expiresAt,
+    sessionID,
+    signedIn,
+    cartProductDetailsMap,
+    cartItemMap,
+    cartContent,
+    paymentInProcess,
+    selCollectionPoint,
+    prfCollectionPoint,
+    shopAddressMap,
+    minSpendForFreeShipping,
+    firstName,
+    headerCarouselTexts,
+} = mdwResponse
+const { 
+    countries, 
+    userCountry, 
+    deliveryMethodMap, 
+    addressMap, 
+    selectedAddressID, 
+    selectedDeliveryID, 
+    noServiceCountryMap,
+    total, 
+    email,
+} = apiResponse
+
+const hasItemsInCart = !!Object.values(cartItemMap).map(e=>e.quantity).filter(e=>!!e).length
+
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(expiresAt))
+
+const isCheckoutPage = Astro.url.pathname === '/checkout'
+
+const csrftoken = getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
+Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption())
+---
+
+<Layout {...{
+    csrftoken,
+    paymentInProcess,
+    selCollectionPoint,
+    prfCollectionPoint,
+    shopAddressMap,
+    signedIn,
+    hasItemsInCart,
+    firstName,
+    total,
+    title:'Checkout',
+    headerCarouselTexts,
+}}>
+    <EmptyCart {...{signedIn}} />
+    <CheckoutForm {...{
+        itemsMap:cartItemMap, 
+        productDetailsMap:cartProductDetailsMap, 
+        isSignedIn:signedIn, 
+        freeShippingLimit:minSpendForFreeShipping, 
+        cartCalculation:cartContent, 
+        isCheckoutPage,
+        countries,
+        userCountry,
+        deliveryMethodMap,
+        addressMap,
+        selectedAddressID,
+        selectedDeliveryID,
+        noServiceCountryMap,
+        total,
+        email,
+        shopAddressMap,
+    }} />
+    <CartLocked />
+</Layout>

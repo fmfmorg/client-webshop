@@ -1,0 +1,28 @@
+---
+import type { ICartItem } from '@components/cart/interfaces'
+import type { IProduct } from '@components/catalogue-item/interfaces';
+import Product from './product.astro';
+
+interface Props {
+    items:ICartItem[];
+    productDetails:IProduct[];
+    trackingNumber:string;
+}
+
+const { items, productDetails, trackingNumber } = Astro.props as Props
+const itemCount = items.map(e=>e.quantity).reduce((a,b)=>a+b,0)
+const productDetailsMap = productDetails.map(e=>({[e.id]:e})).reduce((a,b)=>({...a,...b}),{})
+---
+
+<div class=`${!!trackingNumber ? 'mt-6' : 'mt-4'} border border-gray-300 p-3 rounded-md`>
+    <input type="checkbox" class="peer" checked hidden id="show-products" />
+    <label for="show-products" class="cursor-pointer flex justify-between uppercase text-sm tracking-widest font-semibold peer-checked:[&>svg]:rotate-180">
+        <p>Products ({itemCount})</p>
+        <svg viewBox='0 0 100 100' height='0.8em' fill='none' stroke='black' stroke-width='0.4rem' class='my-auto duration-300'>
+            <polyline points='5,30 50,70 95,30' />
+        </svg>
+    </label>
+    <ul class="max-h-0 overflow-y-hidden peer-checked:max-h-fit">
+        {items.map(e=>(<Product {...{product:productDetailsMap[e.id],item:e}} />))}
+    </ul>
+</div>

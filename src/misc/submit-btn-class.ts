@@ -1,0 +1,1 @@
+export const submitBtnClass = 'w-full mt-6 py-2 uppercase font-serif tracking-[0.4rem] [word-spacing:0.2em] cursor-pointer text-white bg-gray-600 border border-gray-600 mouse:hover:bg-black mouse:hover:border-black duration-300 font-semibold'

@@ -1,0 +1,96 @@
+---
+import ShoppingBagIcon from './icons/shopping-bag.astro'
+import UserIcon from './icons/user.astro'
+import UserSidebar from './user-sidebar.astro'
+import HamburgerIcon from './icons/hamburger.astro'
+import MenuSidebar from './menu-sidebar.astro'
+import pages from './pages.json'
+import ShoppingBagSidebar from './shopping-bag-sidebar.astro'
+import type { IShoppingBagSidebarProp } from '@misc'
+import Logo from '@components/logo.astro'
+import TextCarousel from './text-carousel'
+
+interface Props {
+  signedIn:boolean;
+  firstName:string;
+  showUserIcon?:boolean;
+  shoppingBagProp?:IShoppingBagSidebarProp;
+  headerCarouselTexts:string[];
+}
+
+const { showUserIcon, shoppingBagProp, signedIn, firstName, headerCarouselTexts } = Astro.props
+const isCheckoutPage = Astro.url.pathname === '/checkout'
+---
+
+<div id="menu-overlay" class="fixed top-0 left-0 w-full h-full bg-white hidden opacity-50 transition-opacity duration-300 z-40"></div>
+<header class="bg-white shadow z-30 top-0 left-0 w-full fixed transition-transform duration-300">
+    {!!headerCarouselTexts.length && <TextCarousel texts={headerCarouselTexts} client:only="solid-js" />}
+    <div class={isCheckoutPage ? 'flex justify-center' : 'px-4 flex justify-between items-center'}>
+        <div class={isCheckoutPage ? 'hidden' : 'flex md:hidden'}>
+            <label for="menu-sidebar-checkbox" id="menu-icon-button" class="cursor-pointer focus:outline-none h-full px-1 py-2 -ml-3 md:px-2 md:py-4 md:-ml-2">
+                <HamburgerIcon />
+            </label>
+            <button class="focus:outline-none h-full px-1 py-2 md:px-2 md:py-4 invisible">
+                <HamburgerIcon />
+            </button>
+        </div>
+        <a href="/" class=`py-2 xs:py-3 w-[140px] md:w-[162px] ${isCheckoutPage ? 'flex flex-col justify-center h-10 md:h-12' : ''}`>
+            <Logo className='h-[16.62px] md:h-[19.22px]' />
+        </a>
+        <nav class={isCheckoutPage ? 'hidden' : 'hidden md:block'}>
+            <ul class="flex space-x-8 font-display text-lg uppercase">
+                {pages.map(({name,path})=>(
+                    <li>
+                        <a href={path}>
+                            <span class="relative inline-block after:absolute after:bottom-0 after:bg-black after:h-px after:left-1/2 after:w-0 after:duration-300 mouse:hover:after:left-0 mouse:hover:after:w-full">
+                                {name}
+                            </span>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+        <div class={isCheckoutPage ? 'hidden' : 'flex'}>
+            {!!showUserIcon && <label for="user-sidebar-checkbox" id="user-sidebar-icon-button" class={`focus:outline-none h-full py-2 md:py-4 ${!!shoppingBagProp ? 'px-1 md:px-2' : 'px-1 md:px-2 -mr-3 md:-mr-2'}`}>
+                <UserIcon className="h-6 w-6 xs:h-8 xs:w-8 stroke-[0.2rem] xs:stroke-[0.15rem] stroke-black fill-none" />
+            </label>}
+            {!!shoppingBagProp && <label for="shopping-bag-sidebar-checkbox" id="shopping-bag-sidebar-icon-button" class="focus:outline-none h-full px-1 md:px-2 py-2 md:py-4 -mr-3 md:-mr-2">
+              <ShoppingBagIcon className="h-6 w-6 xs:h-8 xs:w-8 stroke-[0.2rem] xs:stroke-[0.15rem] stroke-black fill-none" />
+            </label>}
+        </div>
+    </div>
+</header>
+
+{showUserIcon && <UserSidebar {...{showUserIcon,firstName,signedIn}} />}
+{!!shoppingBagProp && <ShoppingBagSidebar props={shoppingBagProp} />}
+<MenuSidebar />
+
+<script>
+    const header = document.querySelector('header');
+    const shoppingBagCheckbox = document.getElementById('shopping-bag-sidebar-checkbox') as HTMLInputElement;
+    const userCheckbox = document.getElementById('user-sidebar-checkbox') as HTMLInputElement;
+    const menuCheckbox = document.getElementById("menu-sidebar-checkbox") as HTMLInputElement
+    let lastScrollY = window.scrollY;
+
+    const onScroll = () => {
+        const headerHeight = header.getBoundingClientRect().height
+        if (Math.abs(window.scrollY - lastScrollY) > 10) {
+            const collectionPointSidebarCheckbox = document.getElementById('product-collection-points-sidebar-checkbox') as HTMLInputElement
+            if (window.scrollY < lastScrollY) {
+                // Scrolling down
+                header.classList.remove('-translate-y-full'); // Show the navbar
+            } else if (
+                (!!shoppingBagCheckbox ? !shoppingBagCheckbox.checked : true) && 
+                (!!userCheckbox ? !userCheckbox.checked : true) && 
+                (!!menuCheckbox ? !menuCheckbox.checked : true) && 
+                (!!collectionPointSidebarCheckbox ? !collectionPointSidebarCheckbox.checked : true)
+            ){
+                // Scrolling up
+                header.classList.add('-translate-y-full'); // Hide the navbar
+            }
+        } else if (window.scrollY <= headerHeight) header.classList.remove('-translate-y-full');
+        lastScrollY = window.scrollY; // Update last scroll position
+    }
+
+    window.addEventListener('scroll', onScroll, true);
+</script>

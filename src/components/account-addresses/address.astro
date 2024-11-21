@@ -1,0 +1,132 @@
+---
+import CloseSidebarIcon from '@components/layout/header/icons/close-sidebar-icon.astro'
+import type { IUserAddress } from '@misc'
+
+interface Props {
+    address:IUserAddress
+}
+
+const { address: {
+    firstName,
+    lastName,
+    line1,
+    line2,
+    city,
+    stateProvince,
+    postcode,
+    countryName,
+    isDefault,
+    id
+} } = Astro.props as Props
+---
+<astro-address-list-item data-id={id}>
+    <div class=`mt-4 p-4 ${isDefault ? 'pt-2' : ''} pb-2 rounded-md border border-gray-300`>
+        {isDefault && <p class="border-b border-gray-300 pb-2 uppercase text-[0.75rem] tracking-widest">Default Address</p>}
+        <div class=`font-light tracking-wider [word-spacing:0.1rem] ${isDefault ? 'pt-3' : ''}`>
+            <p class="font-semibold">{`${firstName} ${lastName}`.trim()}</p>
+            {!!line1 && <p>{line1}</p>}
+            {!!line2 && <p>{line2}</p>}
+            <p>{[city,stateProvince,postcode].filter(e=>!!e).join(', ')}</p>
+            <p>{countryName}</p>
+        </div>
+        <div class="flex mt-4 flex-wrap">
+            <a href=`/account/edit-address?id=${id}` class=`uppercase text-xs mr-2 border border-gray-400 text-gray-500 p-1 tracking-widest mb-2 mouse:hover:border-black mouse:hover:text-black duration-300`>Edit</a>
+            <button id=`set-as-default-address-${id}` class=`set-as-default-address uppercase text-xs mr-2 border border-gray-400 text-gray-500 p-1 tracking-widest ${isDefault ? 'hidden' : ''} mb-2 mouse:hover:border-black mouse:hover:text-black duration-300`>Set as Default</button>
+            <label for=`remove-${id}` class=`cursor-pointer uppercase text-xs mr-2 border border-gray-400 text-gray-500 p-1 tracking-widest ${isDefault ? 'hidden' : ''} mb-2 mouse:hover:border-black mouse:hover:text-black duration-300`>Remove</label>
+        </div>
+    </div>
+    <input type="checkbox" hidden class="peer remove-address" id=`remove-${id}` />
+    <div class="hidden peer-checked:block fixed w-screen h-screen top-0 left-0 bg-gray-600 opacity-50 z-50" />
+    <div class="hidden peer-checked:flex flex-col justify-center z-50 fixed w-screen h-screen top-0 left-0 px-4">
+        <div class="remove-address-modal max-w-96 bg-white mx-auto p-4 rounded-md">
+            <div class="flex justify-between mb-4">
+                <div class="flex flex-col justify-center">
+                    <p class="uppercase text-sm tracking-widest">Confirm Delete?</p>
+                </div>
+                <label for=`remove-${id}` class="cursor-pointer">
+                    <CloseSidebarIcon height='1.5em' strokeWidth='0.3rem' />
+                </label>
+            </div>
+            <div class='font-light tracking-wider [word-spacing:0.1rem] mb-4'>
+                <p class="font-semibold">{`${firstName} ${lastName}`.trim()}</p>
+                {!!line1 && <p>{line1}</p>}
+                {!!line2 && <p>{line2}</p>}
+                <p>{[city,stateProvince,postcode].filter(e=>!!e).join(', ')}</p>
+                <p>{countryName}</p>
+            </div>
+            <p class="text-xs list-item ml-2 text-gray-500" style="list-style-type: '* ';">Deleting this address will not delete any pending orders being dispatched to this address.</p>
+            <div class="flex justify-center">
+                <button id=`delete-address-${id}` class="delete-address mt-4 w-full max-w-24 uppercase font-serif tracking-widest [word-spacing:0.2em] cursor-pointer text-white bg-gray-600 border border-gray-600 mouse:hover:bg-black mouse:hover:border-black duration-300 font-semibold text-sm p-2">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</astro-address-list-item>
+
+<script>
+import { httpRequestHeader, sessionLost } from "@misc";
+
+    class AddressListItem extends HTMLElement {
+        constructor(){
+            super();
+            const addressID = this.dataset.id
+            const setAsDefaultBtn = this.getElementsByClassName('set-as-default-address')[0] as HTMLButtonElement
+            const deleteAddressBtn = this.getElementsByClassName('delete-address')[0] as HTMLButtonElement
+            const deleteAddressCheckbox = this.getElementsByClassName('remove-address')[0] as HTMLInputElement
+            const deleteAddressModal = this.getElementsByClassName('remove-address-modal')[0] as HTMLDivElement
+            const isTouchScreen = window.matchMedia && matchMedia("(pointer:coarse)").matches;
+
+            const toSignIn = () => window.location.assign(`/sign-in?rd=${encodeURIComponent('/account/addresses')}`)
+
+            const setAsDefault = async () => {
+                const resp = await fetch(`/api/webshop/account-set-default-address/${addressID}`,{
+                    headers:httpRequestHeader(false,'client',false,true)
+                })
+                if (resp.status === 401) toSignIn()
+                else if (await sessionLost(resp.status)) return
+                else window.location.reload()
+            }
+
+            const onDelete = async () => {
+                const resp = await fetch(`/api/webshop/account-delete-address/${addressID}`,{
+                    headers:httpRequestHeader(false,'client',false,true)
+                })
+                if (resp.status === 401) toSignIn()
+                else if (await sessionLost(resp.status)) return
+                else window.location.reload()
+            }
+
+            const outsideDeleteModal = (x:number,y:number) => {
+                const {left,right,top,bottom} = deleteAddressModal.getBoundingClientRect()
+                if (x<left || x>right || y<top || y>bottom) deleteAddressCheckbox.checked = false
+            }
+
+            const outsideDeleteModalOnClick = (e:MouseEvent) => {
+                if (!deleteAddressCheckbox.checked) return
+                outsideDeleteModal(e.clientX,e.clientY)
+            }
+            const outsideDeleteModalOnTouch = (e:TouchEvent) => {
+                if (!deleteAddressCheckbox.checked) return
+                outsideDeleteModal(e.touches[0].clientX,e.touches[0].clientY)
+            }
+
+            const btnOnPress = (elem:HTMLElement) => {
+                const isSetAsDefaultBtn = elem.closest('#' + setAsDefaultBtn.id)
+                const isDeleteAddressBtn = elem.closest('#' + deleteAddressBtn.id)
+
+                if (!!isSetAsDefaultBtn) setAsDefault()
+                else if (!!isDeleteAddressBtn) onDelete()
+            }
+
+            const btnOnClick = (e:MouseEvent) => btnOnPress(e.target as HTMLElement)
+            const btnOnTouch = (e:TouchEvent) => btnOnPress(e.changedTouches[0].target as HTMLElement)
+
+            isTouchScreen ? document.addEventListener('touchend',btnOnTouch,{passive:false}) : document.addEventListener('click',btnOnClick,true)
+            if (isTouchScreen) window.addEventListener('touchstart',outsideDeleteModalOnTouch,{passive:false})
+            else window.addEventListener('mousedown',outsideDeleteModalOnClick,true)
+        }
+    }
+
+    customElements.define('astro-address-list-item',AddressListItem)
+</script>

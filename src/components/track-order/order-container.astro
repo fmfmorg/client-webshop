@@ -1,0 +1,16 @@
+---
+import type { ITrackOrderResponse } from '@misc';
+import Order from './order.astro';
+
+interface Props {
+    order?:ITrackOrderResponse;
+    orderID:number;
+}
+
+const { order, orderID } = Astro.props as Props
+---
+<div class=`${!!order ? '' : 'hidden'} p-4`>
+    <div class="max-w-md mx-auto">
+        {!!order && <Order {...{order,orderID}} />}
+    </div>
+</div>

@@ -1,0 +1,214 @@
+<div id="card-field-container" class="hidden bg-white rounded-md p-3">
+    <div class='uppercase text-xs tracking-widest xs:text-sm xs:tracking-[0.2rem] mb-3'>
+        6. Card details
+    </div>
+    <div id="card-field"></div>
+</div>
+
+<script>
+import { httpRequestHeader, sessionLost } from '@misc'
+import RevolutCheckout, { type RevolutCheckoutCardField } from '@revolut/checkout'
+import type { Address, CountryCode, Mode } from '@revolut/checkout/types/types'
+import { cardFieldComplete, checkoutOrderID, csrfToken, deliveryAvailable, guestTotalToPay, memberBillingAddress, memberEmail, memberFullName, memberTotalToPay, selectedCollectionPoint, signedIn, thisClientPaymentInProcess } from '@stores'
+import { wsSendMessage } from 'src/ws'
+import { FM_CLIENT_WEBSHOP_REVOLUT_MODE } from "astro:env/client"
+
+let cardField:RevolutCheckoutCardField
+
+const cardFieldContainer = document.getElementById('card-field-container') as HTMLDivElement
+const cardFieldElem = document.getElementById('card-field') as HTMLDivElement
+const checkoutForm = document.getElementById('checkout-form') as HTMLFormElement
+const userExistsModalCheckbox = document.getElementById('user-already-exists-modal') as HTMLInputElement
+const paymentInProcessCheckbox = document.getElementById('payment-in-process-modal') as HTMLInputElement
+const paymentFailModalCheckbox = document.getElementById("payment-failed-modal") as HTMLInputElement
+const paymentFailReasonElem = document.getElementById("payment-failed-reason") as HTMLParagraphElement
+
+const getToken = async ():Promise<string> => {
+    const resp = await fetch('/api/webshop/get-token',{
+        headers:{
+            "X-CSRF-Token":csrfToken.get(),
+        }
+    })
+    if (!resp.ok) {
+        await sessionLost(resp.status)
+        return ''
+    }
+    const json = await resp.json()
+    return json.apiResponse.token as string
+}
+
+const announcePaymentActivity = async (isStart:boolean) => {
+    const resp = await fetch('/api/webshop/update-payment-in-process',{
+        method:"POST",
+        headers:httpRequestHeader(false,'client',false,true),
+        body:JSON.stringify({paymentInProcess:isStart})
+    })
+    if (await sessionLost(resp.status)) return
+
+    wsSendMessage(isStart ? "payment-start" : "payment-end")
+}
+
+const showPaymentFailedModal = (msg:string) => {
+    paymentFailReasonElem.innerText = msg
+    paymentFailModalCheckbox.checked = true
+    paymentInProcessCheckbox.checked = false
+    announcePaymentActivity(false)
+    thisClientPaymentInProcess.set(false)
+    checkoutOrderID.set(0)
+}
+
+const mountCartField = async () => {
+    const token = await getToken()
+    if (token === '') return
+    const { createCardField } = await RevolutCheckout(token,FM_CLIENT_WEBSHOP_REVOLUT_MODE as Mode) // mode: 'prod' or 'sandbox'
+    cardField = createCardField({
+        target:cardFieldElem,
+        onStatusChange:({completed})=>cardFieldComplete.set(completed),
+        onError:(e)=>showPaymentFailedModal(e.message),
+        hidePostcodeField:true,
+    })
+}
+
+const memberCheckout = async (form:HTMLFormElement) => {
+    const $selectedCollectionPoint = selectedCollectionPoint.get()
+
+    const shippingAddressID = $selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-address') as RadioNodeList).value : ''
+    const billingSameAsShipping = (form.elements.namedItem('same-as-shipping') as HTMLInputElement).checked
+    const billingAddressID = billingSameAsShipping ? shippingAddressID : (form.elements.namedItem('billing-address') as RadioNodeList).value
+    const deliveryMethodID = +((form.elements.namedItem('delivery-method') as RadioNodeList)?.value || '0')
+    const total = memberTotalToPay.get()
+    
+    const resp = await fetch('/api/webshop/member-preverify-order',{
+        method:'POST',
+        headers:httpRequestHeader(false,'client',true,true),
+        body:JSON.stringify({
+            shippingAddressID,
+            billingAddressID,
+            deliveryMethodID,
+            total,
+            collectionPoint:$selectedCollectionPoint,
+        })
+    })
+    if (!resp.ok) {
+        if (await sessionLost(resp.status)) return
+        showPaymentFailedModal('Server error. Please try again later.')
+        return
+    }
+    const {apiResponse:{orderID}} = await resp.json() as { apiResponse:{orderID:number;}}
+    checkoutOrderID.set(orderID)
+    cardField.submit({
+        name:memberFullName.get(),
+        email:memberEmail.get(),
+        billingAddress:memberBillingAddress.get(),
+    })
+}
+
+const guestCheckout = async (form:HTMLFormElement) => {
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
+    const signUp = (form.elements.namedItem('guest-sign-up') as HTMLInputElement).checked
+    const password = signUp ? (form.elements.namedItem('guest-sign-up-password') as HTMLInputElement).value.trim() : ''
+
+    const $selectedCollectionPoint = selectedCollectionPoint.get()
+
+    const shippingFirstName = $selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-first-name') as HTMLInputElement).value.trim() : ''
+    const shippingLastName = $selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-last-name') as HTMLInputElement).value.trim() : ''
+    const shippingStreetLine1 = $selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-street-line-1') as HTMLInputElement).value.trim() : ''
+    const shippingStreetLine2 = $selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-street-line-2') as HTMLInputElement).value.trim() : ''
+    const shippingCity = $selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-city') as HTMLInputElement).value.trim() : ''
+    const shippingRegion = $selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-region') as HTMLInputElement).value.trim() : ''
+    const shippingPostcode = $selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-postcode') as HTMLInputElement).value.trim() : ''
+    const shippingCountry = ($selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-country') as HTMLInputElement).value : 'GB') as CountryCode
+
+    const billingSameAsShipping = (form.elements.namedItem('same-as-shipping') as HTMLInputElement).checked
+    
+    const billingFirstName = billingSameAsShipping ? shippingFirstName : (form.elements.namedItem('billing-first-name') as HTMLInputElement).value.trim()
+    const billingLastName = billingSameAsShipping ? shippingLastName : (form.elements.namedItem('billing-last-name') as HTMLInputElement).value.trim()
+    const billingStreetLine1 = billingSameAsShipping ? shippingStreetLine1 : (form.elements.namedItem('billing-street-line-1') as HTMLInputElement).value.trim()
+    const billingStreetLine2 = billingSameAsShipping ? shippingStreetLine2 : (form.elements.namedItem('billing-street-line-2') as HTMLInputElement).value.trim()
+    const billingCity = billingSameAsShipping ? shippingCity : (form.elements.namedItem('billing-city') as HTMLInputElement).value.trim()
+    const billingRegion = billingSameAsShipping ? shippingRegion : (form.elements.namedItem('billing-region') as HTMLInputElement).value.trim()
+    const billingPostcode = billingSameAsShipping ? shippingPostcode : (form.elements.namedItem('billing-postcode') as HTMLInputElement).value.trim()
+    const billingCountry = billingSameAsShipping ? shippingCountry : (form.elements.namedItem('billing-country') as HTMLInputElement).value as CountryCode
+
+    const subscribeNewletter = signUp ? (form.elements.namedItem('guest-sign-up-subscribe-newsletter') as HTMLInputElement).checked : false
+
+    const billingAddress:Address = {
+        streetLine1:billingStreetLine1,
+        streetLine2:billingStreetLine2,
+        city:billingCity,
+        region:billingRegion,
+        postcode:billingPostcode,
+        countryCode:billingCountry
+    }
+
+    const deliveryMethodID = $selectedCollectionPoint === 1 ? +(form.elements.namedItem('delivery-method') as RadioNodeList).value : 0
+
+    const total = guestTotalToPay.get()
+
+    const resp = await fetch('/api/webshop/guest-preverify-order',{
+        method:'POST',
+        headers:httpRequestHeader(false,'client',true,true),
+        body:JSON.stringify({
+            email,
+            password,
+            isNewsletterSubscribed:subscribeNewletter,
+            firstName:shippingFirstName,
+            lastName:shippingLastName,
+            phone:'',
+            line1:shippingStreetLine1,
+            line2:shippingStreetLine2,
+            city:shippingCity,
+            region:shippingRegion,
+            postcode:shippingPostcode,
+            countryID:shippingCountry,
+            deliveryMethodID:deliveryMethodID,
+            total,
+            collectionPoint:$selectedCollectionPoint
+        })
+    })
+    if (!resp.ok) {
+        if (await sessionLost(resp.status)) return
+        showPaymentFailedModal('Server error. Please try again later.')
+        return
+    }
+    const {apiResponse:{userExists,orderID}} = await resp.json() as { apiResponse:{userExists: boolean;orderID:number;}}
+    checkoutOrderID.set(orderID)
+    if (userExists) {
+        paymentInProcessCheckbox.checked = false
+        userExistsModalCheckbox.checked = true
+    } else {
+        cardField.submit({
+            name:`${billingFirstName} ${billingLastName}`.trim(),
+            email,
+            billingAddress,
+        })
+    }
+}
+
+const onSubmit = (e:SubmitEvent) => {
+    e.preventDefault()
+
+    thisClientPaymentInProcess.set(true)
+    paymentInProcessCheckbox.checked = true
+    announcePaymentActivity(true)
+    const form = e.target as HTMLFormElement
+
+    if (signedIn.get()) memberCheckout(form)
+    else guestCheckout(form)
+}
+
+
+
+window.addEventListener('load',mountCartField,{once:true})
+checkoutForm.addEventListener('submit',onSubmit)
+
+const toggleCardField = () => {
+    const _selectedCollectionPoint = selectedCollectionPoint.get()
+    if (_selectedCollectionPoint === 1) cardFieldContainer.classList.toggle('hidden',!deliveryAvailable.get())
+    else if (_selectedCollectionPoint > 1) cardFieldContainer.classList.remove('hidden')
+    else cardFieldContainer.classList.add('hidden')
+}
+
+deliveryAvailable.subscribe(toggleCardField)
+selectedCollectionPoint.subscribe(toggleCardField)
+</script>

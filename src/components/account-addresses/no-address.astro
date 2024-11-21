@@ -1,0 +1,40 @@
+---
+import { whiteBtnClass } from "@misc";
+
+interface Props {
+    hide:boolean;
+}
+
+const { hide } = Astro.props as Props
+---
+
+<div class=`w-full flex-col justify-center px-4 ${hide ? 'hidden' : 'flex'}` id="no-address" data-hide={hide ? '1' : '0'}>
+    <div class="mx-auto">
+        <p class="text-center max-w-96 font-light tracking-wider">You haven't added your address yet.</p>
+        <a href="/account/new-address" class={whiteBtnClass}>Add Address</a>
+    </div>
+</div>
+
+<script>
+    const container = document.getElementById('no-address')
+    const header = document.getElementsByTagName('header')[0]
+    const footer = document.getElementsByTagName('footer')[0]
+    const hide = !!(+container.dataset.hide)
+
+    if (!hide){
+        let resizeTimeout
+
+        const resizeContainer = () => {
+            const headerHeight = header.getBoundingClientRect().height
+            const footerHeight = footer.getBoundingClientRect().height
+            container.style.height = `calc(100vh - ${headerHeight + footerHeight + 40}px)`
+        }
+        const onResize = () => {
+            clearTimeout(resizeTimeout)
+            resizeTimeout = setTimeout(resizeContainer,200)
+        }
+
+        resizeContainer()
+        window.addEventListener('resize',onResize,true)
+    }
+</script>

@@ -1,0 +1,69 @@
+---
+import TextInput from "@components/input-fields/text-input";
+import SubmitBtn from "./submit-btn.astro";
+
+interface Props {
+    firstName:string;
+    lastName:string;
+    dob:string;
+}
+
+const { firstName, lastName, dob } = Astro.props as Props
+---
+<form id="form-personal-info">
+    <TextInput
+        type="text"
+        placeholder='First Name'
+        id="first-name"
+        name="first-name"
+        className='my-4'
+        value={firstName}
+        client:only="solid-js"
+        maxLength={50}
+    />
+    <TextInput
+        type="text"
+        placeholder='Last Name'
+        id="last-name"
+        name="last-name"
+        className='my-8'
+        value={lastName}
+        client:only="solid-js"
+        maxLength={50}
+    />
+    <div class="relative mt-10 mb-6 tracking-wider font-light pb-2 border-b border-gray-300">
+        <label for="dob" class="absolute left-0 text-gray-600 text-xs text-black cursor-pointer -top-5">Date of Birth</label>
+        <input type="date" id="dob" name="dob" value={dob} class="w-full text-black outline-none" />
+    </div>
+    <div class="error-msg -mt-2 font-light tracking-wider mb-4 text-red-700 hidden">System error. Please try again later.</div>
+    <SubmitBtn />
+</form>
+
+<script>
+import { httpRequestHeader, sessionLost } from "@misc"
+
+    const form = document.getElementById('form-personal-info') as HTMLFormElement
+    const errorMsgElem = form.getElementsByClassName('error-msg')[0]
+    
+    const onSubmit = async (e:SubmitEvent) => {
+        e.preventDefault()
+        
+        const firstName = (form.elements.namedItem('first-name') as HTMLInputElement).value.trim()
+        const lastName = (form.elements.namedItem('last-name') as HTMLInputElement).value.trim()
+        const dob = (form.elements.namedItem('dob') as HTMLInputElement).value.trim()
+
+        const resp = await fetch('/api/webshop/account-profile-update-personal-info',{
+            method:"POST",
+            headers:httpRequestHeader(false,'client',false,true),
+            body:JSON.stringify({firstName,lastName,dob})
+        })
+        const { status, ok } = resp
+
+        if (status === 401) window.location.assign(`/sign-in?rd=${encodeURIComponent(window.location.pathname)}`)
+        else if (await sessionLost(status)) return
+        else if (!ok) errorMsgElem.classList.remove('hidden')
+        else window.location.reload()
+    }
+
+    form.addEventListener('submit',onSubmit,true)
+</script>

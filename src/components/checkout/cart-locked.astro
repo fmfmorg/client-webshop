@@ -1,0 +1,18 @@
+<div id="checkout-cart-locked" class="hidden flex-col justify-center">
+    <p class="text-center font-light italic">Cart locked during checkout process</p>
+</div>
+
+<script>
+import { otherClientPaymentInProcess } from "@stores"
+    let timeout
+    const cartLockedDiv = document.getElementById('checkout-cart-locked') as HTMLDivElement
+    const toggleClasses = (v:boolean) => {
+        cartLockedDiv.classList.toggle('hidden',!v)
+        cartLockedDiv.classList.toggle('flex',v)
+    }
+    const resetTimeout = (v:boolean) => {
+        clearTimeout(timeout)
+        timeout = setTimeout(toggleClasses,100,v)
+    }
+    otherClientPaymentInProcess.subscribe(resetTimeout)
+</script>

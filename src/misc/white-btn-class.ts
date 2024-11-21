@@ -1,0 +1,1 @@
+export const whiteBtnClass = "mt-4 w-full text-center uppercase font-serif tracking-[0.4rem] [word-spacing:0.2em] py-2 border-black border font-semibold block relative after:absolute after:w-full after:h-0 after:bottom-0 after:left-0 after:bg-black after:duration-300 mouse:hover:after:h-0.5 touchscreen:after:hidden"

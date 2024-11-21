@@ -1,0 +1,52 @@
+---
+import CloseSidebarIcon from '@components/layout/header/icons/close-sidebar-icon.astro';
+
+interface Props {
+    checkboxID:string;
+}
+
+const { checkboxID } = Astro.props as Props
+---
+
+<astro-profile-editor data-id={checkboxID}>
+    <input id={checkboxID} hidden type="checkbox" class="peer">
+    <div class="fixed w-screen h-screen left-0 top-0 z-50 backdrop-blur-sm hidden peer-checked:block" />
+    <div class="fixed w-screen h-screen left-0 top-0 z-50 flex-col justify-center hidden peer-checked:flex">
+        <div class="profile-editor-container bg-white w-full max-w-96 mx-auto relative border border-gray-400 rounded-md">
+            <label for={checkboxID} class="cursor-pointer absolute right-2 top-2">
+                <CloseSidebarIcon />
+            </label>
+            <div class="overflow-y-auto hide-scrollbar max-h-screen p-4 pt-8">
+                <slot />
+            </div>
+        </div>
+    </div>
+</astro-profile-editor>
+
+<script>
+    class ProfileEditor extends HTMLElement {
+        constructor(){
+            super();
+            const id = this.dataset.id;
+            const checkbox = document.getElementById(id) as HTMLInputElement
+            const editorContainer = this.getElementsByClassName('profile-editor-container')[0]
+
+            const outsideContainerOnClick = (x:number, y:number) => {
+                const { left, right, bottom, top } = editorContainer.getBoundingClientRect()
+                if (x < left || x > right || y < top || y > bottom) checkbox.checked = false
+            }
+
+            const screenOnClick = (e:MouseEvent) => {
+                if (!checkbox.checked) return
+                outsideContainerOnClick(e.clientX, e.clientY)
+            }
+            const screenOnTouch = (e:TouchEvent) => {
+                if (!checkbox.checked) return
+                outsideContainerOnClick(e.touches[0].clientX, e.touches[0].clientY)
+            }
+            window.addEventListener('mousedown',screenOnClick)
+            window.addEventListener('touchstart',screenOnTouch,{passive:false})
+        }
+    }
+    customElements.define('astro-profile-editor',ProfileEditor)
+</script>

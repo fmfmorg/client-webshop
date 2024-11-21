@@ -1,0 +1,70 @@
+---
+import { getCookieValueWithKey, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp, type ITrackOrderResponse } from "@misc"
+import Layout from '@components/layout/index.astro'
+import TrackOrderForm from '@components/track-order/form.astro'
+import OrderContainer from "@components/track-order/order-container.astro";
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
+import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+
+interface IApiResponse {
+    order?:ITrackOrderResponse;
+}
+
+const { searchParams } = Astro.url
+const orderIdString = searchParams.has('order') ? searchParams.get('order') : '0'
+const orderID = isNaN(+orderIdString) ? 0 : +orderIdString
+const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
+const headerCarouselOff = !!Astro.cookies.get(FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
+const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/track-order-page-init/${orderID}`,{
+    headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,!headerCarouselOff)
+})
+if (!resp.ok) {
+    console.log(await resp.text())
+    return
+}
+const {
+    mdwResponse:{
+        expiresAt,
+        sessionID,
+        signedIn,
+        cartProductDetailsMap,
+        cartItemMap,
+        cartContent,
+        paymentInProcess,
+        selCollectionPoint,
+        prfCollectionPoint,
+        shopAddressMap,
+        minSpendForFreeShipping,
+        firstName,
+        headerCarouselTexts,
+    }, apiResponse:{order}
+} = await resp.json() as {mdwResponse: IMdwResponse; apiResponse:IApiResponse; }
+
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(expiresAt))
+
+const shoppingBagProp:IShoppingBagSidebarProp = {
+    isSignedIn:signedIn,
+    cartContent,
+    freeShippingLimit:minSpendForFreeShipping,
+    cartItemMap,
+    productDetailsMap:cartProductDetailsMap
+}
+
+const csrftoken = getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
+Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption())
+---
+<Layout {...{
+    csrftoken,
+    shoppingBagProp,
+    paymentInProcess,
+    selCollectionPoint,
+    prfCollectionPoint,
+    shopAddressMap,
+    signedIn,
+    firstName,
+    title:'Track My Order',
+    headerCarouselTexts,
+}}>
+    <TrackOrderForm {...{fetchedOrder:!!order,orderID}} />
+    <OrderContainer {...{order,orderID}} />
+</Layout>

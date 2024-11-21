@@ -1,0 +1,102 @@
+---
+import TextInput from '@components/input-fields/text-input';
+import type { ICountry } from '@misc';
+
+interface Props {
+    countries:ICountry[];
+    idPrefix?:string;
+}
+
+const { countries, idPrefix = '' } = Astro.props as Props
+---
+
+<TextInput 
+    idPrefix={idPrefix} 
+    type='text' 
+    id='first-name' 
+    name='first-name' 
+    placeholder="First Name" 
+    required 
+    className='mb-8'
+    client:only="solid-js"
+    maxLength={50}
+/>
+<TextInput 
+    idPrefix={idPrefix} 
+    type='text' 
+    id='last-name' 
+    name='last-name' 
+    placeholder="Last Name" 
+    required 
+    className='mb-8'
+    client:only="solid-js"
+    maxLength={50}
+/>
+<TextInput 
+    idPrefix={idPrefix} 
+    type='text' 
+    id='street-line-1' 
+    name='street-line-1' 
+    placeholder="Address Line 1" 
+    required 
+    className='mb-8'
+    client:only="solid-js"
+    maxLength={100}
+/>
+<TextInput 
+    idPrefix={idPrefix} 
+    type='text' 
+    id='street-line-2' 
+    name='street-line-2' 
+    placeholder="Address Line 2" 
+    required={false}
+    className='mb-8'
+    client:only="solid-js"
+    maxLength={100}
+/>
+<TextInput 
+    idPrefix={idPrefix} 
+    type='text' 
+    id='city' 
+    name='city' 
+    placeholder="City" 
+    required
+    className='mb-8'
+    client:only="solid-js"
+    maxLength={50}
+/>
+<TextInput 
+    idPrefix={idPrefix} 
+    type='text' 
+    id='region' 
+    name='region' 
+    placeholder="Region" 
+    required={false}
+    className='mb-8'
+    client:only="solid-js"
+    maxLength={50}
+/>
+<TextInput 
+    idPrefix={idPrefix} 
+    type='text' 
+    id='postcode' 
+    name='postcode' 
+    placeholder="Postcode / ZIP Code" 
+    required
+    className='mb-10'
+    client:only="solid-js"
+    maxLength={20}
+/>
+<div class="relative border-b border-gray-300">
+    <label for={!!idPrefix ? `${idPrefix}-country` : 'country'} class="absolute left-0 transition-all text-gray-600 font-light tracking-wider -top-5 text-xs text-black cursor-pointer">Country</label>
+    <select 
+        name={!!idPrefix ? `${idPrefix}-country` : 'country'}
+        id={!!idPrefix ? `${idPrefix}-country` : 'country'}
+        class=`w-full tracking-wider font-light outline-none leading-loose text-black [-webkit-appearance:none] [-moz-appearance:none] [appearance:none] bg-no-repeat bg-[length:9px] bg-[right_8px_center]`
+        style=`background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='292.4' height='292.4'%3E%3Cpath fill='%23333' d='M287 69.4a17.6 17.6 0 0 0-13-5.4H18.4c-5 0-9.3 1.8-12.9 5.4A17.6 17.6 0 0 0 0 82.2c0 5 1.8 9.3 5.4 12.9l128 127.9c3.6 3.6 7.8 5.4 12.8 5.4s9.2-1.8 12.8-5.4L287 95c3.5-3.5 5.4-7.8 5.4-12.8 0-5-1.9-9.2-5.5-12.8z'/%3E%3C/svg%3E")`
+    >
+        <option value="GB">United Kingdom</option>
+        <hr />
+        {countries.map(({id,name})=>(<option value={id}>{name}</option>))}
+    </select>
+</div>

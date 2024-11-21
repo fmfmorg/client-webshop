@@ -1,0 +1,15 @@
+---
+import { whiteBtnClass, type IUserAddress } from '@misc'
+import Address from './address.astro';
+
+interface Props {
+    addresses:IUserAddress[];
+}
+
+const { addresses } = Astro.props as Props
+---
+<div class=`max-w-96 mx-auto ${!!addresses.length ? '' : 'hidden'}`>
+    <h1 class="font-display text-2xl [word-spacing:0.3rem]">Your Addresses</h1>
+    {addresses.map(e=>(<Address address={e} />))}
+    <a href="/account/new-address" class={whiteBtnClass.replace('mt-4', 'mt-10')}>Add Address</a>
+</div>

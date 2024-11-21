@@ -1,0 +1,107 @@
+---
+import Layout from '@components/layout/index.astro'
+import AccountProfileContainer from '@components/account-profile/display-container.astro'
+import AccountProfileField from '@components/account-profile/display-field.astro'
+import { getCookieValueWithKey, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc'
+import EditorContainer from '@components/account-profile/editor-container.astro';
+import EditorPersonalInfo from '@components/account-profile/editor-personal-info.astro';
+import EditorPassword from '@components/account-profile/editor-password.astro';
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
+import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+
+interface IApiResponse {
+    firstName:string;
+    lastName:string;
+    dob:string;
+    email:string;
+    subscribed:boolean;
+}
+
+const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
+const headerCarouselOff = !!Astro.cookies.get(FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
+
+const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/account-profile-page-init`,{
+    headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,!headerCarouselOff)
+})
+
+if (!resp.ok) return Astro.redirect(`/sign-in?rd=${encodeURIComponent(Astro.url.pathname)}`)
+
+const json = await resp.json()
+
+let {
+    mdwResponse:{
+        expiresAt,
+        sessionID,
+        signedIn,
+        cartProductDetailsMap,
+        cartItemMap,
+        cartContent,
+        paymentInProcess,
+        selCollectionPoint,
+        prfCollectionPoint,
+        shopAddressMap,
+        minSpendForFreeShipping,
+        headerCarouselTexts,
+    },
+    apiResponse:{
+        firstName,
+        lastName,
+        dob,
+        email,
+        subscribed
+    }
+} = json as {
+    mdwResponse:IMdwResponse;
+    apiResponse:IApiResponse;
+}
+
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(expiresAt))
+
+const fullName = `${firstName} ${lastName}`.trim()
+
+const shoppingBagProp:IShoppingBagSidebarProp = {
+    isSignedIn:signedIn,
+    cartContent,
+    freeShippingLimit:minSpendForFreeShipping,
+    cartItemMap,
+    productDetailsMap:cartProductDetailsMap
+}
+
+const csrftoken = getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
+Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption())
+---
+
+<Layout {...{
+    csrftoken,
+    shoppingBagProp,
+    paymentInProcess,
+    selCollectionPoint,
+    prfCollectionPoint,
+    shopAddressMap,
+    signedIn,
+    firstName,
+    title:'Manage My Account',
+    headerCarouselTexts,
+}}>
+    <div id="profile-container" class="h-full flex flex-col justify-center max-w-96 mx-auto">
+        <AccountProfileContainer title="Personal Information" modalCheckboxID='profile-personal-info'>
+            <AccountProfileField name='Name' content={!!fullName ? fullName : 'Full name not provided'} />
+            <AccountProfileField name='Date of birth' content={!!dob ? new Date(dob).toLocaleDateString('en-GB',{year:'numeric',month:'short',day:'numeric'}) : 'Date of birth not provided'} />
+        </AccountProfileContainer>
+        <AccountProfileContainer title="Email" modalCheckboxID='profile-email'>
+            <AccountProfileField name='Email Address' content={email} />
+        </AccountProfileContainer>
+        <AccountProfileContainer title="Password" modalCheckboxID='profile-password'>
+            <AccountProfileField name='Password' content="********" />
+        </AccountProfileContainer>
+        <AccountProfileContainer title="Newsletter Subscription" modalCheckboxID='profile-subscription'>
+            <AccountProfileField name='Receive news and offers' content={subscribed ? 'Subscribed' : 'Unsubscribed'} />
+        </AccountProfileContainer>
+    </div>
+    <EditorContainer checkboxID='profile-personal-info'>
+        <EditorPersonalInfo {...{firstName,lastName,dob}} />
+    </EditorContainer>
+    <EditorContainer checkboxID='profile-password'>
+        <EditorPassword />
+    </EditorContainer>
+</Layout>

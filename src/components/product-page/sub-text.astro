@@ -1,0 +1,21 @@
+---
+interface Props {
+    title:string;
+}
+
+const { title } = Astro.props as Props
+const inputID = title.toLowerCase().replace(' ','-')
+---
+<div>
+    <input type="checkbox" hidden id={inputID} class="peer product-subtext-checkbox" />
+    <label for={inputID} class="flex justify-between cursor-pointer peer-checked:[&>svg>line:first-child]:hidden">
+        <h2 class="font-serif py-3 uppercase [letter-spacing:0.3rem] [word-spacing:0.3rem] text-sm sm:text-base md:text-lg">{title}</h2>
+        <svg viewBox="0 0 100 100" class="w-4 h-4 my-auto" stroke="black" stroke-width="0.4em">
+            <line x1="50" y1="5" x2="50" y2="95" />
+            <line x1="5" y1="50" x2="95" y2="50" />
+        </svg>
+    </label>
+    <div class="product-text max-h-0 relative overflow-y-hidden peer-checked:max-h-fit font-light text-xs md:text-sm tracking-wider duration-300 peer-checked:mb-4">
+        <slot />
+    </div>
+</div>

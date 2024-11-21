@@ -1,0 +1,11 @@
+<input type="checkbox" class="peer/error" hidden id="error-modal-checkbox" />
+<div class="z-50 fixed w-screen h-screen opacity-50 bg-gray-600 top-0 left-0 hidden peer-checked/error:block" />
+<div class='fixed top-0 left-0 w-full h-full flex-col justify-center z-50 hidden peer-checked/error:flex'>
+    <div class="bg-white max-w-96 w-11/12 mx-auto rounded-md p-4 text-center text-sm xs:text-base">
+        <p class="font-light mb-4" id="error-modal-message"></p>
+        <label 
+            for="error-modal-checkbox" 
+            class="w-full block p-2 uppercase font-serif cursor-pointer text-white bg-gray-600 border border-gray-600 mouse:hover:bg-black mouse:hover:border-black duration-300 font-semibold"
+        >OK</label>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+---
+import { submitBtnClass } from "@misc";
+---
+
+<input type="checkbox" class="peer/payment-failed" hidden id="payment-failed-modal" />
+<div class="z-50 fixed w-screen h-screen opacity-50 bg-gray-600 top-0 left-0 hidden peer-checked/payment-failed:block" />
+<div class='fixed top-0 left-0 w-full h-full flex-col justify-center z-50 hidden peer-checked/payment-failed:flex'>
+    <div class="bg-white max-w-96 w-11/12 mx-auto rounded-md p-4 text-center text-sm md:text-base">
+        <p class="font-semibold">Payment failed</p>
+        <p class="font-light" id="payment-failed-reason" />
+        <label for="payment-failed-modal" class={`${submitBtnClass.replace('tracking-[0.4rem]','tracking-[0.2rem]').replace('mt-6','mt-3')} block text-xs text-center`}>
+            Back to Checkout
+        </label>
+    </div>
+</div>

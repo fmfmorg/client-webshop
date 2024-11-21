@@ -1,0 +1,45 @@
+---
+import { submitBtnClass, whiteBtnClass } from "@misc"
+
+const signInPath = `/sign-in?rd=${encodeURIComponent(Astro.url.pathname)}`
+---
+
+<astro-checkout-user-already-exists>
+    <input type="checkbox" class="peer user-already-exists-modal" hidden id="user-already-exists-modal" />
+    <div class="z-50 fixed w-screen h-screen opacity-50 bg-gray-600 top-0 left-0 hidden peer-checked:block" />
+    <div class='fixed top-0 left-0 w-full h-full flex-col justify-center z-50 hidden peer-checked:flex'>
+        <div class="bg-white max-w-96 w-11/12 mx-auto rounded-md">
+            <div class="p-4">
+                <p class="uppercase text-sm tracking-widest font-semibold">Welcome back!</p>
+                <p class="font-light text-sm md:text-base">We recognize your email. How would you like to shop with us today?</p>
+                <a href={signInPath} class={`${submitBtnClass.replace('tracking-[0.4rem]','tracking-[0.2rem]').replace('mt-6','mt-3')} block text-xs text-center`}>Sign In & Earn Points</a>
+                <button class={`${whiteBtnClass.replace('tracking-[0.4rem]','tracking-[0.2rem]').replace('mt-4','mt-2')} block text-xs text-center`}>Continue as Guest</button>
+            </div>
+        </div>
+    </div>
+</astro-checkout-user-already-exists>
+
+<script>
+    class UserAlreadyExistsModal extends HTMLElement {
+        constructor(){
+            super()
+
+            const modalCheckbox = this.getElementsByClassName('user-already-exists-modal')[0] as HTMLInputElement
+            const checkoutAsGuestBtn = this.getElementsByTagName('button')[0]
+            const signUpCheckbox = document.getElementById('guest-sign-up') as HTMLInputElement
+            
+            const onClick = (e:MouseEvent) => {
+                e.preventDefault()
+                signUpCheckbox.checked = false
+
+                const checkoutSubmitBtn = document.getElementById('checkout-submit') as HTMLInputElement
+                checkoutSubmitBtn.click()
+
+                modalCheckbox.checked = false
+            }
+
+            checkoutAsGuestBtn.addEventListener('click',onClick,true)
+        }
+    }
+    customElements.define('astro-checkout-user-already-exists', UserAlreadyExistsModal)
+</script>

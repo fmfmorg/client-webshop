@@ -1,0 +1,60 @@
+---
+import { formatPrice } from '@misc';
+import SubText from './sub-text.astro';
+import type { IProduct } from '@components/catalogue-item/interfaces';
+import ClickCollectBtn from './click-collect-btn';
+import LoadingSmall from '@components/layout/header/icons/loading-small.astro';
+
+interface Props {
+    productDetails:IProduct;
+}
+
+const { productDetails } = Astro.props
+const {
+    name,
+    description,
+    price,
+    discountedPrice,
+} = productDetails
+---
+
+<div class="divide-y gap-y-4">
+    <div class="md:mb-8">
+        <h1 class="font-display text-2xl [letter-spacing:-0.18rem] [word-spacing:0.3rem] mb-6 md:text-3xl md:[letter-spacing:-0.2rem] md:[word-spacing:0.4rem]">{name}</h1>
+        <div class="fixed bottom-0 left-0 right-0 bg-white p-3 shadow-[0_12px_8px_10px_rgba(0,0,0,0.3)] z-20 md:z-0 md:shadow-none md:static md:bg-transparent md:p-0">
+            <div class="text-center md:text-left mb-2 md:mb-4">
+                <p class={`without-discount original-price font-serif font-black tracking-widest text-xl md:text-2xl ${price === discountedPrice ? '' : 'hidden'}`}>{formatPrice(price)}</p>
+                <p class={`with-discount font-serif ${price === discountedPrice ? 'hidden' : ''}`}>
+                    <span class="original-price text-red-700 mr-1 xs:mr-2 line-through tracking-tight text-lg md:text-xl">{formatPrice(price)}</span>
+                    <span class="discounted-price font-black tracking-widest text-xl md:text-2xl">{formatPrice(discountedPrice)}</span>
+                </p>
+            </div>
+            <div class="hidden w-full add-to-bag-buttons">
+                <button id="product-page-qty-minus" class="p-3 w-10 h-10 flex-none text-3xl font-light bg-gray-600 border border-gray-600">
+                    <svg viewBox="0 0 100 100" class="w-full h-full" stroke="white" stroke-width="0.4em">
+                        <line x1="5" y1="50" x2="95" y2="50" />
+                    </svg>
+                </button>
+                <button id="product-page-add-to-bag" class="flex-1 bg-gray-600 border border-gray-600">
+                    <p class="text-white uppercase text-xs [letter-spacing:0.15rem] [word-spacing:0.15rem]">Add <span class="add-to-bag-quantity" /> to Bag</p>
+                    <LoadingSmall className="fill-white animate-spin h-5 w-5 mx-auto hidden" />
+                </button>
+                <button id="product-page-qty-add" class="p-3 w-10 h-10 flex-none text-3xl font-light bg-gray-600 border border-gray-600">
+                    <svg viewBox="0 0 100 100" class="w-full h-full" stroke="white" stroke-width="0.4em">
+                        <line x1="5" y1="50" x2="95" y2="50" />
+                        <line x1="50" y1="5" x2="50" y2="95" />
+                    </svg>
+                </button>
+            </div>
+            <p class="other-client-payment-in-process-msg text-center md:text-left font-light text-sm sm:text-base italic pb-3 hidden">Cart locked during checkout process</p>
+            <p class="product-no-stock italic font-light text-center md:text-left hidden">Currently out of stock.</p>
+            <p class="product-no-more-to-add italic font-light text-center md:text-left hidden">Only <span class="stock-qty"></span> in stock.</p>
+        </div>
+    </div>
+    <ClickCollectBtn product={productDetails} client:only="solid-js" />
+    <SubText title="Description">
+        <!-- <p>{Array(100).fill(description).join(' ')}</p> -->
+        <div set:html={description} />
+    </SubText>
+    <div />
+</div>

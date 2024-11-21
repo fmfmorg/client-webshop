@@ -1,0 +1,31 @@
+---
+import FreeShippingProgress from "@components/cart/free-shipping-progress";
+import Sidebar from "./right-sidebar.astro"
+import CartList from '@components/cart/index'
+import type { IShoppingBagSidebarProp } from "@misc";
+
+interface Props {
+    props?:IShoppingBagSidebarProp;
+}
+const { props } = Astro.props as Props
+const freeShippingLimit = props?.freeShippingLimit || 30
+const cartItemMap = props?.cartItemMap || {}
+const productDetailsMap = props?.productDetailsMap || {}
+const cartContent = props?.cartContent || {
+    staffDiscount:0,
+    campaignDiscount:0,
+    campaignName:'',
+    memberDiscount:0,
+    memberDiscountRate:0,
+    subtotalBeforeDelivery:0,
+    total:0
+}
+
+const isCheckoutPage = Astro.url.pathname === '/checkout'
+
+---
+
+<Sidebar id="shopping-bag-sidebar" show={!!props}>
+    {!isCheckoutPage && <FreeShippingProgress slot="header" client:only="solid-js" freeShippingLimit={freeShippingLimit} />}
+    {!!props && <CartList client:only="solid-js" itemsMap={cartItemMap} productDetailsMap={productDetailsMap} cartCalculation={cartContent}  />}
+</Sidebar>

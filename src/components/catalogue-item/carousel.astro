@@ -1,0 +1,22 @@
+---
+import type { IProductImages } from '@components/catalogue-item/interfaces'
+import Image from './image.astro';
+
+interface IProps {
+    images:IProductImages[];
+    id:string;
+    productPageProduct?:boolean;
+    renderImages:boolean;
+}
+
+const { images, id, productPageProduct = false, renderImages } = Astro.props as IProps
+
+---
+
+<div class="absolute top-0 bottom-0 left-0 right-0">
+    {
+        images.map(({name,ext},i)=>(
+            <Image {...{name,ext,catalogue:false,id,checked:i===0,index:i,len:images.length,productPageProduct,render:renderImages}} />
+        ))
+    }
+</div>

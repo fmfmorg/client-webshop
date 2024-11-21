@@ -1,0 +1,24 @@
+---
+import { FM_COMPANY_NAME_SHORT } from 'astro:env/client'
+Astro.cookies.delete('sessionID')
+---
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Signing Out ... | {FM_COMPANY_NAME_SHORT}</title>
+    </head>
+    <body></body>
+</html>
+<script>
+
+const bc = new BroadcastChannel('reload')
+const onLoad = () => {
+    bc.postMessage('')
+    const searchParams = new URLSearchParams(window.location.search)
+    if (searchParams.has('rd')) window.location.replace(decodeURIComponent(searchParams.get('rd')))
+    else window.location.replace('/')
+}
+
+window.addEventListener('load',onLoad,{once:true})
+</script>

@@ -1,0 +1,90 @@
+<input type="checkbox" hidden id="collection-point-on-qty-increase" class="peer/collection" />
+<div class="z-50 fixed w-screen h-screen opacity-50 bg-gray-600 top-0 left-0 hidden peer-checked/collection:block" />
+<div class='fixed top-0 left-0 w-full h-full flex-col justify-center z-50 hidden peer-checked/collection:flex'>
+    <div class="bg-white max-w-96 w-11/12 mx-auto rounded-md p-4 text-center text-sm xs:text-base">
+        <p class="font-semibold">
+            Insufficient stock at <span id="current-collection-point-name"></span>
+        </p>
+        <p class="font-light mb-4">
+            Please either select an alternative collection point or opt for home delivery at checkout, or maintain your current quantity.
+        </p>
+        <label 
+            for="collection-point-on-qty-increase" 
+            class="mt-4 w-full text-xs xs:text-sm text-center uppercase font-serif tracking-widest py-2 border-black border font-semibold block relative after:absolute after:w-full after:h-0 after:bottom-0 after:left-0 after:bg-black after:duration-300 mouse:hover:after:h-0.5 touchscreen:after:hidden"
+        >Keep quantity</label>
+        <button 
+            id="collection-point-on-qty-increase-btn"
+            class="w-full mt-2 py-2 text-xs xs:text-sm uppercase font-serif tracking-widest cursor-pointer text-white bg-gray-600 border border-gray-600 mouse:hover:bg-black mouse:hover:border-black duration-300 font-semibold"
+        >Increase anyway</button>
+    </div>
+</div>
+
+<script>
+import type { IAddToBagResponse } from "@components/cart/interfaces"
+import { dispatchInternalEvent, httpRequestHeader, sessionLost, setLoading, showErrorModal } from "@misc"
+import { ADD_TO_BAG_FROM_CATALOGUE, CART_ITEM_QTY_BACK_TO_ORIGINAL, CART_QTY_UPDATE } from "@misc/event-keys"
+import { selectedCollectionPoint } from "@stores"
+
+    const isDesktop = window.matchMedia && matchMedia("(pointer:fine)").matches;
+    const checkbox = document.getElementById("collection-point-on-qty-increase") as HTMLInputElement
+    const btn = document.getElementById("collection-point-on-qty-increase-btn") as HTMLButtonElement
+    
+    const btnOnPress = async () => {
+        checkbox.checked = false
+
+        setLoading(true)
+        const changeInQuantity = +checkbox.dataset.changeInQuantity
+        const productID = checkbox.dataset.productId
+        const dt = +checkbox.dataset.dt
+        if (isNaN(changeInQuantity)) {
+            showErrorModal('There is an error. Please reload and try again.')
+            setLoading(false)
+            return
+        }
+
+        const resp = await fetch('/api/webshop/product-add-qty-deselect-collection-point',{
+            method:"POST",
+            headers:httpRequestHeader(false,'client',true,true),
+            body:JSON.stringify({id:productID,changeInQuantity,dateAdded:isNaN(dt) ? 0 : dt})
+        })
+        if (!resp.ok) {
+            if (await sessionLost(resp.status)) return
+            showErrorModal('Failed to update your shopping bag. Please try again later.')
+            setLoading(false)
+            return
+        }
+        const { apiResponse: { cartContent, cartItemMap, total, productDetails, collectionPoint } } = await resp.json() as {apiResponse:IAddToBagResponse & {collectionPoint:number}}
+
+        dispatchInternalEvent(ADD_TO_BAG_FROM_CATALOGUE,{cartContent, cartItemMap, total, productDetails})
+        dispatchInternalEvent(CART_QTY_UPDATE,{id:productID,qtyInCart:cartItemMap[productID]?.quantity || 0})
+
+        selectedCollectionPoint.set(collectionPoint)
+        setLoading(false)
+    }
+
+    const checkboxOnClick = (e:Event) => {
+        const targetElem = e.target as HTMLElement
+        const thisCheckbox = targetElem.closest('#' + checkbox.id)
+        if (!thisCheckbox) return
+        
+        const checked = (thisCheckbox as HTMLInputElement).checked
+        const productID = checkbox.dataset.productId
+        if (checked || !productID) return
+        dispatchInternalEvent(CART_ITEM_QTY_BACK_TO_ORIGINAL,productID)
+    }
+
+    const btnOnClick = (e:MouseEvent) => {
+        const targetElem = e.target as HTMLElement
+        const isBtn = targetElem.closest('#' + btn.id)
+        if (!!isBtn) btnOnPress()
+    }
+
+    const btnOnTouch = (e:TouchEvent) => {
+        const targetElem = e.changedTouches[0].target as HTMLElement
+        const isBtn = targetElem.closest('#' + btn.id)
+        if (!!isBtn) btnOnPress()
+    }
+
+    isDesktop ? document.addEventListener('click',btnOnClick,true) : document.addEventListener('touchend',btnOnTouch,{passive:false})
+    document.addEventListener('change',checkboxOnClick,true)
+</script>

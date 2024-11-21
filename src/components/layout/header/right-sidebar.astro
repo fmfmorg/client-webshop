@@ -1,0 +1,128 @@
+---
+import CloseSidebarIcon from './icons/close-sidebar-icon.astro';
+
+interface Props {
+    id:string;
+    show?:boolean;
+}
+
+const { id, show = true } = Astro.props as Props
+---
+
+<astro-sidebar data-id={id} data-show={show ? '1' : '0'}>
+    {!!show && <input type="checkbox" hidden class="peer" id={`${id}-checkbox`} />}
+    <div class="overlay fixed bottom-0 left-0 w-full h-full hidden transition-opacity duration-300 z-10" />
+    <label id={`${id}-overlay`} for={`${id}-checkbox`} class="fixed w-screen h-screen top-0 left-0 hidden z-[25] before:absolute before:w-full before:h-full before:backdrop-blur-sm" />
+    <div id={id} class='sidebar fixed right-[-410px] bottom-0 peer-checked:right-0 w-full max-w-[400px] bg-white shadow-lg transition-all duration-300 z-30'>
+        <div class='sidebar-header absolute w-full top-0 left-0 flex justify-between'>
+            <div class="w-full grow flex flex-col justify-center">
+                <slot name="header" />
+            </div>
+            {!!show && <label for={`${id}-checkbox`} id={`close-${id}-button`} class="mouse:hidden grow-0 p-2">
+                <CloseSidebarIcon />
+            </label>}
+        </div>
+        <slot />
+    </div>
+</astro-sidebar>
+
+<script>
+    class Sidebar extends HTMLElement {
+        constructor(){
+            super();
+            const show = !!(+this.dataset.show)
+
+            if (show){
+                let isOpen = false;
+                const id = this.dataset.id;
+                const sidebar = document.getElementById(id);
+                const checkbox = document.getElementById(`${id}-checkbox`) as HTMLInputElement;
+                const overlay = document.getElementsByClassName('overlay')[0] as HTMLDivElement;
+                const overlayLabel = document.getElementById(`${id}-overlay`);
+                const header = document.querySelector('header');
+                const iconButton = document.getElementById(`${id}-icon-button`);
+                const closeButton = document.getElementById(`close-${id}-button`) as HTMLLabelElement
+                const isDesktop = window.matchMedia && matchMedia("(pointer:fine)").matches;
+
+                let timeout
+
+                const resizeCallback = (entries:ResizeObserverEntry[]) => {
+                    entries.forEach(entry=>{
+                        const headerHeight = entry.contentRect.height
+                        sidebar.style.height = isDesktop ? `calc(100vh - ${headerHeight}px)` : `${window.innerHeight - headerHeight}px`;
+                        closeButton.style.top = `${headerHeight + 8}px`
+                    })
+                }
+
+                const headerResizeObserver = new ResizeObserver(resizeCallback)
+
+                const toggleSidebar = (open:boolean,toggleCheckbox:boolean) => {
+                    isOpen = open;
+                    if (toggleCheckbox && (isOpen && !checkbox.checked || !isOpen && checkbox.checked)) checkbox.click()
+                    overlayLabel.classList.toggle('hidden', !isOpen);
+
+                    if (isOpen) {
+                        overlay.classList.toggle('hidden', !isOpen);
+                        headerResizeObserver.observe(header)
+                    }
+                    else {
+                        headerResizeObserver.disconnect()
+                        clearTimeout(timeout)
+                        timeout = setTimeout(()=>overlay.classList.toggle('hidden', !isOpen),300)
+                    }
+                };
+
+                const productCollectionPointSidebarIsOn = () => {
+                    const collectionPointSidebarCheckbox = document.getElementById('product-collection-points-sidebar-checkbox') as HTMLInputElement
+                    return !!collectionPointSidebarCheckbox && collectionPointSidebarCheckbox.checked
+                }
+
+                const handleMouseEnter = () => {
+                    if (productCollectionPointSidebarIsOn()) return
+                    toggleSidebar(true,true)
+                };
+                const handleMouseLeave = (e:MouseEvent) => {
+                    if (productCollectionPointSidebarIsOn()) return
+                    if (!checkbox.disabled){
+                        const 
+                            { clientX, clientY } = e,
+                            sidebarStayOpen = [iconButton,sidebar].some(elem=>{
+                                const { top, bottom, left, right } = elem.getBoundingClientRect()
+                                return clientX > left && clientX < right - 1 && clientY >= top && clientY <= bottom
+                            })
+                        toggleSidebar(sidebarStayOpen,true)
+                    }
+                }
+
+                const withinIcon = (clientX: number, clientY: number) => {
+                    const { top, bottom, left, right } = iconButton.getBoundingClientRect()
+                    return clientX >= left && clientX <= right - 1 && clientY >= top && clientY <= bottom
+                }
+
+                const handleTouch = (e:TouchEvent) => {
+                    const { clientX, clientY } = e.targetTouches[0]
+                    if (withinIcon(clientX, clientY)) return
+                    else if (!checkbox.disabled) toggleSidebar(false,true)
+                }
+
+                const checkboxOnClick = (e:Event) => {
+                    const collectionPointSidebarCheckbox = document.getElementById('product-collection-points-sidebar-checkbox') as HTMLInputElement
+                    if (!!collectionPointSidebarCheckbox && collectionPointSidebarCheckbox.checked) collectionPointSidebarCheckbox.checked = false
+                    toggleSidebar((e.target as HTMLInputElement).checked,false)
+                }
+
+                checkbox.addEventListener('show',()=>toggleSidebar(true,true),true)
+
+                if (isDesktop){
+                    iconButton.addEventListener('mouseenter', handleMouseEnter,true);
+                    iconButton.addEventListener('mouseleave', handleMouseLeave,true);
+                    sidebar.addEventListener('mouseleave', handleMouseLeave,true);
+                } else header.addEventListener('touchstart',handleTouch,{passive:false})
+
+                checkbox.addEventListener('change',checkboxOnClick,true)
+            }
+        }
+    }
+
+    customElements.define('astro-sidebar', Sidebar)
+</script>

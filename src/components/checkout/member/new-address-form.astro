@@ -1,0 +1,265 @@
+---
+import CountrySelect from "@components/account-addresses/country-select";
+import Checkbox from "@components/input-fields/checkbox";
+import TextInput from "@components/input-fields/text-input";
+import CloseSidebarIcon from "@components/layout/header/icons/close-sidebar-icon.astro";
+import type { ICountry, INoServiceCountryMap } from "@misc";
+
+interface Props {
+    countries:ICountry[];
+    noServiceCountryMap:INoServiceCountryMap;
+    idPrefix:'shipping'|'billing';
+}
+
+const { countries, noServiceCountryMap, idPrefix } = Astro.props as Props
+---
+
+<astro-checkout-new-address data-prefix={idPrefix}>
+    <input type="checkbox" hidden id={`${idPrefix}-checkout-new-address`} class="peer" />
+    <div class="fixed w-screen h-screen bg-gray-600 left-0 top-0 z-50 opacity-50 hidden peer-checked:block" />
+    <div class="fixed w-screen h-screen top-0 left-0 hidden flex-col justify-center z-50 peer-checked:flex">
+        <div class="new-address-form-container bg-white max-w-96 mx-auto rounded-md">
+            <div class="new-address-form-header flex justify-between">
+                <div class="ml-2 flex flex-col justify-center">
+                    <p class="uppercase text-sm tracking-widest">Add New Address</p>
+                </div>
+                <label for={`${idPrefix}-checkout-new-address`} class="cursor-pointer">
+                    <CloseSidebarIcon />
+                </label>
+            </div>
+            <form id={`${idPrefix}-new-address-form`}>
+                <div class="new-address-form-main hide-scrollbar p-2 overflow-y-scroll">
+                    <TextInput 
+                        client:only="solid-js"
+                        type="text"
+                        id="first-name"
+                        name="first-name"
+                        required
+                        placeholder='First Name'
+                        className='mb-8 mt-4'
+                        idPrefix={idPrefix}
+                        maxLength={50}
+                    />
+                    <TextInput 
+                        client:only="solid-js"
+                        type="text"
+                        id="last-name"
+                        name="last-name"
+                        required
+                        placeholder='Last Name'
+                        className='my-8'
+                        idPrefix={idPrefix}
+                        maxLength={50}
+                    />
+                    <TextInput 
+                        client:only="solid-js"
+                        type="text"
+                        id="line-one"
+                        name="line-one"
+                        required
+                        placeholder='Address Line 1'
+                        className='my-8'
+                        idPrefix={idPrefix}
+                        maxLength={100}
+                    />
+                    <TextInput 
+                        client:only="solid-js"
+                        type="text"
+                        id="line-two"
+                        name="line-two"
+                        placeholder='Address Line 2'
+                        className='my-8'
+                        idPrefix={idPrefix}
+                        maxLength={100}
+                    />
+                    <TextInput 
+                        type='text' 
+                        id='city' 
+                        name='city' 
+                        placeholder="City" 
+                        required
+                        className='mb-8'
+                        client:only="solid-js"
+                        idPrefix={idPrefix}
+                        maxLength={50}
+                    />
+                    <TextInput 
+                        type='text' 
+                        id='region' 
+                        name='region' 
+                        placeholder="Region" 
+                        required={false}
+                        className='mb-8'
+                        client:only="solid-js"
+                        idPrefix={idPrefix}
+                        maxLength={50}
+                    />
+                    <TextInput 
+                        type='text' 
+                        id='postcode' 
+                        name='postcode' 
+                        placeholder="Postcode / ZIP Code" 
+                        required
+                        className='mb-10'
+                        client:only="solid-js"
+                        idPrefix={idPrefix}
+                        maxLength={20}
+                    />
+                    <CountrySelect {...{countries,noServiceCountryMap,idPrefix}} client:only="solid-js" />
+                    <div class="is-default-checkbox-container">
+                        <Checkbox idPrefix={idPrefix} id='is-default' name='is-default' client:only="solid-js">
+                            <p class='font-light text-xs tracking-wider pl-6 mt-4'>Set this as default address.</p>
+                        </Checkbox>
+                    </div>
+                </div>
+                <div class="new-address-form-footer pb-2">
+                    <p class="error-msg pt-2 font-light text-sm text-red-700 tracking-wider text-center invisible">Server error. Please try again later.</p>
+                    <div class="flex justify-center mt-2">
+                        <input type="submit" value="Submit" class="w-full max-w-24 uppercase font-serif tracking-widest [word-spacing:0.2em] cursor-pointer text-white bg-gray-600 border border-gray-600 mouse:hover:bg-black mouse:hover:border-black duration-300 font-semibold text-sm p-2" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</astro-checkout-new-address>
+
+<script>
+import { dispatchInternalEvent, httpRequestHeader, sessionLost, type IUserAddress } from "@misc";
+import { MEMBER_NEW_ADDRESS_UPDATE, TEXT_INPUT_SET_NEW_VALUE } from "@misc/event-keys";
+import { userAlreadyHasAddress } from "@stores";
+
+    class CheckoutNewAddressForm extends HTMLElement {
+        constructor(){
+            super()
+
+            let resizeTimeout
+
+            const prefix = this.dataset.prefix
+            const isDesktop = window.matchMedia && matchMedia("(pointer:fine)").matches;
+            const newAddressFormCheckbox = document.getElementById(`${prefix}-checkout-new-address`) as HTMLInputElement
+            const container = this.getElementsByClassName("new-address-form-container")[0] as HTMLDivElement
+            const header = this.getElementsByClassName("new-address-form-header")[0] as HTMLDivElement
+            const main = this.getElementsByClassName("new-address-form-main")[0] as HTMLDivElement
+            const footer = this.getElementsByClassName("new-address-form-footer")[0] as HTMLDivElement
+            const form = this.getElementsByTagName('form')[0]
+            const errorMsg = this.getElementsByClassName('error-msg')[0] as HTMLParagraphElement
+            
+
+
+            const resize = () => {
+                if (!!newAddressFormCheckbox && !newAddressFormCheckbox.checked) return
+                main.style.height = null
+                
+                const { innerHeight, innerWidth } = window
+                container.style.maxHeight = `${innerHeight - (isDesktop ? 40 : 20)}px`
+                
+                const containerHeight = container.getBoundingClientRect().height
+                const headerHeight = header.getBoundingClientRect().height
+                const footerHeight = footer.getBoundingClientRect().height
+                main.style.height = `${containerHeight - headerHeight - footerHeight}px`
+                container.style.width = `${innerWidth - (isDesktop ? 40 : 20)}px`
+            }
+
+            const onResize = () => {
+                clearTimeout(resizeTimeout)
+                resizeTimeout = setTimeout(resize,200)
+            }
+
+            const clearInputValue = (elem:HTMLInputElement) => {
+                dispatchInternalEvent(TEXT_INPUT_SET_NEW_VALUE,{id:elem.id,value:''})
+                elem.value = ''
+            }
+
+            const onSubmit = async (e:SubmitEvent) => {
+                e.preventDefault()
+
+                const firstNameElem = form.elements.namedItem('first-name') as HTMLInputElement
+                const lastNameElem = form.elements.namedItem('last-name') as HTMLInputElement
+                const line1Elem = form.elements.namedItem('line-one') as HTMLInputElement
+                const line2Elem = form.elements.namedItem('line-two') as HTMLInputElement
+                const cityElem = form.elements.namedItem('city') as HTMLInputElement
+                const stateProvinceElem = form.elements.namedItem('region') as HTMLInputElement
+                const postcodeElem = form.elements.namedItem('postcode') as HTMLInputElement
+                const countryIDElem = form.elements.namedItem('country') as HTMLSelectElement
+                const isDefaultCheckbox = form.elements.namedItem('is-default') as HTMLInputElement
+                
+                
+                const firstName = firstNameElem.value
+                const lastName = lastNameElem.value
+                const line1 = line1Elem.value
+                const line2 = line2Elem.value
+                const city = cityElem.value
+                const stateProvince = stateProvinceElem.value
+                const postcode = postcodeElem.value
+                const countryID = countryIDElem.value
+                const isDefault = !!isDefaultCheckbox && isDefaultCheckbox.checked
+
+                const resp = await fetch('/api/webshop/account-add-update-address',{
+                    method:"POST",
+                    headers:httpRequestHeader(false,'client',false,true),
+                    body:JSON.stringify({
+                        firstName,
+                        lastName,
+                        line1,
+                        line2,
+                        city,
+                        stateProvince,
+                        postcode,
+                        countryID,
+                        isDefault,
+                        isCheckoutPage:true,
+                        isShipping:prefix === 'shipping'
+                    })
+                })
+                
+                switch(resp.status){
+                    case 200:
+                        const { apiResponse } = await resp.json() as {apiResponse:IUserAddress}
+                        dispatchInternalEvent(MEMBER_NEW_ADDRESS_UPDATE,apiResponse)
+
+                        newAddressFormCheckbox.checked = false;
+                        window.removeEventListener('resize',onResize,true)
+
+                        clearInputValue(firstNameElem)
+                        clearInputValue(lastNameElem)
+                        clearInputValue(line1Elem)
+                        clearInputValue(line2Elem)
+                        clearInputValue(cityElem)
+                        clearInputValue(stateProvinceElem)
+                        clearInputValue(postcodeElem)
+                        countryIDElem.value = 'GB'
+                        if (!!isDefaultCheckbox) isDefaultCheckbox.checked = false
+                        break
+                    case 401:
+                        window.location.assign(`/sign-in?rd=${encodeURIComponent(window.location.pathname)}`)
+                        break
+                    case 403:
+                        await sessionLost(resp.status)
+                        break
+                    default: 
+                        errorMsg.classList.remove('invisible')
+                        break
+                }
+            }
+
+            const checkboxOnChange = (e:Event) => {
+                const checked = (e.target as HTMLInputElement).checked
+                if (checked){
+                    resize()
+                    window.addEventListener('resize',onResize,true)
+                } else window.removeEventListener('resize',onResize,true)
+            }
+            
+            newAddressFormCheckbox.addEventListener('change',checkboxOnChange,true)
+
+            form.addEventListener('submit',onSubmit,true)
+
+            userAlreadyHasAddress.subscribe(v=>{
+                const isDefaultCheckboxContainer = this.getElementsByClassName('is-default-checkbox-container')[0] as HTMLDivElement
+                if (!!isDefaultCheckboxContainer) isDefaultCheckboxContainer.classList.toggle('hidden',!v)
+            })
+        }
+    }
+
+    customElements.define('astro-checkout-new-address',CheckoutNewAddressForm)
+</script>

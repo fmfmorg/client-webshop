@@ -1,0 +1,78 @@
+---
+import { getCookieValueWithKey, httpRequestHeader, sessionCookieOption, whiteBtnClass, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
+import Layout from '../components/layout/index.astro';
+import SignInForm from '../components/sign-in-form/index.astro';
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
+import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+
+const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
+const headerCarouselOff = !!Astro.cookies.get(FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
+
+const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/sign-in-page-init`,{
+    headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,!headerCarouselOff)
+})
+if (!resp.ok) return Astro.redirect('/')
+
+const json = await resp.json()
+const {mdwResponse} = json as {mdwResponse: IMdwResponse}
+const {
+    expiresAt,
+    sessionID,
+    signedIn,
+    cartProductDetailsMap,
+    cartItemMap,
+    cartContent,
+    paymentInProcess,
+    selCollectionPoint,
+    prfCollectionPoint,
+    shopAddressMap,
+    minSpendForFreeShipping,
+    firstName,
+    headerCarouselTexts,
+} = mdwResponse
+
+if ( signedIn ) return Astro.redirect('/')
+else Astro.cookies.set('sessionID',sessionID,sessionCookieOption(expiresAt))
+
+const shoppingBagProp:IShoppingBagSidebarProp = {
+    isSignedIn:signedIn,
+    cartContent,
+    freeShippingLimit:minSpendForFreeShipping,
+    cartItemMap,
+    productDetailsMap:cartProductDetailsMap
+}
+
+const csrftoken = getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
+Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption())
+---
+
+<Layout {...{
+    csrftoken,
+    shoppingBagProp,
+    paymentInProcess,
+    selCollectionPoint,
+    prfCollectionPoint,
+    shopAddressMap,
+    signedIn,
+    showUserIcon:false,
+    firstName,
+    title:'Sign In',
+    headerCarouselTexts,
+}}>
+    <div class="flex justify-center">
+        <div class="divide-y p-8 space-y-8 max-w-md lg:grid lg:grid-cols-2 lg:divide-y-0 lg:divide-x lg:max-w-screen-lg lg:pb-10">
+            <div class="lg:pr-8">
+                <SignInForm />
+            </div>
+            <div class="divide-y space-y-8 lg:pl-8">
+                <div class="pt-6">
+                    <p class="text-center uppercase text-[0.8rem] tracking-widest">Not yet a member?</p>
+                    <a href="/sign-up" class={whiteBtnClass}>Sign Up</a>
+                </div>
+                <div class="pt-4">
+                    <a href="/track-order" class={whiteBtnClass}>Track Order</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>

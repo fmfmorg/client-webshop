@@ -1,0 +1,20 @@
+---
+import AddressForm from "@components/checkout/guest/address-form";
+import type { ICountry, INoServiceCountryMap } from "@misc";
+const shippingIdPrefix = 'shipping'
+
+interface Props {
+    countries:ICountry[];
+    userCountry:string;
+    noServiceCountryMap:INoServiceCountryMap;
+}
+
+const { countries, userCountry, noServiceCountryMap } = Astro.props as Props
+---
+
+<div class="mt-4">
+    <div class='uppercase text-xs tracking-widest xs:text-sm xs:tracking-[0.2rem] mb-6'>
+        A. Shipping Address
+    </div>
+    <AddressForm {...{idPrefix:shippingIdPrefix,countries,userCountry,noServiceCountryMap}} required client:only="solid-js" />
+</div>

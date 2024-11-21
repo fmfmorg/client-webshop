@@ -1,0 +1,107 @@
+---
+import Checkbox from "@components/input-fields/checkbox"
+import TextInput from "@components/input-fields/text-input"
+import { submitBtnClass } from "@misc"
+
+const idPrefix="sign-up"
+
+const isSignUpPage = Astro.url.pathname === '/sign-up'
+---
+
+<astro-sign-up-form data-id={idPrefix}>
+    {isSignUpPage && <h2 class="font-display text-3xl tracking-[-0.1em] [word-spacing:0.3em] mb-6">Create an Account</h2>}
+    <p class="font-extralight tracking-wider text-sm mb-4">
+        Become a member to unlock exclusive perks, discounted pricing, and special birthday gifts. 
+        <br />
+        <a class="font-semibold mouse:hover:underline" href="/perks" target="_blank" rel="noopener noreferrer">Discover all the benefits here.</a>
+    </p>
+    <form id={idPrefix} class={idPrefix}>
+        <p class={`${idPrefix}-error-message mb-7 text-[0.8rem] tracking-wider text-red-700 invisible`}>.</p>
+        <input type='text' id={`${idPrefix}-phone`} name='phone' class='fixed top-[-100px] right-0' placeholder="Phone number" />
+        <TextInput 
+            idPrefix={idPrefix} 
+            type='email' 
+            id='email' 
+            name='email' 
+            placeholder="Email Address" 
+            required 
+            className='mb-8'
+            client:only="solid-js"
+            maxLength={100}
+        />
+        <TextInput 
+            idPrefix={idPrefix} 
+            type='password' 
+            id='password' 
+            name='password' 
+            placeholder="Password" 
+            required 
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!?<>\\/\\@#$%\\^&\\*\\(\\)~\\`\\=\\-_\\+\\.,])[a-zA-Z0-9!?<>\\/\\@#$%\\^&\\*\\(\\)~\\`\\=\\-_\\+\\.,]{8,20}$"
+            className='mb-6'
+            showPasswordRules
+            client:only="solid-js"
+        />
+        <Checkbox client:only="solid-js" id='subscribe-newsletter' name='subscribe-newsletter' idPrefix={idPrefix}>
+            <p class='font-light text-xs tracking-wider pl-6'>Stay in the loop! Subscribe to our newsletter and receive exclusive offers, just for you &hearts;</p>
+        </Checkbox>
+        <input type='submit' value='Sign up' class={submitBtnClass} />
+    </form>
+</astro-sign-up-form>
+
+<script>
+import { dispatchInternalEvent, httpRequestHeader, sessionLost } from "@misc"
+import { TEXT_INPUT_SET_NEW_VALUE } from "@misc/event-keys"
+import { pageToken } from "@stores"
+
+class SignUpForm extends HTMLElement {
+    constructor(){
+        super()
+
+        const id = this.dataset.id
+        const signUpForm = document.getElementsByClassName(id)[0] as HTMLFormElement
+        const errorMsg = document.getElementsByClassName(`${id}-error-message`)[0] as HTMLParagraphElement
+        const bc = new BroadcastChannel('reload')
+
+        const onSubmit = async (e:SubmitEvent) => {
+            e.preventDefault()
+            const form = e.target as HTMLFormElement
+            const phoneElem = form.elements.namedItem('phone') as HTMLInputElement
+
+            if (phoneElem.value !== "") {
+                window.location.assign('/bot')
+                return
+            }
+            
+            const emailElem = form.elements.namedItem('email') as HTMLInputElement
+            const passwordElem = form.elements.namedItem('password') as HTMLInputElement
+            const subscribeNewsletterElem = form.elements.namedItem('subscribe-newsletter') as HTMLInputElement
+
+            const email = emailElem.value.trim()
+            const password = passwordElem.value.trim()
+            const isNewsletterSubscribed = subscribeNewsletterElem.checked
+
+            passwordElem.value = ''
+            dispatchInternalEvent(TEXT_INPUT_SET_NEW_VALUE,{id:passwordElem.id,value:''})
+
+            const resp = await fetch('/api/webshop/sign-up',{
+                method:'POST',
+                headers:httpRequestHeader(false,'client',false,true),
+                body:JSON.stringify({email,password,isNewsletterSubscribed})
+            })
+            const { status, ok } = resp
+            if (ok) {
+                bc.postMessage(pageToken.get())
+                window.location.assign('/')
+            } else {
+                if (await sessionLost(resp.status)) return
+                errorMsg.innerText = status === 400 ? await resp.text() : 'Server error. Please try again later.'
+                errorMsg.classList.remove('invisible')
+                errorMsg.classList.add('visible')
+            }
+        }
+
+        if (!!signUpForm) signUpForm.addEventListener('submit',onSubmit,true)
+    }
+}
+customElements.define('astro-sign-up-form',SignUpForm)
+</script>

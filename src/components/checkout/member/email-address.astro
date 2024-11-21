@@ -1,0 +1,12 @@
+---
+interface Props {
+    email:string;
+}
+
+const { email } = Astro.props as Props
+---
+
+<div class='uppercase text-xs tracking-widest xs:text-sm xs:tracking-[0.2rem] pt-3 pb-1'>
+    2. Email Address
+</div>
+<p class="font-light tracking-wider text-sm">{email}</p>

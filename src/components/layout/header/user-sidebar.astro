@@ -1,0 +1,90 @@
+---
+import { whiteBtnClass } from "@misc";
+
+import Sidebar from "./right-sidebar.astro";
+import SignUpForm from "@components/sign-up-form/index.astro";
+
+interface Props {
+  signedIn:boolean;
+  firstName:string;
+  showUserIcon?:boolean;
+}
+
+const { showUserIcon = true, signedIn, firstName } = Astro.props
+
+const { pathname, search } = Astro.url
+const encodedRedirectURI =  encodeURIComponent(pathname+search)
+
+const memberMenuList = [
+    {
+        name:'Manage Account',
+        slug:'profile'
+    },
+    {
+        name:'Manage Addresses',
+        slug:'addresses'
+    },
+    {
+        name:'Sign Out',
+        slug:'sign-out'
+    },
+]
+---
+
+<Sidebar id="user-sidebar" show={showUserIcon}>
+    <p slot="header" class=`p-2 pl-4 font-display ${signedIn ? 'text-2xl xs:text-3xl' : 'text-3xl'} tracking-[-0.1em] [word-spacing:0.3em]`>
+        {signedIn ? `Hello ${firstName || ''}`.trim() : 'Create an Account'}
+    </p>
+    {showUserIcon && (
+        signedIn ? 
+        <ul id="member-menu" class="divide-y p-4 sidebar-body hide-scrollbar overflow-y-scroll">
+            {memberMenuList.map(({name,slug})=>(
+                <li>
+                    <a 
+                        href={slug === 'sign-out' ? '/sign-out' : `/account/${slug}`}
+                        class={`px-2 py-4 block uppercase text-xs xs:text-sm tracking-widest ${slug === 'sign-out' ? 'text-red-700' : ''}`.trim()}
+                    >{name}</a>
+                </li>
+            ))}
+        </ul>
+        :
+        <div class="divide-y p-8 space-y-8 sidebar-body hide-scrollbar overflow-y-scroll">
+            <SignUpForm />
+            <div class="pt-6">
+                <p class="text-center uppercase text-[0.8rem] tracking-widest">Already a member?</p>
+                <a href={`/sign-in?rd=${encodedRedirectURI}`} class={whiteBtnClass}>Sign in</a>
+            </div>
+            <div class="pt-4">
+                <a href="/track-order" class={whiteBtnClass}>Track Order</a>
+            </div>
+        </div>
+    )}
+</Sidebar>
+
+<script>
+    const userSidebar = document.getElementById("user-sidebar") as HTMLDivElement
+    const checkbox = document.getElementById('user-sidebar-checkbox') as HTMLInputElement
+    
+    if (!!userSidebar && !!checkbox){
+        const resizeCallback = (entries: ResizeObserverEntry[]) => {
+            entries.forEach(entry=>{
+                const sidebarHeight = entry.contentRect.height
+                const sidebarHeader = entry.target.getElementsByClassName('sidebar-header')[0] as HTMLDivElement
+                const sidebarHeaderHeight = sidebarHeader.getBoundingClientRect().height
+                const sidebarBody = entry.target.getElementsByClassName('sidebar-body')[0] as HTMLDivElement
+                sidebarBody.style.marginTop = `${ sidebarHeaderHeight }px`
+                sidebarBody.style.height = `${ sidebarHeight - sidebarHeaderHeight }px`
+            })
+        }
+
+        const resizeObserver = new ResizeObserver(resizeCallback)
+
+        const checkboxOnChange = (e:Event) => {
+            const checked = (e.target as HTMLInputElement).checked
+            if (checked) resizeObserver.observe(userSidebar)
+            else resizeObserver.disconnect()
+        }
+
+        checkbox.addEventListener('change',checkboxOnChange,true)
+    }
+</script>

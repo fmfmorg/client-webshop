@@ -1,0 +1,51 @@
+---
+import Checkbox from "@components/input-fields/checkbox";
+---
+
+<div class='uppercase text-xs tracking-widest xs:text-sm xs:tracking-[0.2rem]'>
+    4. Billing Address
+</div>
+<div class="mt-4 mb-2" id="billing-same-as-shipping-checkbox-container">
+    <Checkbox id='same-as-shipping' name='same-as-shipping' idPrefix='billing' client:only="solid-js">
+        <p class='font-light text-xs tracking-wider pl-6'>Same as shipping address</p>
+    </Checkbox>
+</div>
+<div id="billing-addresses" class="max-h-0 overflow-y-hidden">
+    <slot />
+</div>
+
+<script>
+import { homeDeliveryBillingSameAsShipping, selectedCollectionPoint } from "@stores"
+    const billingSameAsShippingCheckboxContainer = document.getElementById("billing-same-as-shipping-checkbox-container") as HTMLDivElement
+    const billingAddresses = document.getElementById('billing-addresses') as HTMLDivElement
+
+    const toggleBillingAddress = (e:MouseEvent) => {
+        const checked = (e.target as HTMLInputElement).checked
+        if (selectedCollectionPoint.get() === 1) homeDeliveryBillingSameAsShipping.set(checked)
+        billingAddresses.classList.toggle('max-h-0',checked)
+    }
+
+    const collectionPointOnChange = (v:number) => {
+        const billingSameAsShippingCheckbox = document.getElementById('billing-same-as-shipping') as HTMLInputElement
+        
+        if (v === 1){
+            billingSameAsShippingCheckbox.disabled = false
+            if (!billingSameAsShippingCheckbox.checked && homeDeliveryBillingSameAsShipping.get()) billingSameAsShippingCheckbox.click()
+            billingSameAsShippingCheckboxContainer.classList.remove('hidden')
+            billingAddresses.classList.toggle('max-h-0',billingSameAsShippingCheckbox.checked)
+        } else if (!v || v > 1){
+            if (billingSameAsShippingCheckbox.checked) billingSameAsShippingCheckbox.click()
+            billingSameAsShippingCheckbox.disabled = true
+            billingSameAsShippingCheckboxContainer.classList.add('hidden')
+            billingAddresses.classList.remove('max-h-0')
+        }
+    }
+
+    const addCheckboxListener = () => {
+        const billingSameAsShippingCheckbox = document.getElementById('billing-same-as-shipping') as HTMLInputElement
+        billingSameAsShippingCheckbox.addEventListener('click',toggleBillingAddress,true)
+        billingSameAsShippingCheckboxContainer.removeEventListener('show',addCheckboxListener)
+        selectedCollectionPoint.subscribe(collectionPointOnChange)
+    }
+    billingSameAsShippingCheckboxContainer.addEventListener('show',addCheckboxListener)
+</script>

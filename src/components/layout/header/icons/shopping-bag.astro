@@ -1,0 +1,9 @@
+---
+import type { IIcon } from './interfaces'
+
+const { className = "scale-90 md:scale-100" } = Astro.props as IIcon
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" class={className}>
+    <use href="#shopping-bag-svg" />
+</svg>

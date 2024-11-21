@@ -1,0 +1,103 @@
+---
+import TextInput from '@components/input-fields/text-input';
+import { submitBtnClass } from '@misc';
+
+interface Props {
+    fetchedOrder:boolean;
+    orderID:number;
+}
+
+const { fetchedOrder, orderID } = Astro.props as Props
+---
+
+<form class=`max-w-96 mx-auto hidden flex-col justify-center py-4` id="track-order-form" data-fetchedorder={fetchedOrder ? 1 : 0}>
+    <h1 class="font-display text-2xl [word-spacing:0.3rem]">Track Order</h1>
+    <input type="text" id="track-order-phone" name="track-order-phone" class="fixed top-[-100px]" />
+    <TextInput 
+        type="number"
+        value={!!orderID ? orderID.toString() : ''}
+        required
+        placeholder='Order Number'
+        id="order_number"
+        name="order_number"
+        className='mt-10'
+        client:only="solid-js"
+    />
+    <TextInput 
+        type="email"
+        required
+        placeholder='Email address'
+        id="email"
+        name="email"
+        className='mt-8'
+        client:only="solid-js"
+        maxLength={100}
+    />
+    <p class="text-xs my-1 text-gray-400">The email or phone number used when placing the order</p>
+    <p id="track-order-form-error-msg" class="font-light text-red-700 invisible">Sorry, we can't load your order.</p>
+    <input type="submit" value="Track Order" class={`${submitBtnClass.replace('tracking-[0.4rem] [word-spacing:0.2em]', 'tracking-[0.2rem] md:tracking-[0.3rem] [word-spacing:0.05em] md:[word-spacing:0.1em]').replace('mt-6','mt-2')} text-xs md:text-base`} />
+</form>
+
+<script>
+import { httpRequestHeader, sessionLost } from "@misc"
+
+    const form = document.getElementById('track-order-form') as HTMLFormElement
+    const fetchedOrder = !!(+form.dataset.fetchedorder)
+
+    if (!fetchedOrder){
+        let resizeTimeout
+        const header = document.getElementsByTagName('header')[0] as HTMLDivElement
+        const footer = document.getElementsByTagName('footer')[0] as HTMLDivElement
+        const main = document.getElementsByTagName('main')[0] as HTMLDivElement
+        const errorMsg = document.getElementById('track-order-form-error-msg') as HTMLParagraphElement
+        const resize = () => {
+            const { innerHeight } = window
+            const headerHeight = header.getBoundingClientRect().height
+            const footerHeight = footer.getBoundingClientRect().height
+            form.style.minHeight = `${innerHeight - headerHeight - footerHeight}px`
+        }
+        const show = () => {
+            form.classList.add('flex')
+            form.classList.remove('hidden')
+        }
+        const onSubmit = async (e:SubmitEvent) => {
+            e.preventDefault()
+            const phone = (form.elements.namedItem('track-order-phone') as HTMLInputElement).value
+            if (!!phone) {
+                window.location.assign('/bot')
+                return
+            }
+            const orderID = +(form.elements.namedItem('order_number') as HTMLInputElement).value
+            if (isNaN(orderID) || !Number.isInteger(orderID)){
+                errorMsg.classList.remove('invisible')
+                return
+            }
+            const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
+
+            const resp = await fetch('/api/webshop/track-order',{
+                method:"POST",
+                headers:httpRequestHeader(false,'client',true,true),
+                body:JSON.stringify({email,orderID})
+            })
+            if (resp.ok) window.location.assign(`/track-order?order=${orderID}`)
+            else {
+                if (await sessionLost(resp.status)) return
+                errorMsg.classList.remove('invisible')
+            }
+        }
+
+        const onLoad = () => {
+            resize()
+            show()
+        }
+
+        const onResize = () => {
+            clearTimeout(resizeTimeout)
+            resizeTimeout = setTimeout(resize,200)
+        }
+
+        window.addEventListener('load',onLoad,{once:true})
+        window.addEventListener('resize',onResize,true)
+        form.addEventListener('submit',onSubmit,true)
+    }
+</script>

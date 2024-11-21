@@ -1,0 +1,35 @@
+---
+import { FM_IMAGE_URL_PREFIX } from 'astro:env/client'
+import type { ICartItem } from '@components/cart/interfaces'
+import type { IProduct } from '@components/catalogue-item/interfaces'
+import { formatPrice } from '@misc';
+
+interface Props {
+    product:IProduct;
+    item:ICartItem;
+}
+
+
+const { product:{name: productName, images, url, id}, item:{ finalPrice, quantity } } = Astro.props as Props
+const { name:imgName, ext } = images[0]
+const style = `background-image: image-set(${['.avif','.webp',ext].map(e=>`url(${FM_IMAGE_URL_PREFIX}${imgName}${e}) type('image/${e === '.jpg' ? 'jpeg' : e.replace('.','').toLowerCase()}')`).join(', ')})`
+---
+
+<li>
+    <a href={`/product/${url}/${id}`} target="_blank" rel="noreferrer noopener" class="flex">
+            <div class="w-20 h-20 relative flex-none">
+                <div 
+                    class="absolute top-0 bg-cover bg-no-repeat bg-center w-full h-full"
+                    style={style}
+                />
+            </div>
+            <div class="grow flex flex-col justify-center text-sm">
+                <p>{productName}</p>
+                <p class="font-light text-xs mb-2">{formatPrice(finalPrice)}</p>
+                <p class="text-2xs text-gray-500">Ref: {id}</p>
+            </div>
+            <div class="flex-none flex flex-col justify-center float-right">
+                <p class="text-right text-xs">Qty: {quantity}</p>
+            </div>
+    </a>
+</li>

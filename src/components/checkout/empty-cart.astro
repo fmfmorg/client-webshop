@@ -1,0 +1,68 @@
+---
+import { whiteBtnClass } from "@misc";
+
+interface Props {
+    signedIn:boolean;
+}
+
+const { signedIn } = Astro.props as Props
+
+const { pathname, search } = Astro.url
+
+const signInPath = `/sign-in?rd=${encodeURIComponent(pathname + search)}`
+---
+
+<div class=`hidden flex-col justify-center bg-white` id="empty-cart">
+    <div class="flex justify-center">
+        <div class="mx-2">
+            <h3 class={`font-semibold text-lg tracking-wider [word-spacing:0.2rem] text-center`}>Your shopping bag is empty!</h3>
+            {!signedIn && <>
+            <p class='tracking-widest uppercase text-xs text-center mt-2 mb-8'>Sign in to access your items already saved in your shopping bag.</p>
+            <a href={signInPath} class={whiteBtnClass.replace('w-full','max-w-60 mx-auto')}>Sign In</a>
+            </>}
+            {signedIn && <a href="/shop" class={whiteBtnClass.replace('w-full','max-w-60 text-center mx-auto')}>Go to shop</a>}
+        </div>
+    </div>
+</div>
+
+<script>
+import { cartHasItems, otherClientPaymentInProcess } from "@stores"
+
+let timeout
+const emptyCartElem = document.getElementById('empty-cart')
+const header = document.getElementsByTagName('header')[0] as HTMLDivElement
+const footer = document.getElementsByTagName('footer')[0] as HTMLDivElement
+
+const resize = () => {
+    const { innerHeight } = window
+    const headerHeight = header.getBoundingClientRect().height
+    const footerHeight = footer.getBoundingClientRect().height
+    emptyCartElem.style.minHeight = `${ innerHeight - headerHeight - footerHeight}px`
+}
+
+const toggleClasses = () => {
+    const v = cartHasItems.get() || otherClientPaymentInProcess.get()
+    emptyCartElem.classList.toggle('hidden',v)
+    emptyCartElem.classList.toggle('flex',!v)
+    if (v) window.removeEventListener('resize',onResize,true)
+    else {
+        resize()
+        window.addEventListener('resize',onResize,true)
+    }
+}
+const resetTimeout = () => {
+    clearTimeout(timeout)
+    timeout = setTimeout(toggleClasses,100)
+}
+
+let resizeTimeout
+
+const onResize = () => {
+    if (cartHasItems.get() || otherClientPaymentInProcess.get()) return
+    clearTimeout(resizeTimeout)
+    resizeTimeout = setTimeout(resize,100)
+}
+
+cartHasItems.subscribe(resetTimeout)
+otherClientPaymentInProcess.subscribe(resetTimeout)
+</script>

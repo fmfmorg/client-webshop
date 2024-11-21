@@ -1,0 +1,25 @@
+---
+interface Props {
+    id:string;
+    labelText:string;
+    hasPOS?:boolean;
+}
+
+const { id, labelText, hasPOS } = Astro.props as Props
+---
+
+<div class={`my-2 ${hasPOS ? 'p-2 rounded-md border-gray-200 border-2 has-[.collect-or-delivery:checked]:border-black' : ''}`}>
+    <input type="radio" name="collect-or-delivery" hidden id={id} required class='peer collect-or-delivery' checked={!hasPOS} />
+    {hasPOS && <label for={id} class='cursor-pointer [&>div>svg]:hidden peer-checked:[&>div>svg]:block '>
+        <div class="flex justify-between uppercase text-sm tracking-widest peer-checked:font-semibold">
+            <p>{labelText}</p>
+            <svg viewBox='0 0 100 100' height='0.8em' fill='none' stroke='black' stroke-linecap="round" stroke-linejoin="round" stroke-width='0.8rem' class='my-auto duration-300'>
+                <polyline points='5,60 35,90 95,10' />
+            </svg>
+        </div>
+        <slot name="under-title" />
+    </label>}
+    <div class="max-h-0 overflow-y-hidden peer-checked:max-h-fit">
+        <slot />
+    </div>
+</div>

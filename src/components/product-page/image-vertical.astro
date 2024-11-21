@@ -1,0 +1,22 @@
+---
+import { FM_IMAGE_URL_PREFIX } from 'astro:env/client'
+import type { IProductImages } from "@components/catalogue-item/interfaces";
+
+
+const { name, ext } = Astro.props as IProductImages
+---
+
+<picture>
+    {
+        [
+            '.avif',
+            '.webp',
+            ext
+        ].map(e=>(
+            e === ext ?
+            <img src={`${FM_IMAGE_URL_PREFIX}${name}${e}`} />
+            :
+            <source srcset={`${FM_IMAGE_URL_PREFIX}${name}${e}`} />
+        ))
+    }
+</picture>
