@@ -3,7 +3,6 @@ import solid from '@astrojs/solid-js';
 import node from '@astrojs/node';
 import tailwind from '@astrojs/tailwind';
 
-// https://astro.build/config
 export default defineConfig({
     server:{
         host:true
