@@ -50,7 +50,7 @@ export default defineConfig({
                     context:'client',
                     access:'public'
                 }),
-                FM_IMAGE_URL_PREFIX:envField.string({
+                FM_PUBLIC_IMAGE_URL_PREFIX:envField.string({
                     context:'client',
                     access:'public'
                 })
