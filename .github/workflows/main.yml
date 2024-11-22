@@ -25,7 +25,7 @@ jobs:
       if: steps.cache-restore.outputs.cache-hit != 'true'
       run: npm ci
     - run: npm run build --if-present
-      env:
+      env: |
         FM_CLIENT_WEBSHOP_API_URL : ${{ env.FM_CLIENT_WEBSHOP_API_URL }}
         FM_CLIENT_WEBSHOP_REVOLUT_MODE : ${{ env.FM_CLIENT_WEBSHOP_REVOLUT_MODE }}
         FM_HEADER_CAROUSEL_OFF_COOKIE_KEY : ${{ env.FM_HEADER_CAROUSEL_OFF_COOKIE_KEY }}
