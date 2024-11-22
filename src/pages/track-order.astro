@@ -4,7 +4,8 @@ import Layout from '@components/layout/index.astro'
 import TrackOrderForm from '@components/track-order/form.astro'
 import OrderContainer from "@components/track-order/order-container.astro";
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
-import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+// import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+import { headerCarouselOffKey } from '@misc'
 
 interface IApiResponse {
     order?:ITrackOrderResponse;
@@ -14,7 +15,7 @@ const { searchParams } = Astro.url
 const orderIdString = searchParams.has('order') ? searchParams.get('order') : '0'
 const orderID = isNaN(+orderIdString) ? 0 : +orderIdString
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
-const headerCarouselOff = !!Astro.cookies.get(FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
+const headerCarouselOff = !!Astro.cookies.get(headerCarouselOffKey)
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/track-order-page-init/${orderID}`,{
     headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })

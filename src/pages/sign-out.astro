@@ -1,12 +1,13 @@
 ---
-import { FM_COMPANY_NAME_SHORT } from 'astro:env/client'
+// import { FM_COMPANY_NAME_SHORT } from 'astro:env/client'
+import { companyNameShort } from '@misc'
 Astro.cookies.delete('sessionID')
 ---
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Signing Out ... | {FM_COMPANY_NAME_SHORT}</title>
+        <title>Signing Out ... | {companyNameShort}</title>
     </head>
     <body></body>
 </html>

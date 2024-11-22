@@ -11,7 +11,8 @@ import RevolutCheckout, { type RevolutCheckoutCardField } from '@revolut/checkou
 import type { Address, CountryCode, Mode } from '@revolut/checkout/types/types'
 import { cardFieldComplete, checkoutOrderID, csrfToken, deliveryAvailable, guestTotalToPay, memberBillingAddress, memberEmail, memberFullName, memberTotalToPay, selectedCollectionPoint, signedIn, thisClientPaymentInProcess } from '@stores'
 import { wsSendMessage } from 'src/ws'
-import { FM_CLIENT_WEBSHOP_REVOLUT_MODE } from "astro:env/client"
+// import { FM_CLIENT_WEBSHOP_REVOLUT_MODE } from "astro:env/client"
+import { revolutMode } from '@misc'
 
 let cardField:RevolutCheckoutCardField
 
@@ -60,7 +61,7 @@ const showPaymentFailedModal = (msg:string) => {
 const mountCartField = async () => {
     const token = await getToken()
     if (token === '') return
-    const { createCardField } = await RevolutCheckout(token,FM_CLIENT_WEBSHOP_REVOLUT_MODE as Mode) // mode: 'prod' or 'sandbox'
+    const { createCardField } = await RevolutCheckout(token,revolutMode as Mode) // mode: 'prod' or 'sandbox'
     cardField = createCardField({
         target:cardFieldElem,
         onStatusChange:({completed})=>cardFieldComplete.set(completed),

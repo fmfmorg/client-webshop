@@ -4,14 +4,15 @@ import Layout from '@components/layout/index.astro'
 import AddressList from '@components/account-addresses/address-list.astro';
 import { getCookieValueWithKey, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp, type IUserAddress } from '@misc'
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
-import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+// import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+import { headerCarouselOffKey } from '@misc'
 
 interface IApiResponse {
     addresses:IUserAddress[];
 }
 
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
-const headerCarouselOff = !!Astro.cookies.get(FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
+const headerCarouselOff = !!Astro.cookies.get(headerCarouselOffKey)
 
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/account-addresses-page-init`,{
     headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,!headerCarouselOff)

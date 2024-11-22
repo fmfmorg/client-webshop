@@ -31,31 +31,29 @@ export default defineConfig({
         env:{
             schema:{
                 FM_CLIENT_WEBSHOP_API_URL:envField.string({
-                    context:'client',
-                    access:'public'
-                    // context:'server',
-                    // access:'secret'
+                    context:'server',
+                    access:'secret'
                 }),
-                FM_CLIENT_WEBSHOP_REVOLUT_MODE:envField.string({
-                    context:'client',
-                    access:'public'
-                }),
-                FM_HEADER_CAROUSEL_OFF_COOKIE_KEY:envField.string({
-                    context:'client',
-                    access:'public'
-                }),
-                FM_COMPANY_NAME_SHORT:envField.string({
-                    context:'client',
-                    access:'public'
-                }),
-                FM_COMPANY_NAME_FULL:envField.string({
-                    context:'client',
-                    access:'public'
-                }),
-                FM_PUBLIC_IMAGE_URL_PREFIX:envField.string({
-                    context:'client',
-                    access:'public'
-                })
+                // FM_CLIENT_WEBSHOP_REVOLUT_MODE:envField.string({
+                //     context:'client',
+                //     access:'public'
+                // }),
+                // FM_HEADER_CAROUSEL_OFF_COOKIE_KEY:envField.string({
+                //     context:'client',
+                //     access:'public'
+                // }),
+                // FM_COMPANY_NAME_SHORT:envField.string({
+                //     context:'client',
+                //     access:'public'
+                // }),
+                // FM_COMPANY_NAME_FULL:envField.string({
+                //     context:'client',
+                //     access:'public'
+                // }),
+                // FM_PUBLIC_IMAGE_URL_PREFIX:envField.string({
+                //     context:'client',
+                //     access:'public'
+                // })
             }
         }
     }

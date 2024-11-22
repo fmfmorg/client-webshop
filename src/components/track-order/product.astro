@@ -1,5 +1,6 @@
 ---
-import { FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
+// import { FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
+import { imageUrlPrefix } from '@misc'
 import type { ICartItem } from '@components/cart/interfaces'
 import type { IProduct } from '@components/catalogue-item/interfaces'
 import { formatPrice } from '@misc';
@@ -12,7 +13,7 @@ interface Props {
 
 const { product:{name: productName, images, url, id}, item:{ finalPrice, quantity } } = Astro.props as Props
 const { name:imgName, ext } = images[0]
-const style = `background-image: image-set(${['.avif','.webp',ext].map(e=>`url(${FM_PUBLIC_IMAGE_URL_PREFIX}${imgName}${e}) type('image/${e === '.jpg' ? 'jpeg' : e.replace('.','').toLowerCase()}')`).join(', ')})`
+const style = `background-image: image-set(${['.avif','.webp',ext].map(e=>`url(${imageUrlPrefix}${imgName}${e}) type('image/${e === '.jpg' ? 'jpeg' : e.replace('.','').toLowerCase()}')`).join(', ')})`
 ---
 
 <li>

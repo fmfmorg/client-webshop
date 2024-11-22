@@ -5,7 +5,8 @@ import type { IShopAddressMap, IShoppingBagSidebarProp } from '@misc';
 import LoadingOverlay from './loading-overlay.astro';
 import ErrorMsgModal from './error-msg-modal.astro';
 import CollectionPointOnQtyIncrease from './collection-point-on-qty-increase.astro'
-import { FM_COMPANY_NAME_SHORT } from 'astro:env/client'
+// import { FM_COMPANY_NAME_SHORT } from 'astro:env/client'
+import { companyNameShort } from '@misc'
 
 interface Props {
   csrftoken:string;
@@ -50,7 +51,7 @@ if (!!shoppingBagProp){
   if (!!cartItemMap) cartHasItems = !!Object.values(cartItemMap).map(e=>e.quantity).filter(e=>!!e).length
 } else cartHasItems = hasItemsInCart
 
-const fullTitle = !!title ? `${title.trim()} | ${FM_COMPANY_NAME_SHORT}` : `${FM_COMPANY_NAME_SHORT} | Fashion Jewellery For Her`
+const fullTitle = !!title ? `${title.trim()} | ${companyNameShort}` : `${companyNameShort} | Fashion Jewellery For Her`
 
 ---
 
@@ -79,7 +80,7 @@ const fullTitle = !!title ? `${title.trim()} | ${FM_COMPANY_NAME_SHORT}` : `${FM
 
   <meta name="og:type" content="website">
   <meta name="og:url" content={Astro.url.href}>
-  <meta name="og:site_name" content={FM_COMPANY_NAME_SHORT}>
+  <meta name="og:site_name" content={companyNameShort}>
 
   <meta name="twitter:card" content="summary_large_image">
 
