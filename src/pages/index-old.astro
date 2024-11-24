@@ -5,6 +5,8 @@ import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 // import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import { headerCarouselOffKey } from '@misc'
 
+console.log("api url: ", FM_CLIENT_WEBSHOP_API_URL)
+
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = !!Astro.cookies.get(headerCarouselOffKey)
 
