@@ -17,7 +17,7 @@ export const passwordRules:IPasswordRule[] = [
         re:/^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,}).{0,}$/
     },
     {
-        msg:'Contain at least one of the following symbols:\n!?<>/@#$%^&*()~`=-_+.,',
+        msg:'Contain at least one of the following symbols:\n!?<>/@#$%^&*()~=-_+.,',
         re:/^(?=(.*[!?<>/@#$%^&*()~`=\-_+.,]){1,}).{0,}$/
     }
 ]

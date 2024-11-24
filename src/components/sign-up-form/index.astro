@@ -36,7 +36,7 @@ const isSignUpPage = Astro.url.pathname === '/sign-up'
             name='password' 
             placeholder="Password" 
             required 
-            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!?<>\\/\\@#$%\\^&\\*\\(\\)~\\`\\=\\-_\\+\\.,])[a-zA-Z0-9!?<>\\/\\@#$%\\^&\\*\\(\\)~\\`\\=\\-_\\+\\.,]{8,20}$"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!?<>\\/\\@#$%\\^&\\*\\(\\)~\\=\\-_\\+\\.,])[a-zA-Z0-9!?<>\\/\\@#$%\\^&\\*\\(\\)~\\=\\-_\\+\\.,]{8,20}$"
             className='mb-6'
             showPasswordRules
             client:only="solid-js"
