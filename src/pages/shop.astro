@@ -59,6 +59,14 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 
 const csrftoken = getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
 Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption())
+console.log(
+    csrftoken,
+    shoppingBagProp,
+    paymentInProcess,
+    selCollectionPoint,
+    prfCollectionPoint,
+    shopAddressMap,
+)
 ---
 
 <Layout {...{
