@@ -45,8 +45,6 @@ let {
     apiResponse:IApiResponse;
 }
 
-console.log(productIDs)
-
 Astro.cookies.set('sessionID',sessionID,sessionCookieOption(expiresAt))
 
 productMap = {...productMap,...cartProductDetailsMap}
@@ -75,5 +73,5 @@ Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption())
     title:'All Jewellery',
     headerCarouselTexts,
 }}>
-    <ShopContent productIDs={productIDs} productObj={productMap} cartItemObj={cartItemMap} />
+    <ShopContent productIDs={productIDs || []} productObj={productMap} cartItemObj={cartItemMap} />
 </Layout>
