@@ -14,7 +14,10 @@ const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/index-page-init
     headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })
 
-if (!resp.ok) return Astro.redirect('/maintenance')
+if (!resp.ok) {
+    console.log(await resp.text())
+    return Astro.redirect('/maintenance')
+}
 
 const json = await resp.json()
 const {mdwResponse} = json as {mdwResponse: IMdwResponse}
