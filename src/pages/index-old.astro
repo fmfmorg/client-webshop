@@ -5,8 +5,6 @@ import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 // import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import { headerCarouselOffKey } from '@misc'
 
-console.log("api url: ", FM_CLIENT_WEBSHOP_API_URL)
-
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = !!Astro.cookies.get(headerCarouselOffKey)
 
@@ -14,10 +12,7 @@ const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/index-page-init
     headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })
 
-if (!resp.ok) {
-    console.log(await resp.text())
-    return Astro.redirect('/maintenance')
-}
+if (!resp.ok) return Astro.redirect('/maintenance')
 
 const json = await resp.json()
 const {mdwResponse} = json as {mdwResponse: IMdwResponse}
