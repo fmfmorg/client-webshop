@@ -7,16 +7,17 @@ interface IProps {
     id:string;
     productPageProduct?:boolean;
     renderImages:boolean;
+    imageSize?:number;
 }
 
-const { images, id, productPageProduct = false, renderImages } = Astro.props as IProps
+const { images, id, productPageProduct = false, renderImages, imageSize } = Astro.props as IProps
 
 ---
 
 <div class="absolute top-0 bottom-0 left-0 right-0">
     {
         images.map(({name,ext},i)=>(
-            <Image {...{name,ext,catalogue:false,id,checked:i===0,index:i,len:images.length,productPageProduct,render:renderImages}} />
+            <Image {...{name,ext,catalogue:false,id,checked:i===0,index:i,len:images.length,productPageProduct,render:renderImages,imageSize}} />
         ))
     }
 </div>

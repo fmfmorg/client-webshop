@@ -9,10 +9,11 @@ interface Props extends IProductImages {
     len:number;
     productPageProduct?:boolean;
     render:boolean;
+    imageSize?:number;
 }
 
-const { name, ext, id, checked, index, len, productPageProduct = false, render } = Astro.props as Props
-const style = productPageProduct || render ? getImageStyle(name,ext) : ''
+const { name, ext, id, checked, index, len, productPageProduct = false, render, imageSize } = Astro.props as Props
+const style = productPageProduct || render ? getImageStyle(name,ext,imageSize) : ''
 ---
 
 <astro-carousel-image 

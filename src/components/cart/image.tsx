@@ -18,9 +18,9 @@ const Image = (
                 ext
             ].map(e=>(
                 e === ext ?
-                <img src={`${imageUrlPrefix}${name}${e}`} />
+                <img src={`${imageUrlPrefix}${name}_256x256${e}`} />
                 :
-                <source srcset={`${imageUrlPrefix}${name}${e}`} />
+                <source srcset={`${imageUrlPrefix}${name}_256x256${e}`} />
             ))
         }
     </picture>

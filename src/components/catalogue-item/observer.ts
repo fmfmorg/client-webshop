@@ -21,7 +21,7 @@ const observerCallback = (entries: IntersectionObserverEntry[], observer: Inters
                     const name = image.dataset.name
                     const ext = image.dataset.ext
                     const imgHolder = image.getElementsByClassName('img-holder')[0] as HTMLDivElement
-                    imgHolder.style.backgroundImage = getImageStyle(name,ext)
+                    imgHolder.style.backgroundImage = getImageStyle(name,ext,768)
                 }
 
                 cataItem.classList.remove('hidden')
