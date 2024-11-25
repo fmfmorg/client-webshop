@@ -56,6 +56,8 @@ const wsMsgHandler = (msg:IWsMessage) => {
 const launchWs = () => {
     if (cartID === '') return
 
+    console.log('ws: ', websocketUrl)
+
     ws = new WebSocket(`${ websocketUrl }/ws?key=${cartID}`)
     ws.onmessage = (e) => wsMsgHandler(JSON.parse(e.data) as IWsMessage)
 }
