@@ -60,6 +60,8 @@ const launchWs = () => {
 
     ws = new WebSocket(`${ wsUrl }/ws?key=${cartID}`)
     ws.onmessage = (e) => wsMsgHandler(JSON.parse(e.data) as IWsMessage)
+    ws.onclose = (e) => console.log("ws closed: ", e.reason)
+    ws.onerror = (e) => console.log("ws error: ", e)
 }
 
 const launchWsAtInit = async () => {

@@ -19,6 +19,7 @@ const TextCarousel = ({texts}:{texts:string[]}) => {
         const { innerWidth } = window
         const firstP = document.getElementsByClassName('header-carousel-p')[0]
         const width = firstP.getBoundingClientRect().width
+        console.log("innerWidth: ", innerWidth, ", pWidth: ", width)
         setPCount(Math.ceil(innerWidth / width)+1)
 
         if (notLoaded()){
