@@ -27,3 +27,4 @@ jobs:
     - run: npm run build --if-present
       env: 
         FM_CLIENT_WEBSHOP_API_URL: ${{ vars.FM_CLIENT_WEBSHOP_API_URL }}
+        PUBLIC_FM_WEBSOCKET_URL: ${{ vars.PUBLIC_FM_WEBSOCKET_URL }}
