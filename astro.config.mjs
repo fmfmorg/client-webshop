@@ -24,12 +24,12 @@ export default defineConfig({
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/api/, ''),
                 },
-                '/socket': {
-                    target: process.env.PUBLIC_FM_WEBSOCKET_URL,
-                    ws:true,
-                    rewriteWsOrigin:true,
-                    rewrite: (path) => path.replace(/^\/socket/, ''),
-                }
+                // '/socket': {
+                //     target: process.env.PUBLIC_FM_WEBSOCKET_URL,
+                //     ws:true,
+                //     rewriteWsOrigin:true,
+                //     rewrite: (path) => path.replace(/^\/socket/, ''),
+                // }
             },
         },
     },

@@ -57,7 +57,7 @@ const launchWs = () => {
     if (cartID === '') return
 
     // ws = new WebSocket(`${ websocketUrl }/ws?key=${cartID}`)
-    ws = new WebSocket(`/socket/ws?key=${cartID}`)
+    ws = new WebSocket(`wss://server-ws.fairymade.co/ws?key=${cartID}`)
     ws.onmessage = (e) => wsMsgHandler(JSON.parse(e.data) as IWsMessage)
 }
 
