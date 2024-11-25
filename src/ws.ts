@@ -23,7 +23,7 @@ import {
 import type { IWsMessage } from "./misc/ws-interfaces";
 import { BACK_ONLINE_ADDRESS_LIST, COUNTRY_CHANGED, UPDATE_CART_ITEM_MAP } from "@misc/event-keys";
 
-let cartID = '', isCheckoutPage = false, ws:WebSocket = null
+let cartID = '', wsUrl = '', isCheckoutPage = false, ws:WebSocket = null
 
 const fetchKey = async() => {
     const resp = await fetch('/api/webshop/get-key',{
@@ -32,7 +32,9 @@ const fetchKey = async() => {
         }
     })
     if (!resp.ok) return false
-    cartID = await resp.text()
+    const {key, url} = await resp.json() as {key:string; url:string}
+    cartID = key
+    wsUrl = url
     return true
 }
 
@@ -54,10 +56,9 @@ const wsMsgHandler = (msg:IWsMessage) => {
 }
 
 const launchWs = () => {
-    if (cartID === '') return
+    if (cartID === '' || wsUrl === '') return
 
-    // ws = new WebSocket(`${ websocketUrl }/ws?key=${cartID}`)
-    ws = new WebSocket(`wss://server-ws.fairymade.co/ws?key=${cartID}`)
+    ws = new WebSocket(`${ wsUrl }/ws?key=${cartID}`)
     ws.onmessage = (e) => wsMsgHandler(JSON.parse(e.data) as IWsMessage)
 }
 
