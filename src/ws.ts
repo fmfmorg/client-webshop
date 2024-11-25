@@ -4,7 +4,6 @@ import {
     httpRequestHeader,
     sessionLost,
     showErrorModal,
-    websocketUrl,
     type IDeliveryMethodMap,
     type IMdwResponse,
     type IUserAddressMap,
@@ -60,8 +59,7 @@ const launchWs = () => {
 
     ws = new WebSocket(`${ wsUrl }/ws?key=${cartID}`)
     ws.onmessage = (e) => wsMsgHandler(JSON.parse(e.data) as IWsMessage)
-    ws.onclose = (e) => console.log("ws closed: ", e.reason)
-    ws.onerror = (e) => console.log("ws error: ", e)
+    ws.onclose = () => closeWs()
 }
 
 const launchWsAtInit = async () => {
@@ -74,15 +72,20 @@ const launchWsAtInit = async () => {
     launchWs()
 }
 
+const documentOnShow = () => {
+    if (document.visibilityState === 'visible') backOnline()
+}
+
 const closeWs = () => {
-    ws.close()
+    if (!!ws) ws.close()
     ws = null
     window.addEventListener('online',backOnline,true)
-    window.removeEventListener('offline',closeWs,true)
+    document.addEventListener('visibilitychange',documentOnShow,true)
 }
 
 const backOnline = async () => {
-    if (isCheckoutPage){
+    if (!!ws && ws.readyState === 1) return
+    else if (isCheckoutPage){
         if (signedIn.get()){
             const resp = await fetch('/api/webshop/internet-back-checkout-page-member',{
                 headers:httpRequestHeader(true,'client',true,true)
@@ -197,13 +200,10 @@ const backOnline = async () => {
         })
     }
     launchWs()
-    window.removeEventListener('online',backOnline,true)
-    window.addEventListener('offline',closeWs,true)
 }
 
 if (typeof window !== 'undefined'){
     window.addEventListener('load',launchWsAtInit,{once:true})
-    window.addEventListener('offline',closeWs,true)
     
 }
 

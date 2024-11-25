@@ -19,7 +19,6 @@ const TextCarousel = ({texts}:{texts:string[]}) => {
         const { innerWidth } = window
         const firstP = document.getElementsByClassName('header-carousel-p')[0]
         const width = firstP.getBoundingClientRect().width
-        console.log("innerWidth: ", innerWidth, ", pWidth: ", width)
         setPCount(Math.ceil(innerWidth / width)+1)
 
         if (notLoaded()){
@@ -42,13 +41,20 @@ const TextCarousel = ({texts}:{texts:string[]}) => {
         if (checked) document.cookie = `${headerCarouselOffKey}=1; path=/`
     }
 
+    const documentOnShow = () => {
+        if (document.visibilityState === 'visible') pCountOnResize()
+    }
+
     onMount(()=>{
         pCountOnResize()
         window.addEventListener('resize',onResize,true)
         dispatchInternalEvent(HEADER_TEXT_CAROUSEL_LOADED)
 
+        document.addEventListener('visibilitychange',documentOnShow,true)
+
         onCleanup(()=>{
             window.removeEventListener('resize',onResize,true)
+            document.removeEventListener('visibilitychange',documentOnShow,true)
         })
     })
 
