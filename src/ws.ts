@@ -4,6 +4,7 @@ import {
     httpRequestHeader,
     sessionLost,
     showErrorModal,
+    websocketUrl,
     type IDeliveryMethodMap,
     type IMdwResponse,
     type IUserAddressMap,
@@ -55,7 +56,7 @@ const wsMsgHandler = (msg:IWsMessage) => {
 const launchWs = () => {
     if (cartID === '') return
 
-    ws = new WebSocket(`ws://192.168.1.111:8000/ws?key=${cartID}`)
+    ws = new WebSocket(`${ websocketUrl }/ws?key=${cartID}`)
     ws.onmessage = (e) => wsMsgHandler(JSON.parse(e.data) as IWsMessage)
 }
 
