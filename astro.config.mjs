@@ -27,7 +27,8 @@ export default defineConfig({
                 '/socket': {
                     target: process.env.PUBLIC_FM_WEBSOCKET_URL,
                     ws:true,
-                    rewriteWsOrigin:true
+                    rewriteWsOrigin:true,
+                    rewrite: (path) => path.replace(/^\/socket/, ''),
                 }
             },
         },
