@@ -19,6 +19,7 @@ const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/shop-page-init$
 })
 if (!resp.ok) {
     console.log(resp.status)
+    console.log(await resp.text())
     return Astro.redirect('/maintenance')
 }
 
