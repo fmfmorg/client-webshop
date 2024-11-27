@@ -48,7 +48,7 @@ let {
     apiResponse:IApiResponse;
 }
 
-let finalName = productMap[id].name
+let finalName = productMap[id].url
 if (finalName !== name) return Astro.redirect(`/product/${finalName}/${id}`)
 
 Astro.cookies.set('sessionID',sessionID,sessionCookieOption(expiresAt))
