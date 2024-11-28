@@ -12,11 +12,13 @@ interface Props {
 const { productIDs = [], productObj, cartItemObj } = Astro.props as Props
 
 const itemPerGroup = 24
+
+const oldClassList = 'pt-3 px-3 md:px-4 grid grid-cols-2 gap-x-1 2xs:gap-x-2 xs:grid-cols-3 md:gap-x-4 lg:grid-cols-4 2xl:grid-cols-6 gap-y-8'
 ---
 
 <div 
     id="shop-container" 
-    class="px-3 md:px-4 grid grid-cols-2 gap-x-1 2xs:gap-x-2 xs:grid-cols-3 md:gap-x-4 lg:grid-cols-4 2xl:grid-cols-6 gap-y-8"
+    class="pt-3 px-3 md:px-4 grid grid-cols-2 gap-x-1 2xs:gap-x-2 sm:grid-cols-3 md:gap-x-4 2xl:grid-cols-4 gap-y-8"
     data-product-ids={JSON.stringify(productIDs)}
 >
     {productIDs.map((id,i)=>(

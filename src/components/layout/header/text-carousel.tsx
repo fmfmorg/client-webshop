@@ -46,7 +46,7 @@ const TextCarousel = ({texts}:{texts:string[]}) => {
     }
 
     onMount(()=>{
-        pCountOnResize()
+        setTimeout(pCountOnResize,50)
         window.addEventListener('resize',onResize,true)
         dispatchInternalEvent(HEADER_TEXT_CAROUSEL_LOADED)
 
