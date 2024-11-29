@@ -233,28 +233,36 @@ import { observer } from "./observer";
                 const addToBagBtn = this.getElementsByClassName('add-to-bag-touchscreen')[0] as HTMLButtonElement
                 const link = this.getElementsByTagName('a')[0] as HTMLAnchorElement
                 const limit = 20
-                let touchStartX = 0
+                let touchStartX = 0, touchStartY = 0
 
                 const onTouchStart = (e:TouchEvent) => {
-                    const targetElem = e.changedTouches[0].target as HTMLElement
+                    const thisTouch = e.changedTouches[0]
+                    const targetElem = thisTouch.target as HTMLElement
                     const isContainer = targetElem.closest('#' + container.id)
                     if (!isContainer) return
-                    e.preventDefault()
-                    touchStartX = e.changedTouches[0].clientX
+                    touchStartX = thisTouch.clientX
+                    touchStartY = thisTouch.clientY
                 }
 
                 const onTouchEnd = (e:TouchEvent) => {
-                    const targetElem = e.changedTouches[0].target as HTMLElement
+                    const thisTouch = e.changedTouches[0]
+                    const targetElem = thisTouch.target as HTMLElement
                     const isContainer = targetElem.closest('#' + container.id)
                     const isAddToBagBtn = targetElem.closest('#' + addToBagBtn.id)
                     if (!!isContainer || !!isAddToBagBtn){
-                        e.preventDefault()
                         if (!!isContainer){
-                            const currentX = e.changedTouches[0].clientX
-                            if (Math.abs(currentX - touchStartX) < limit) {
+                            const currentX = thisTouch.clientX
+                            const currentY = thisTouch.clientY
+                            const deltaX = Math.abs(currentX - touchStartX)
+                            const deltaY = Math.abs(currentY - touchStartY)
+                            
+                            if (deltaX < limit && deltaY < limit) {
                                 if (!(e.target as HTMLElement).classList.contains('add-to-bag')) link.click()
                             }
-                            else currentX > touchStartX ? leftward() : rightward()
+                            else if (deltaX > deltaY) {
+                                if (currentX > touchStartX) leftward()
+                                else rightward()
+                            }
                         } else addToBag()
                     }
                 }

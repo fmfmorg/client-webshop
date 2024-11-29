@@ -36,6 +36,9 @@ export default defineConfig({
                 }),
                 // for github action, cannot have envField with { context:'client', access:'public' }
             }
-        }
+        },
+    },
+    devToolbar:{
+        enabled:false
     }
 });
