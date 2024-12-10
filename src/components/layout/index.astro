@@ -54,8 +54,6 @@ if (!!shoppingBagProp){
 
 const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : title.trim()} | ${companyNameShort}` : `${companyNameShort} | Fashion Jewellery For Her`
 
-// const hasContactForm = Astro.url.pathname === '/contact'
-
 ---
 
 <html lang="en-GB">
@@ -169,7 +167,11 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
       font-weight: 600;
     }
   </style>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback"
+    defer
+  ></script>
+  {/* <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script> */}
 </head>
 <body 
   data-ct={csrftoken} 
@@ -224,7 +226,7 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
   <ErrorMsgModal />
   <CollectionPointOnQtyIncrease />
   <slot name="body-end" />
-  <div id="turnstile" />
+  <div id="turnstile-tag" />
 </body>
 </html>
 
@@ -246,6 +248,12 @@ cartHasItems,
 memberTotalToPay,
 shoppingBagLoaded,
 } from "@stores"
+
+declare global {
+  interface Window {
+    onloadTurnstileCallback: ()=>void;
+  }
+}
 
 if (performance.getEntriesByType('navigation')[0]['type'] === "back_forward") window.location.reload()
 else document.body.classList.remove('hidden')
@@ -297,22 +305,17 @@ document.addEventListener(HEADER_TEXT_CAROUSEL_LOADED,resize,true)
 window.addEventListener('resize',onResize,true)
 window.addEventListener('load',resize,{once:true})
 
-if ('turnstile' in window) window.turnstile.ready(() => {
-  window.turnstile.render("#turnstile", {
+window.onloadTurnstileCallback = () => {
+  window.turnstile.render("#turnstile-tag", {
     sitekey: turnstileSiteKey,
     callback: () => {
-      console.log('turnstile challenge success');
-
-      // const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
-      // const len = btnToCheck.length
-
-      // for (let i=0; i<len; i++) btnToCheck.item(i).disabled = false
+      console.log(`Challenge Success`);
+      const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
+      const len = btnToCheck.length
+      for (let i=0; i<len; i++) btnToCheck.item(i).disabled = false
     },
   });
-});
-
-
-
+}
 
 // favicon svg
 const faviconSvg = document.getElementById('favicon-svg') as HTMLLinkElement
