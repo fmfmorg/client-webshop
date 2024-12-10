@@ -2,6 +2,7 @@
     "extends": "astro/tsconfigs/base",
     "compilerOptions": {
         "baseUrl": ".",
+        "types": ["turnstile-types"],
         "paths": {
             "@components/*": ["src/components/*"],
             "@misc": ["src/misc/index"],

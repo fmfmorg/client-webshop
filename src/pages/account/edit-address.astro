@@ -2,7 +2,7 @@
 import { getCookieValueWithKey, httpRequestHeader, sessionCookieOption, type ICountry, type IMdwResponse, type INoServiceCountryMap, type IShoppingBagSidebarProp, type IUserAddress } from "@misc";
 import Layout from '@components/layout/index.astro'
 import EditAddressForm from "@components/account-addresses/edit-address-form.astro";
-import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
+import { FM_CLIENT_WEBSHOP_API_URL, FM_ENV_MODE } from 'astro:env/server'
 // import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import { headerCarouselOffKey } from '@misc'
 
@@ -12,10 +12,10 @@ interface IApiResponse {
     noServiceCountryMap:INoServiceCountryMap;
 }
 
-
 const id = Astro.url.searchParams.get('id')
 if (!id) return Astro.redirect('/account/addresses')
 
+const isProduction = FM_ENV_MODE === 'production'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = !!Astro.cookies.get(headerCarouselOffKey)
 
@@ -55,7 +55,7 @@ const {
     apiResponse:IApiResponse;
 }
 
-Astro.cookies.set('sessionID',sessionID,sessionCookieOption(expiresAt))
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isProduction,expiresAt))
 
 const shoppingBagProp:IShoppingBagSidebarProp = {
     isSignedIn:signedIn,
@@ -66,7 +66,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 }
 
 const csrftoken = getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
-Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption())
+Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption(isProduction))
 ---
 
 <Layout {...{

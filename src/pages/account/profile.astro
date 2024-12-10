@@ -6,7 +6,7 @@ import { getCookieValueWithKey, httpRequestHeader, sessionCookieOption, type IMd
 import EditorContainer from '@components/account-profile/editor-container.astro';
 import EditorPersonalInfo from '@components/account-profile/editor-personal-info.astro';
 import EditorPassword from '@components/account-profile/editor-password.astro';
-import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
+import { FM_CLIENT_WEBSHOP_API_URL, FM_ENV_MODE } from 'astro:env/server'
 // import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import { headerCarouselOffKey } from '@misc'
 
@@ -18,6 +18,7 @@ interface IApiResponse {
     subscribed:boolean;
 }
 
+const isProduction = FM_ENV_MODE === 'production'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = !!Astro.cookies.get(headerCarouselOffKey)
 
@@ -56,7 +57,7 @@ let {
     apiResponse:IApiResponse;
 }
 
-Astro.cookies.set('sessionID',sessionID,sessionCookieOption(expiresAt))
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isProduction,expiresAt))
 
 const fullName = `${firstName} ${lastName}`.trim()
 
@@ -69,7 +70,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 }
 
 const csrftoken = getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
-Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption())
+Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption(isProduction))
 ---
 
 <Layout {...{

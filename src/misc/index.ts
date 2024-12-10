@@ -36,7 +36,6 @@ import {
     companyNameShort,
     companyNameFull,
     imageUrlPrefix,
-    websocketUrl,
 } from './env-vars'
 
 export {
@@ -77,5 +76,4 @@ export {
     companyNameShort,
     companyNameFull,
     imageUrlPrefix,
-    websocketUrl,
 }

@@ -3,7 +3,7 @@ import ShopContent from '@components/shop/intro.astro'
 import Layout from '../components/layout/index.astro'
 import type { IProduct } from '@components/catalogue-item/interfaces';
 import { getCookieValueWithKey, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
-import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
+import { FM_CLIENT_WEBSHOP_API_URL, FM_ENV_MODE } from 'astro:env/server'
 // import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import { headerCarouselOffKey } from '@misc'
 
@@ -12,6 +12,7 @@ interface IApiResponse {
     productMap:{[k:string]:IProduct};
 }
 
+const isProduction = FM_ENV_MODE === 'production'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = !!Astro.cookies.get(headerCarouselOffKey)
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/shop-page-init${Astro.url.search}`,{
@@ -45,7 +46,7 @@ let {
     apiResponse:IApiResponse;
 }
 
-Astro.cookies.set('sessionID',sessionID,sessionCookieOption(expiresAt))
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isProduction,expiresAt))
 
 productMap = {...productMap,...cartProductDetailsMap}
 
@@ -58,7 +59,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 }
 
 const csrftoken = getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
-Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption())
+Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption(isProduction))
 ---
 
 <Layout {...{

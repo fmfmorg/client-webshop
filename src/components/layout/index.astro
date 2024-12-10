@@ -54,6 +54,8 @@ if (!!shoppingBagProp){
 
 const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : title.trim()} | ${companyNameShort}` : `${companyNameShort} | Fashion Jewellery For Her`
 
+const hasContactForm = Astro.url.pathname === '/contact'
+
 ---
 
 <html lang="en-GB">
@@ -167,6 +169,7 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
       font-weight: 600;
     }
   </style>
+  {hasContactForm && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>}
 </head>
 <body 
   data-ct={csrftoken} 
@@ -225,7 +228,11 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
 </html>
 
 <script>
-import { HEADER_TEXT_CAROUSEL_LOADED, SHOPPING_BAG_LOADED } from "@misc/event-keys"
+import { 
+  HEADER_TEXT_CAROUSEL_LOADED, 
+  SHOPPING_BAG_LOADED, 
+} from "@misc/event-keys"
+import { turnstileSiteKey } from '@misc/env-vars'
 import { 
   selectedCollectionPoint, 
   csrfToken, 
@@ -288,6 +295,20 @@ document.addEventListener(SHOPPING_BAG_LOADED,()=>shoppingBagLoaded.set(true))
 document.addEventListener(HEADER_TEXT_CAROUSEL_LOADED,resize,true)
 window.addEventListener('resize',onResize,true)
 window.addEventListener('load',resize,{once:true})
+
+if ('turnstile' in window) window.turnstile.ready(() => {
+  window.turnstile.render("#turnstile", {
+    sitekey: turnstileSiteKey,
+    callback: () => {
+      console.log('turnstile challenge success');
+      const submitBtn = document.getElementById('form-submit') as HTMLInputElement
+      if (!!submitBtn) submitBtn.disabled = false
+    },
+  });
+});
+
+
+
 
 // favicon svg
 const faviconSvg = document.getElementById('favicon-svg') as HTMLLinkElement

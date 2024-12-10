@@ -34,6 +34,10 @@ export default defineConfig({
                     context:'server',
                     access:'secret'
                 }),
+                FM_ENV_MODE:envField.string({
+                    context:'server',
+                    access:'secret'
+                })
                 // for github action, cannot have envField with { context:'client', access:'public' }
             }
         },
