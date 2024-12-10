@@ -54,8 +54,6 @@ if (!!shoppingBagProp){
 
 const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : title.trim()} | ${companyNameShort}` : `${companyNameShort} | Fashion Jewellery For Her`
 
-const hasContactForm = Astro.url.pathname === '/contact'
-
 ---
 
 <html lang="en-GB">
@@ -169,7 +167,7 @@ const hasContactForm = Astro.url.pathname === '/contact'
       font-weight: 600;
     }
   </style>
-  {hasContactForm && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>}
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
 </head>
 <body 
   data-ct={csrftoken} 
@@ -224,6 +222,7 @@ const hasContactForm = Astro.url.pathname === '/contact'
   <ErrorMsgModal />
   <CollectionPointOnQtyIncrease />
   <slot name="body-end" />
+  <div id="turnstile" />
 </body>
 </html>
 
@@ -296,19 +295,22 @@ document.addEventListener(HEADER_TEXT_CAROUSEL_LOADED,resize,true)
 window.addEventListener('resize',onResize,true)
 window.addEventListener('load',resize,{once:true})
 
-if ('turnstile' in window) window.turnstile.ready(() => {
-  window.turnstile.render("#turnstile", {
-    sitekey: turnstileSiteKey,
-    callback: () => {
-      console.log('turnstile challenge success');
-      const submitBtn = document.getElementById('form-submit') as HTMLInputElement
-      if (!!submitBtn) submitBtn.disabled = false
-    },
+if ('turnstile' in window) {
+  window.turnstile.ready(() => {
+    window.turnstile.render("#turnstile", {
+      sitekey: turnstileSiteKey,
+      callback: () => {
+        console.log('turnstile challenge success');
+        const btnTurnstileCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
+        const len = btnTurnstileCheck.length
+
+        for (let i=0; i<len; i++){
+          btnTurnstileCheck.item(i).disabled = false
+        }
+      },
+    });
   });
-});
-
-
-
+}
 
 // favicon svg
 const faviconSvg = document.getElementById('favicon-svg') as HTMLLinkElement
