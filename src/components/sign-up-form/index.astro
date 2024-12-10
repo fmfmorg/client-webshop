@@ -17,7 +17,6 @@ const isSignUpPage = Astro.url.pathname === '/sign-up'
     </p>
     <form id={idPrefix} class={idPrefix}>
         <p class={`${idPrefix}-error-message mb-7 text-[0.8rem] tracking-wider text-red-700 invisible`}>.</p>
-        <input type='text' id={`${idPrefix}-phone`} name='phone' class='fixed top-[-100px] right-0' placeholder="Phone number" />
         <TextInput 
             idPrefix={idPrefix} 
             type='email' 
@@ -65,12 +64,6 @@ class SignUpForm extends HTMLElement {
         const onSubmit = async (e:SubmitEvent) => {
             e.preventDefault()
             const form = e.target as HTMLFormElement
-            const phoneElem = form.elements.namedItem('phone') as HTMLInputElement
-
-            if (phoneElem.value !== "") {
-                window.location.assign('/bot')
-                return
-            }
             
             const emailElem = form.elements.namedItem('email') as HTMLInputElement
             const passwordElem = form.elements.namedItem('password') as HTMLInputElement
