@@ -303,10 +303,10 @@ if ('turnstile' in window) window.turnstile.ready(() => {
     callback: () => {
       console.log('turnstile challenge success');
 
-      const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
-      const len = btnToCheck.length
+      // const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
+      // const len = btnToCheck.length
 
-      for (let i=0; i<len; i++) btnToCheck.item(i).disabled = false
+      // for (let i=0; i<len; i++) btnToCheck.item(i).disabled = false
     },
   });
 });
