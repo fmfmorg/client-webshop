@@ -10,7 +10,6 @@ const idPrefix="sign-in"
     <h2 class="font-display text-3xl tracking-[-0.1em] [word-spacing:0.3em] mb-6">Sign In</h2>
     <form id={idPrefix}>
         <p id={`${idPrefix}-error-message`} class='mb-7 text-[0.8rem] tracking-wider text-red-700 invisible'>.</p>
-        <input type='text' id={`${idPrefix}-phone`} name='phone' class='fixed top-[-100px] right-0' placeholder="Phone number" />
         <TextInput 
             idPrefix={idPrefix} 
             type='email' 
@@ -36,7 +35,7 @@ const idPrefix="sign-in"
         <Checkbox client:only="solid-js" id='private-device' name='private-device' idPrefix={idPrefix}>
             <p class='font-light text-xs tracking-wider pl-6'>Keep me signed in on this device for easier shopping next time.</p>
         </Checkbox>
-        <input type='submit' value='Sign In' class={submitBtnClass} />
+        <input type='submit' disabled value='Sign In' class={`${submitBtnClass} turnstile-check enabled:mouse:hover:bg-black enabled:mouse:hover:border-black disabled:cursor-not-allowed`} />
     </form>
 </div>
 
@@ -53,12 +52,6 @@ import { pageToken } from "@stores"
         e.preventDefault()
         
         const form = e.target as HTMLFormElement
-        const phoneElem = form.elements.namedItem('phone') as HTMLInputElement
-
-        if (phoneElem.value !== "") {
-            window.location.assign('/bot')
-            return
-        }
 
         const emailElem = form.elements.namedItem('email') as HTMLInputElement
         const passwordElem = form.elements.namedItem('password') as HTMLInputElement

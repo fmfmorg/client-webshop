@@ -302,8 +302,6 @@ if ('turnstile' in window) window.turnstile.ready(() => {
     sitekey: turnstileSiteKey,
     callback: () => {
       console.log('turnstile challenge success');
-      // const submitBtn = document.getElementById('form-submit') as HTMLInputElement
-      // if (!!submitBtn) submitBtn.disabled = false
 
       const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
       const len = btnToCheck.length

@@ -44,7 +44,7 @@ const isSignUpPage = Astro.url.pathname === '/sign-up'
         <Checkbox client:only="solid-js" id='subscribe-newsletter' name='subscribe-newsletter' idPrefix={idPrefix}>
             <p class='font-light text-xs tracking-wider pl-6'>Stay in the loop! Subscribe to our newsletter and receive exclusive offers, just for you &hearts;</p>
         </Checkbox>
-        <input type='submit' value='Sign up' class={submitBtnClass} />
+        <input type='submit' disabled value='Sign up' class={`${submitBtnClass} turnstile-check enabled:mouse:hover:bg-black enabled:mouse:hover:border-black disabled:cursor-not-allowed`} />
     </form>
 </astro-sign-up-form>
 
