@@ -54,7 +54,7 @@ if (!!shoppingBagProp){
 
 const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : title.trim()} | ${companyNameShort}` : `${companyNameShort} | Fashion Jewellery For Her`
 
-const hasContactForm = Astro.url.pathname === '/contact'
+// const hasContactForm = Astro.url.pathname === '/contact'
 
 ---
 
@@ -169,7 +169,7 @@ const hasContactForm = Astro.url.pathname === '/contact'
       font-weight: 600;
     }
   </style>
-  {hasContactForm && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>}
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
 </head>
 <body 
   data-ct={csrftoken} 
@@ -302,8 +302,13 @@ if ('turnstile' in window) window.turnstile.ready(() => {
     sitekey: turnstileSiteKey,
     callback: () => {
       console.log('turnstile challenge success');
-      const submitBtn = document.getElementById('form-submit') as HTMLInputElement
-      if (!!submitBtn) submitBtn.disabled = false
+      // const submitBtn = document.getElementById('form-submit') as HTMLInputElement
+      // if (!!submitBtn) submitBtn.disabled = false
+
+      const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
+      const len = btnToCheck.length
+
+      for (let i=0; i<len; i++) btnToCheck.item(i).disabled = false
     },
   });
 });
