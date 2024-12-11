@@ -127,10 +127,12 @@ import { observer } from "./observer";
                     })
 
                     if (!resp.ok) {
-                        if (await sessionLost(resp.status)) return
-                        setLoading(false)
-                        showErrorModal('Failed to update your shopping bag. Please try again later.')
+                        console.log(resp.status)
                         return
+                        // if (await sessionLost(resp.status)) return
+                        // setLoading(false)
+                        // showErrorModal('Failed to update your shopping bag. Please try again later.')
+                        // return
                     }
 
                     const json = await resp.json()

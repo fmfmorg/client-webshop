@@ -4,3 +4,4 @@ export const companyNameShort = import.meta.env.PUBLIC_FM_COMPANY_NAME_SHORT
 export const companyNameFull = import.meta.env.PUBLIC_FM_COMPANY_NAME_FULL
 export const imageUrlPrefix = import.meta.env.PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX
 export const turnstileSiteKey = import.meta.env.PUBLIC_FM_TURNSTILE_SITEKEY
+export const acceptMembership = import.meta.env.PUBLIC_FM_ACCEPT_MEMBERSHIP === "true"

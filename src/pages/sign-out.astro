@@ -1,6 +1,9 @@
 ---
-// import { FM_COMPANY_NAME_SHORT } from 'astro:env/client'
 import { companyNameShort } from '@misc'
+import { acceptMembership } from '@misc/env-vars'
+
+if (!acceptMembership) return new Response(null,{status:404})
+
 Astro.cookies.delete('sessionID')
 ---
 <html lang="en">

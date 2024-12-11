@@ -3,6 +3,7 @@ import { whiteBtnClass } from "@misc";
 
 import Sidebar from "./right-sidebar.astro";
 import SignUpForm from "@components/sign-up-form/index.astro";
+import { acceptMembership } from "@misc/env-vars";
 
 interface Props {
   signedIn:boolean;
@@ -31,11 +32,11 @@ const memberMenuList = [
 ]
 ---
 
-<Sidebar id="user-sidebar" show={showUserIcon}>
+<Sidebar id="user-sidebar" show={acceptMembership && showUserIcon}>
     <p slot="header" class=`p-2 pl-4 font-display ${signedIn ? 'text-2xl xs:text-3xl' : 'text-3xl'} tracking-[-0.1em] [word-spacing:0.3em]`>
         {signedIn ? `Hello ${firstName || ''}`.trim() : 'Create an Account'}
     </p>
-    {showUserIcon && (
+    {(acceptMembership && showUserIcon) && (
         signedIn ? 
         <ul id="member-menu" class="divide-y p-4 sidebar-body hide-scrollbar overflow-y-scroll">
             {memberMenuList.map(({name,slug})=>(

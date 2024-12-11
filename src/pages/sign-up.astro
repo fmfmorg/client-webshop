@@ -5,6 +5,9 @@ import { getCookieValueWithKey, httpRequestHeader, sessionCookieOption, type IMd
 import { FM_CLIENT_WEBSHOP_API_URL, FM_ENV_MODE } from 'astro:env/server'
 // import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import { headerCarouselOffKey } from '@misc'
+import { acceptMembership } from '@misc/env-vars';
+
+if (!acceptMembership) return new Response(null,{status:404})
 
 const isProduction = FM_ENV_MODE === 'production'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
