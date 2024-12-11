@@ -57,6 +57,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 }
 
 const csrftoken = crypto.randomUUID()
+console.log("sessionID: ", sessionID)
 console.log("csrf: ", csrftoken)
 Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption(isProduction))
 ---
