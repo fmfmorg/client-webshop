@@ -4,6 +4,6 @@ export const sessionCookieOption = (secure:boolean,expiresAt?:number):AstroCooki
     httpOnly:true,
     path:'/',
     encode:(v)=>v,
-    // secure,
+    secure,
     ...(!!expiresAt && {expires:new Date(expiresAt)}),
 })
