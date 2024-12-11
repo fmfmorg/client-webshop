@@ -45,7 +45,7 @@ let {
     mdwResponse:IMdwResponse;
     apiResponse:IApiResponse;
 }
-
+console.log("typeof sessionID: ", typeof sessionID)
 Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isProduction,expiresAt))
 
 productMap = {...productMap,...cartProductDetailsMap}
@@ -59,6 +59,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 }
 
 const csrftoken = crypto.randomUUID() //getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
+console.log("typeof csrftoken: ", typeof csrftoken)
 Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption(isProduction))
 
 console.log("csrf_token: ", csrftoken)

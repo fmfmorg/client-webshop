@@ -6,7 +6,7 @@ import { headerCarouselOffKey } from '@misc'
 
 const isProduction = FM_ENV_MODE === 'production'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
-const headerCarouselOff = !!Astro.cookies.get(headerCarouselOffKey)
+const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
 
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/index-page-init`,{
     headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,!headerCarouselOff)
