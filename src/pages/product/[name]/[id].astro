@@ -63,7 +63,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
     productDetailsMap:productMap
 }
 
-const csrftoken = getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
+const csrftoken = crypto.randomUUID()
 Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption(isProduction))
 const productName = productMap[id].name
 ---

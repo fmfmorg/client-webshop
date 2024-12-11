@@ -45,7 +45,6 @@ let {
     mdwResponse:IMdwResponse;
     apiResponse:IApiResponse;
 }
-console.log("typeof sessionID: ", typeof sessionID)
 Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isProduction,expiresAt))
 
 productMap = {...productMap,...cartProductDetailsMap}
@@ -58,16 +57,8 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
     productDetailsMap:productMap
 }
 
-const csrftoken = crypto.randomUUID() //getCookieValueWithKey(resp.headers.getSetCookie(),"csrf_token")
-console.log("typeof csrftoken: ", typeof csrftoken)
+const csrftoken = crypto.randomUUID()
 Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption(isProduction))
-
-console.log("csrf_token: ", csrftoken)
-console.log("sessionID: ", sessionID)
-console.log("initialSessionID: ", initialSessionID)
-console.log("headerCarouselOff: ", headerCarouselOff)
-console.log("headerCarouselOffKey: ", headerCarouselOffKey)
-console.log(productMap['240001EHSS'])
 ---
 
 <Layout {...{
