@@ -1,7 +1,6 @@
 import { catalogueItemsOnResize } from './catalogue-items-on-resize'
 import { dispatchInternalEvent } from './dispatch-internal-event'
 import { formatPrice, formatPriceInteger } from './format-price'
-import { getCookieValueWithKey } from './get-cookie-value-w-key'
 import { httpRequestHeader, type IHttpRequestHeader } from './http-request-header'
 import type { 
     ICountry, 
@@ -64,7 +63,6 @@ export {
     type IShopAddress,
     type IShopAddressMap,
     httpRequestHeader,
-    getCookieValueWithKey,
     setLoading,
     showErrorModal,
     dispatchInternalEvent,
