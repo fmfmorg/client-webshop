@@ -274,7 +274,7 @@ const header = document.getElementsByTagName('header')[0] as HTMLDivElement
 const main = document.getElementsByTagName('main')[0] as HTMLDivElement
 const footer = document.getElementsByTagName('footer')[0] as HTMLDivElement
 
-pageToken.set(!!window.crypto ? crypto.randomUUID() : Math.random().toString())
+pageToken.set('crypto' in window ? crypto.randomUUID() : Math.random().toString())
 
 let resizeTimeout
 const resize = () => {
