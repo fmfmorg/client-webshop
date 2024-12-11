@@ -32,6 +32,7 @@ export const pageToken = atom('')
 export const homeDeliveryBillingSameAsShipping = atom(true)
 export const shoppingBagLoaded = atom(false)
 export const cardFieldComplete = atom(false)
+export const turnstilePassed = atom(false)
 export const canShowPayBtn = computed(
     [
         cartHasItems,
@@ -40,6 +41,7 @@ export const canShowPayBtn = computed(
         shoppingBagLoaded,
         signedIn,
         userAlreadyHasAddress,
+        turnstilePassed,
     ],(
         _cartHasItems,
         _selectedCollectionPoint,
@@ -47,7 +49,9 @@ export const canShowPayBtn = computed(
         _shoppingBagLoaded,
         _signedIn,
         _userAlreadyHasAddress,
+        _turnstilePassed,
     )=>_shoppingBagLoaded 
+        && _turnstilePassed
         && _cartHasItems 
         && (_selectedCollectionPoint > 1 || (_selectedCollectionPoint === 1 && _deliveryAvailable))
         && (_signedIn ? _userAlreadyHasAddress : true)
