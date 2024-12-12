@@ -69,7 +69,7 @@ const ShopAddressListItem = (
         const clickCollectCheckbox = document.getElementById('collect') as HTMLInputElement
 
         const resp = await fetch(`/api/webshop/select-collection-point/${p.address.id}`,{
-            headers:httpRequestHeader(false,'client',true,true)
+            headers:httpRequestHeader(false,'client',true)
         })
         if (!resp.ok){
             if (await sessionLost(resp.status)) return

@@ -44,7 +44,7 @@ import { selectedCollectionPoint } from "@stores"
 
         const resp = await fetch('/api/webshop/product-add-qty-deselect-collection-point',{
             method:"POST",
-            headers:httpRequestHeader(false,'client',true,true),
+            headers:httpRequestHeader(false,'client',true),
             body:JSON.stringify({id:productID,changeInQuantity,dateAdded:isNaN(dt) ? 0 : dt})
         })
         if (!resp.ok) {

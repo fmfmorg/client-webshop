@@ -181,7 +181,7 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
                     setLoading(true)
                     const resp = await fetch('/api/webshop/product-add-qty',{
                         method:"POST",
-                        headers:httpRequestHeader(false,'client',true,true),
+                        headers:httpRequestHeader(false,'client',true),
                         body:JSON.stringify({id,changeInQuantity:addQty,dateAdded:Date.now()})
                     })
                     if (!resp.ok) {
@@ -292,7 +292,7 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
             const onOnline = async() => {
                 const resp = await fetch('/api/webshop/shop-page',{
                     method:"POST",
-                    headers:httpRequestHeader(false,'client',false,true),
+                    headers:httpRequestHeader(false,'client',false),
                     body:JSON.stringify({ids:[id,...relatedProductIDs]})
                 })
                 if (!resp.ok) return

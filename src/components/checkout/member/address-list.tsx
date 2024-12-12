@@ -56,7 +56,7 @@ const AddressList = (
             if (address) memberSetBillingAddress(address)
         } else {
             const resp = await fetch(`/api/webshop/member-shipping-address-on-change/${id}`,{
-                headers:httpRequestHeader(false,'client',true,true),
+                headers:httpRequestHeader(false,'client',true),
             })
             if (!resp.ok) {
                 if (await sessionLost(resp.status)) return

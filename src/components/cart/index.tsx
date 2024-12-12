@@ -89,7 +89,7 @@ const CartList = (
         setLoading(id,true)
         const resp = await fetch('/api/webshop/product-add-qty',{
             method:"POST",
-            headers:httpRequestHeader(false,'client',true,true),
+            headers:httpRequestHeader(false,'client',true),
             body:JSON.stringify({id,changeInQuantity,dateAdded})
         })
 

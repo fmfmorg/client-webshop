@@ -78,7 +78,7 @@ class SignUpForm extends HTMLElement {
 
             const resp = await fetch('/api/webshop/sign-up',{
                 method:'POST',
-                headers:httpRequestHeader(false,'client',false,true),
+                headers:httpRequestHeader(false,'client',false),
                 body:JSON.stringify({email,password,isNewsletterSubscribed})
             })
             const { status, ok } = resp

@@ -54,7 +54,7 @@ import { httpRequestHeader, sessionLost } from "@misc"
 
         const resp = await fetch('/api/webshop/account-profile-update-personal-info',{
             method:"POST",
-            headers:httpRequestHeader(false,'client',false,true),
+            headers:httpRequestHeader(false,'client',false),
             body:JSON.stringify({firstName,lastName,dob})
         })
         const { status, ok } = resp

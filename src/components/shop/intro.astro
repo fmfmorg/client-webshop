@@ -47,7 +47,7 @@ import { PRODUCT_UPDATE } from "@misc/event-keys"
         try {
             const responses = await Promise.all(chunks.map(chunk => fetch('/api/webshop/shop-page',{
                 method:"POST",
-                headers:httpRequestHeader(false,'client',false,true),
+                headers:httpRequestHeader(false,'client',false),
                 body:JSON.stringify({ids:chunk})
             })))
             const jsons = await Promise.all(responses.map(resp => resp.json())) as {apiResponse:{productDetails:IProduct[]}}[]

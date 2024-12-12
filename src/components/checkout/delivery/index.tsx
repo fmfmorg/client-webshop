@@ -53,7 +53,7 @@ const DeliveryMethods = (
     const deliveryMethodOnClick = (id:number) => async() => {
         if (signedIn.get()){
             const resp = await fetch(`/api/webshop/member-delivery-method-on-change/${id}`,{
-                headers:httpRequestHeader(false,'client',true,true),
+                headers:httpRequestHeader(false,'client',true),
             })
             if (!resp.ok) {
                 if (await sessionLost(resp.status)) return

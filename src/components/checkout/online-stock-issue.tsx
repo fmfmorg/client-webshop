@@ -114,7 +114,7 @@ const OnlineStockIssue = (
         setLoading(true)
 
         const resp = await fetch('/api/webshop/select-collection-point/1',{
-            headers:httpRequestHeader(false,'client',true,true)
+            headers:httpRequestHeader(false,'client',true)
         })
         if (!resp.ok) {
             if (await sessionLost(resp.status)) return

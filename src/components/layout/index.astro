@@ -8,7 +8,6 @@ import CollectionPointOnQtyIncrease from './collection-point-on-qty-increase.ast
 import { companyNameShort } from '@misc'
 
 interface Props {
-  csrftoken:string;
   paymentInProcess:boolean;
   showUserIcon?:boolean;
   shoppingBagProp?:IShoppingBagSidebarProp;
@@ -28,7 +27,6 @@ interface Props {
 const { 
   showUserIcon = true, 
   shoppingBagProp, 
-  csrftoken, 
   paymentInProcess, 
   selCollectionPoint, 
   prfCollectionPoint, 
@@ -68,9 +66,7 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Yuji+Syuku&display=swap" rel="stylesheet">
 
-  <!-- <link rel="shortcut icon" href="/favicon.ico" sizes="32x32">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
+
   <link rel="canonical" href={Astro.url.href} />
 
   {['og','twitter'].map(e=>(
@@ -173,7 +169,6 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
   ></script>
 </head>
 <body 
-  data-ct={csrftoken} 
   data-pip={paymentInProcess ? 1 : 0} 
   data-selected-collection-point={selCollectionPoint}
   data-preferred-collection-point={prfCollectionPoint}
@@ -237,7 +232,6 @@ import {
 import { turnstileSiteKey } from '@misc/env-vars'
 import { 
   selectedCollectionPoint, 
-  csrfToken, 
   otherClientPaymentInProcess, 
   shopNameMap, 
   preferredCollectionPoint, 
@@ -259,8 +253,6 @@ if (performance.getEntriesByType('navigation')[0]['type'] === "back_forward") wi
 else document.body.classList.remove('hidden')
 
 const reloadBC = new BroadcastChannel('reload')
-const csrfBC = new BroadcastChannel('csrf')
-const csrftoken = document.body.dataset.ct
 const barcodes = document.getElementsByClassName('font-barcode')
 const barcodeLen = barcodes.length
 
@@ -295,9 +287,6 @@ shopNameMap.set(JSON.parse(document.body.dataset.shopNameMap))
 selectedCollectionPoint.set(+document.body.dataset.selectedCollectionPoint)
 preferredCollectionPoint.set(+document.body.dataset.preferredCollectionPoint)
 otherClientPaymentInProcess.set(!!(+document.body.dataset.pip))
-csrfToken.set(csrftoken)
-csrfBC.postMessage(csrftoken)
-csrfBC.onmessage = (ev:MessageEvent<string>) => csrfToken.set(ev.data)
 reloadBC.onmessage = (ev:MessageEvent<string>) => ev.data !== pageToken.get() && window.location.reload()
 document.addEventListener('DOMContentLoaded',showBarcodesOnLoad,true)
 document.addEventListener(SHOPPING_BAG_LOADED,()=>shoppingBagLoaded.set(true))
@@ -319,8 +308,13 @@ window.onloadTurnstileCallback = () => {
 }
 
 // favicon svg
-const faviconSvg = document.getElementById('favicon-svg') as HTMLLinkElement
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',(e)=>{
-  if (!!faviconSvg) faviconSvg.href = `/favicon-${e.matches ? 'dark' : 'light'}.svg`
-})
+// const faviconSvg = document.getElementById('favicon-svg') as HTMLLinkElement
+// window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',(e)=>{
+//   if (!!faviconSvg) faviconSvg.href = `/favicon-${e.matches ? 'dark' : 'light'}.svg`
+// })
+
+
+// <link rel="shortcut icon" href="/favicon.ico" sizes="32x32">
+//   <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg">
+//   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </script>

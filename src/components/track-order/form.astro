@@ -76,7 +76,7 @@ import { httpRequestHeader, sessionLost } from "@misc"
 
             const resp = await fetch('/api/webshop/track-order',{
                 method:"POST",
-                headers:httpRequestHeader(false,'client',true,true),
+                headers:httpRequestHeader(false,'client',true),
                 body:JSON.stringify({email,orderID})
             })
             if (resp.ok) window.location.assign(`/track-order?order=${orderID}`)

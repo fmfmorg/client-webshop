@@ -25,7 +25,7 @@ const CountrySelect = (
         if (p.idPrefix === 'shipping') {
             const postcode = (document.getElementById('shipping-postcode') as HTMLInputElement).value.trim()
             const resp = await fetch('/api/webshop/guest-shipping-country-on-change',{
-                headers:httpRequestHeader(false,'client',true,true),
+                headers:httpRequestHeader(false,'client',true),
                 method:"POST",
                 body:JSON.stringify({country:countryID,postcode})
             })

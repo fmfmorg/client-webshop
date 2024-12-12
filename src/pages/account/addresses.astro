@@ -19,7 +19,7 @@ const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
 
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/account-addresses-page-init`,{
-    headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,!headerCarouselOff)
+    headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })
 
 if (!resp.ok) return Astro.redirect(`/sign-in?rd=${encodeURIComponent(Astro.url.pathname)}`)
@@ -60,12 +60,10 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
     productDetailsMap:cartProductDetailsMap
 }
 
-const csrftoken = crypto.randomUUID()
-Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption(isProduction))
+Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isProduction))
 ---
 
 <Layout {...{
-    csrftoken,
     shoppingBagProp,
     paymentInProcess,
     selCollectionPoint,

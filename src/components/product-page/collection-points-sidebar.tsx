@@ -58,7 +58,7 @@ const CollectionPointsSidebar = (
         checkboxRef.click()
         preferredCollectionPoint.set(addressID)
         const resp = await fetch(`/api/webshop/set-preferred-collection-point/${addressID}`,{
-            headers:httpRequestHeader(false,'client',true,true)
+            headers:httpRequestHeader(false,'client',true)
         })
         await sessionLost(resp.status)
     }

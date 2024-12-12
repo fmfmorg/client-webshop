@@ -93,7 +93,7 @@ import { whiteBtnClass } from '@misc';
 
         const resp = await fetch('/api/webshop/contact-form-enquiry',{
             method:"POST",
-            headers:httpRequestHeader(false,'client',true,true),
+            headers:httpRequestHeader(false,'client',true),
             body:JSON.stringify({
                 subject:(document.getElementById('contact-form-subject') as HTMLInputElement).value.trim(),
                 toEmailName:(document.getElementById('contact-form-name') as HTMLInputElement).value.trim(),

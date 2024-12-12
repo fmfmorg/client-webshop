@@ -17,7 +17,7 @@ const VoucherDiscountRow = (p:{
 
         const resp = await fetch('/api/webshop/voucher-code-on-remove',{
             method:"POST",
-            headers:httpRequestHeader(false,'client',true,true),
+            headers:httpRequestHeader(false,'client',true),
             body:JSON.stringify({type:p.voucherType})
         })
 

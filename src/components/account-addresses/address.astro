@@ -81,7 +81,7 @@ import { httpRequestHeader, sessionLost } from "@misc";
 
             const setAsDefault = async () => {
                 const resp = await fetch(`/api/webshop/account-set-default-address/${addressID}`,{
-                    headers:httpRequestHeader(false,'client',false,true)
+                    headers:httpRequestHeader(false,'client',false)
                 })
                 if (resp.status === 401) toSignIn()
                 else if (await sessionLost(resp.status)) return
@@ -90,7 +90,7 @@ import { httpRequestHeader, sessionLost } from "@misc";
 
             const onDelete = async () => {
                 const resp = await fetch(`/api/webshop/account-delete-address/${addressID}`,{
-                    headers:httpRequestHeader(false,'client',false,true)
+                    headers:httpRequestHeader(false,'client',false)
                 })
                 if (resp.status === 401) toSignIn()
                 else if (await sessionLost(resp.status)) return

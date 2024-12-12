@@ -41,7 +41,7 @@ const getToken = async ():Promise<string> => {
 const announcePaymentActivity = async (isStart:boolean) => {
     const resp = await fetch('/api/webshop/update-payment-in-process',{
         method:"POST",
-        headers:httpRequestHeader(false,'client',false,true),
+        headers:httpRequestHeader(false,'client',false),
         body:JSON.stringify({paymentInProcess:isStart})
     })
     if (await sessionLost(resp.status)) return
@@ -81,7 +81,7 @@ const memberCheckout = async (form:HTMLFormElement) => {
     
     const resp = await fetch('/api/webshop/member-preverify-order',{
         method:'POST',
-        headers:httpRequestHeader(false,'client',true,true),
+        headers:httpRequestHeader(false,'client',true),
         body:JSON.stringify({
             shippingAddressID,
             billingAddressID,
@@ -148,7 +148,7 @@ const guestCheckout = async (form:HTMLFormElement) => {
 
     const resp = await fetch('/api/webshop/guest-preverify-order',{
         method:'POST',
-        headers:httpRequestHeader(false,'client',true,true),
+        headers:httpRequestHeader(false,'client',true),
         body:JSON.stringify({
             email,
             password,

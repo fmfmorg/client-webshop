@@ -8,7 +8,7 @@ export const httpRequestHeader = (
     fetchCartContent:boolean,
     source:'client'|'SSR',
     renewSession:boolean,
-    includeCSRF:boolean,
+    // includeCSRF:boolean,
     sessionID?:string,
     clientIP?:string,
     headerCarouselOn?:boolean,
@@ -18,7 +18,6 @@ export const httpRequestHeader = (
         "X-Request-Source":source,
         "X-Renew-Session":JSON.stringify(renewSession),
     }
-    if (includeCSRF) result["X-CSRF-Token"] = csrfToken.get()
     if (!!sessionID) result["X-Session-ID"] = sessionID
     if (!!clientIP) result["X-Client-IP"] = clientIP
     if (!!headerCarouselOn) result["X-Header-Carousel-On"] = "true"

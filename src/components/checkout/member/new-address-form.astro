@@ -196,7 +196,7 @@ import { userAlreadyHasAddress } from "@stores";
 
                 const resp = await fetch('/api/webshop/account-add-update-address',{
                     method:"POST",
-                    headers:httpRequestHeader(false,'client',false,true),
+                    headers:httpRequestHeader(false,'client',false),
                     body:JSON.stringify({
                         firstName,
                         lastName,

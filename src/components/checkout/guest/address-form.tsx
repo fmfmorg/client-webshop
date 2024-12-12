@@ -30,7 +30,7 @@ const AddressForm = (
         const country = (document.getElementById('shipping-country') as HTMLSelectElement).value
 
         const resp = await fetch('/api/webshop/guest-shipping-country-on-change',{
-            headers:httpRequestHeader(false,'client',true,true),
+            headers:httpRequestHeader(false,'client',true),
             method:"POST",
             body:JSON.stringify({country,postcode})
         })

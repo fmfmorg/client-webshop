@@ -19,7 +19,7 @@ const isProduction = FM_ENV_MODE === 'production'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/product-page-init/${id}`,{
-    headers:httpRequestHeader(true,'SSR',true,false,initialSessionID,Astro.clientAddress,!headerCarouselOff)
+    headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })
 if (!resp.ok) return new Response(null,{status:404})
 const json = await resp.json()
@@ -63,13 +63,11 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
     productDetailsMap:productMap
 }
 
-const csrftoken = crypto.randomUUID()
-Astro.cookies.set("csrf_token",csrftoken,sessionCookieOption(isProduction))
+Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isProduction))
 const productName = productMap[id].name
 ---
 
 <Layout {...{
-    csrftoken,
     shoppingBagProp,
     paymentInProcess,
     selCollectionPoint,
