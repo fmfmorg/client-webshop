@@ -85,6 +85,8 @@ import { selectedCollectionPoint } from "@stores"
         if (!!isBtn) btnOnPress()
     }
 
-    isDesktop ? document.addEventListener('click',btnOnClick,true) : document.addEventListener('touchend',btnOnTouch,{passive:false})
     document.addEventListener('change',checkboxOnClick,true)
+
+    if (isDesktop) document.addEventListener('click',btnOnClick,true) 
+    else document.addEventListener('touchend',btnOnTouch,{passive:false})
 </script>

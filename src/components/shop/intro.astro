@@ -53,7 +53,7 @@ import { PRODUCT_UPDATE } from "@misc/event-keys"
             const jsons = await Promise.all(responses.map(resp => resp.json())) as {apiResponse:{productDetails:IProduct[]}}[]
             const productDetails = jsons.map(e=>e.apiResponse.productDetails).flat()
             dispatchInternalEvent(PRODUCT_UPDATE,productDetails)
-        } catch (e) {}
+        } catch { return }
     }
 
     let resizeTimeout

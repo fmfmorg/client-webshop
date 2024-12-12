@@ -8,8 +8,8 @@
 <script>
 import { httpRequestHeader, sessionLost } from '@misc'
 import RevolutCheckout, { type RevolutCheckoutCardField } from '@revolut/checkout'
-import type { Address, CountryCode, Mode } from '@revolut/checkout/types/types'
-import { cardFieldComplete, checkoutOrderID, csrfToken, deliveryAvailable, guestTotalToPay, memberBillingAddress, memberEmail, memberFullName, memberTotalToPay, selectedCollectionPoint, signedIn, thisClientPaymentInProcess } from '@stores'
+import type { CountryCode, Mode } from '@revolut/checkout/types/types'
+import { cardFieldComplete, checkoutOrderID, deliveryAvailable, guestTotalToPay, memberBillingAddress, memberEmail, memberFullName, memberTotalToPay, selectedCollectionPoint, signedIn, thisClientPaymentInProcess } from '@stores'
 import { wsSendMessage } from 'src/ws'
 import { revolutMode } from '@misc'
 
@@ -24,11 +24,7 @@ const paymentFailModalCheckbox = document.getElementById("payment-failed-modal")
 const paymentFailReasonElem = document.getElementById("payment-failed-reason") as HTMLParagraphElement
 
 const getToken = async ():Promise<string> => {
-    const resp = await fetch('/api/webshop/get-token',{
-        headers:{
-            "X-CSRF-Token":csrfToken.get(),
-        }
-    })
+    const resp = await fetch('/api/webshop/get-token')
     if (!resp.ok) {
         await sessionLost(resp.status)
         return ''
@@ -120,27 +116,27 @@ const guestCheckout = async (form:HTMLFormElement) => {
     const shippingPostcode = $selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-postcode') as HTMLInputElement).value.trim() : ''
     const shippingCountry = ($selectedCollectionPoint === 1 ? (form.elements.namedItem('shipping-country') as HTMLInputElement).value : 'GB') as CountryCode
 
-    const billingSameAsShipping = (form.elements.namedItem('same-as-shipping') as HTMLInputElement).checked
+    // const billingSameAsShipping = (form.elements.namedItem('same-as-shipping') as HTMLInputElement).checked
     
-    const billingFirstName = billingSameAsShipping ? shippingFirstName : (form.elements.namedItem('billing-first-name') as HTMLInputElement).value.trim()
-    const billingLastName = billingSameAsShipping ? shippingLastName : (form.elements.namedItem('billing-last-name') as HTMLInputElement).value.trim()
-    const billingStreetLine1 = billingSameAsShipping ? shippingStreetLine1 : (form.elements.namedItem('billing-street-line-1') as HTMLInputElement).value.trim()
-    const billingStreetLine2 = billingSameAsShipping ? shippingStreetLine2 : (form.elements.namedItem('billing-street-line-2') as HTMLInputElement).value.trim()
-    const billingCity = billingSameAsShipping ? shippingCity : (form.elements.namedItem('billing-city') as HTMLInputElement).value.trim()
-    const billingRegion = billingSameAsShipping ? shippingRegion : (form.elements.namedItem('billing-region') as HTMLInputElement).value.trim()
-    const billingPostcode = billingSameAsShipping ? shippingPostcode : (form.elements.namedItem('billing-postcode') as HTMLInputElement).value.trim()
-    const billingCountry = billingSameAsShipping ? shippingCountry : (form.elements.namedItem('billing-country') as HTMLInputElement).value as CountryCode
+    // const billingFirstName = billingSameAsShipping ? shippingFirstName : (form.elements.namedItem('billing-first-name') as HTMLInputElement).value.trim()
+    // const billingLastName = billingSameAsShipping ? shippingLastName : (form.elements.namedItem('billing-last-name') as HTMLInputElement).value.trim()
+    // const billingStreetLine1 = billingSameAsShipping ? shippingStreetLine1 : (form.elements.namedItem('billing-street-line-1') as HTMLInputElement).value.trim()
+    // const billingStreetLine2 = billingSameAsShipping ? shippingStreetLine2 : (form.elements.namedItem('billing-street-line-2') as HTMLInputElement).value.trim()
+    // const billingCity = billingSameAsShipping ? shippingCity : (form.elements.namedItem('billing-city') as HTMLInputElement).value.trim()
+    // const billingRegion = billingSameAsShipping ? shippingRegion : (form.elements.namedItem('billing-region') as HTMLInputElement).value.trim()
+    // const billingPostcode = billingSameAsShipping ? shippingPostcode : (form.elements.namedItem('billing-postcode') as HTMLInputElement).value.trim()
+    // const billingCountry = billingSameAsShipping ? shippingCountry : (form.elements.namedItem('billing-country') as HTMLInputElement).value as CountryCode
 
     const subscribeNewletter = signUp ? (form.elements.namedItem('guest-sign-up-subscribe-newsletter') as HTMLInputElement).checked : false
 
-    const billingAddress:Address = {
-        streetLine1:billingStreetLine1,
-        streetLine2:billingStreetLine2,
-        city:billingCity,
-        region:billingRegion,
-        postcode:billingPostcode,
-        countryCode:billingCountry
-    }
+    // const billingAddress:Address = {
+    //     streetLine1:billingStreetLine1,
+    //     streetLine2:billingStreetLine2,
+    //     city:billingCity,
+    //     region:billingRegion,
+    //     postcode:billingPostcode,
+    //     countryCode:billingCountry
+    // }
 
     const deliveryMethodID = $selectedCollectionPoint === 1 ? +(form.elements.namedItem('delivery-method') as RadioNodeList).value : 0
 
@@ -166,7 +162,7 @@ const guestCheckout = async (form:HTMLFormElement) => {
             region:shippingRegion,
             postcode:shippingPostcode,
             countryID:shippingCountry,
-            deliveryMethodID:deliveryMethodID,
+            deliveryMethodID,
             total,
             collectionPoint:$selectedCollectionPoint
         })

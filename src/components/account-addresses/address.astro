@@ -122,9 +122,13 @@ import { httpRequestHeader, sessionLost } from "@misc";
             const btnOnClick = (e:MouseEvent) => btnOnPress(e.target as HTMLElement)
             const btnOnTouch = (e:TouchEvent) => btnOnPress(e.changedTouches[0].target as HTMLElement)
 
-            isTouchScreen ? document.addEventListener('touchend',btnOnTouch,{passive:false}) : document.addEventListener('click',btnOnClick,true)
-            if (isTouchScreen) window.addEventListener('touchstart',outsideDeleteModalOnTouch,{passive:false})
-            else window.addEventListener('mousedown',outsideDeleteModalOnClick,true)
+            if (isTouchScreen) {
+                window.addEventListener('touchstart',outsideDeleteModalOnTouch,{passive:false})
+                document.addEventListener('touchend',btnOnTouch,{passive:false})
+            } else {
+                document.addEventListener('click',btnOnClick,true)
+                window.addEventListener('mousedown',outsideDeleteModalOnClick,true)
+            }
         }
     }
 

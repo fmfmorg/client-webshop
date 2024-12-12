@@ -1,5 +1,3 @@
-import { csrfToken } from "@stores";
-
 export interface IHttpRequestHeader {
     [k:string]:string;
 }
@@ -8,7 +6,6 @@ export const httpRequestHeader = (
     fetchCartContent:boolean,
     source:'client'|'SSR',
     renewSession:boolean,
-    // includeCSRF:boolean,
     sessionID?:string,
     clientIP?:string,
     headerCarouselOn?:boolean,

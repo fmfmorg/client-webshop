@@ -1,7 +1,6 @@
 import type { Address } from '@revolut/checkout/types/types'
 import { atom, computed, map } from 'nanostores'
 
-export const csrfToken = atom('')
 export const signedIn = atom(false)
 export const cartSubtotal = atom(0)
 export const memberTotalToPay = atom(0)

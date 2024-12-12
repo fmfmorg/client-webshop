@@ -1,7 +1,7 @@
 import { createMemo, For, onMount, onCleanup } from 'solid-js'
 import { createStore, produce } from "solid-js/store";
 import type { IProduct } from "@components/catalogue-item/interfaces";
-import { httpRequestHeader, sessionLost, setLoading, showErrorModal, type IShopAddress, type IShopAddressMap } from "@misc";
+import { httpRequestHeader, sessionLost, type IShopAddress, type IShopAddressMap } from "@misc";
 import { preferredCollectionPoint } from '@stores';
 import { PRODUCT_UPDATE } from '@misc/event-keys';
 

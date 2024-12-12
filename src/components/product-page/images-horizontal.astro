@@ -62,7 +62,9 @@ const { id, images } = Astro.props as Props
                     const rightwardBtn = currentElem.closest('#' + rightwardBtnID)
                     if (!!leftwardBtn || !!rightwardBtn){
                         e.preventDefault()
-                        !!leftwardBtn ? leftward() : rightward()
+
+                        if (!!leftwardBtn) leftward() 
+                        else rightward()
                     }
                 }
 
@@ -81,7 +83,10 @@ const { id, images } = Astro.props as Props
                     const containerElem = (e.changedTouches[0].target as HTMLElement).closest('#' + containerID)
                     if (!containerElem) return
                     const currentX = e.changedTouches[0].clientX
-                    if (Math.abs(currentX - touchStartX) > limit) currentX > touchStartX ? leftward() : rightward()
+                    if (Math.abs(currentX - touchStartX) > limit) {
+                        if (currentX > touchStartX) leftward()
+                        else rightward()
+                    }
                 }
 
                 document.addEventListener('touchstart',onTouchStart,{passive:false})

@@ -1,6 +1,6 @@
 import { createMemo } from 'solid-js'
 import { formatPriceInteger, type IDeliveryMethod } from "@misc";
-import { cartSubtotal, selectedCollectionPoint } from '@stores';
+import { cartSubtotal } from '@stores';
 import { useStore } from '@nanostores/solid';
 
 const DeliveryMethod = (p:IDeliveryMethod & {checked:boolean; onInput:()=>void;required:boolean;}) => {

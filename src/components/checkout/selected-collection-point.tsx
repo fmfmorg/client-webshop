@@ -1,4 +1,4 @@
-import type { IShopAddress, IShopAddressMap } from "@misc";
+import type { IShopAddressMap } from "@misc";
 import { createMemo } from 'solid-js'
 import { selectedCollectionPoint } from "@stores";
 import { useStore } from "@nanostores/solid";
