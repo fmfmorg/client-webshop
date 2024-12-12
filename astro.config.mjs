@@ -27,20 +27,18 @@ export default defineConfig({
             },
         },
     },
-    experimental:{
-        env:{
-            schema:{
-                FM_CLIENT_WEBSHOP_API_URL:envField.string({
-                    context:'server',
-                    access:'secret'
-                }),
-                FM_ENV_MODE:envField.string({
-                    context:'server',
-                    access:'secret'
-                })
-                // for github action, cannot have envField with { context:'client', access:'public' }
-            }
-        },
+    env:{
+        schema:{
+            FM_CLIENT_WEBSHOP_API_URL:envField.string({
+                context:'server',
+                access:'secret'
+            }),
+            FM_ENV_MODE:envField.string({
+                context:'server',
+                access:'secret'
+            })
+            // for github action, cannot have envField with { context:'client', access:'public' }
+        }
     },
     devToolbar:{
         enabled:false
