@@ -105,7 +105,8 @@ const memberCheckout = async (form:HTMLFormElement) => {
 
 const guestCheckout = async (form:HTMLFormElement) => {
     const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
-    const signUp = (form.elements.namedItem('guest-sign-up') as HTMLInputElement).checked
+    const signUpElem = form.elements.namedItem('guest-sign-up') as HTMLInputElement
+    const signUp = !!signUpElem ? signUpElem.checked : false
     const password = signUp ? (form.elements.namedItem('guest-sign-up-password') as HTMLInputElement).value.trim() : ''
 
     const $selectedCollectionPoint = selectedCollectionPoint.get()
