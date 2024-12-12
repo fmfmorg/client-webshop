@@ -11,7 +11,6 @@ import RevolutCheckout, { type RevolutCheckoutCardField } from '@revolut/checkou
 import type { Address, CountryCode, Mode } from '@revolut/checkout/types/types'
 import { cardFieldComplete, checkoutOrderID, csrfToken, deliveryAvailable, guestTotalToPay, memberBillingAddress, memberEmail, memberFullName, memberTotalToPay, selectedCollectionPoint, signedIn, thisClientPaymentInProcess } from '@stores'
 import { wsSendMessage } from 'src/ws'
-// import { FM_CLIENT_WEBSHOP_REVOLUT_MODE } from "astro:env/client"
 import { revolutMode } from '@misc'
 
 let cardField:RevolutCheckoutCardField
@@ -167,22 +166,24 @@ const guestCheckout = async (form:HTMLFormElement) => {
             collectionPoint:$selectedCollectionPoint
         })
     })
+    console.log(resp.status)
     if (!resp.ok) {
         if (await sessionLost(resp.status)) return
         showPaymentFailedModal('Server error. Please try again later.')
         return
     }
     const {apiResponse:{userExists,orderID}} = await resp.json() as { apiResponse:{userExists: boolean;orderID:number;}}
+    console.log(userExists, orderID)
     checkoutOrderID.set(orderID)
     if (userExists) {
         paymentInProcessCheckbox.checked = false
         userExistsModalCheckbox.checked = true
     } else {
-        cardField.submit({
-            name:`${billingFirstName} ${billingLastName}`.trim(),
-            email,
-            billingAddress,
-        })
+        // cardField.submit({
+        //     name:`${billingFirstName} ${billingLastName}`.trim(),
+        //     email,
+        //     billingAddress,
+        // })
     }
 }
 

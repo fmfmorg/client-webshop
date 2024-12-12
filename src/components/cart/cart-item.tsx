@@ -65,7 +65,7 @@ const CartItem = (
             </a>
             <div class="col-span-2 py-2 pr-1">
                 <div class='flex w-full justify-between'>
-                    <a href={`/product/${productDetail().url}/${p.id}`} class="font-serif">{productDetail().name}</a>
+                    <a href={`/product/${productDetail().url}/${p.id}`} class="font-serif mr-6">{productDetail().name}</a>
                     <div class='relative h-full -mt-1'>
                         <button class="p-2 absolute top-0 right-0" onClick={p.deleteOnClick}>
                             <svg viewBox="0 0 100 100" height="1em" stroke-linecap="round" stroke="black" stroke-width='0.4rem'>
