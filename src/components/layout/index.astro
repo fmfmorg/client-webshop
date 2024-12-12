@@ -67,6 +67,10 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
   <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Yuji+Syuku&display=swap" rel="stylesheet">
 
 
+  <link rel="shortcut icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
   <link rel="canonical" href={Astro.url.href} />
 
   {['og','twitter'].map(e=>(
@@ -284,8 +288,8 @@ memberTotalToPay.set(+document.body.dataset.memberTotal)
 cartHasItems.set(!!(+document.body.dataset.hasItems))
 signedIn.set(!!(+document.body.dataset.signedIn))
 shopNameMap.set(JSON.parse(document.body.dataset.shopNameMap))
-selectedCollectionPoint.set(+document.body.dataset.selectedCollectionPoint)
-preferredCollectionPoint.set(+document.body.dataset.preferredCollectionPoint)
+selectedCollectionPoint.set(!!Object.keys(shopNameMap.get()).length ? +document.body.dataset.selectedCollectionPoint : 1)
+preferredCollectionPoint.set(!!Object.keys(shopNameMap.get()).length ? +document.body.dataset.preferredCollectionPoint : 1)
 otherClientPaymentInProcess.set(!!(+document.body.dataset.pip))
 reloadBC.onmessage = (ev:MessageEvent<string>) => ev.data !== pageToken.get() && window.location.reload()
 document.addEventListener('DOMContentLoaded',showBarcodesOnLoad,true)
@@ -308,13 +312,8 @@ window.onloadTurnstileCallback = () => {
 }
 
 // favicon svg
-// const faviconSvg = document.getElementById('favicon-svg') as HTMLLinkElement
-// window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',(e)=>{
-//   if (!!faviconSvg) faviconSvg.href = `/favicon-${e.matches ? 'dark' : 'light'}.svg`
-// })
-
-
-// <link rel="shortcut icon" href="/favicon.ico" sizes="32x32">
-//   <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg">
-//   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+const faviconSvg = document.getElementById('favicon-svg') as HTMLLinkElement
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',(e)=>{
+  if (!!faviconSvg) faviconSvg.href = `/favicon-${e.matches ? 'dark' : 'light'}.svg`
+})
 </script>
