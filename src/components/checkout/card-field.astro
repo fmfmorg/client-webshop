@@ -146,6 +146,10 @@ const guestCheckout = async (form:HTMLFormElement) => {
 
     const total = guestTotalToPay.get()
 
+    console.log("deliveryMethodID: ", deliveryMethodID)
+    console.log("selectedCollectionPoint: ", $selectedCollectionPoint)
+    console.log("total: ", total)
+
     const resp = await fetch('/api/webshop/guest-preverify-order',{
         method:'POST',
         headers:httpRequestHeader(false,'client',true),
@@ -167,7 +171,7 @@ const guestCheckout = async (form:HTMLFormElement) => {
             collectionPoint:$selectedCollectionPoint
         })
     })
-    console.log(resp.status)
+    console.log("resp.status: ", resp.status)
     if (!resp.ok) {
         if (await sessionLost(resp.status)) return
         showPaymentFailedModal('Server error. Please try again later.')
