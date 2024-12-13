@@ -62,6 +62,7 @@ const mountCartField = async () => {
         onStatusChange:({completed})=>cardFieldComplete.set(completed),
         onError:(e)=>showPaymentFailedModal(e.message),
         hidePostcodeField:true,
+        onSuccess:()=>console.log('payment received!')
     })
 }
 
@@ -142,10 +143,6 @@ const guestCheckout = async (form:HTMLFormElement) => {
 
     const total = guestTotalToPay.get()
 
-    console.log("deliveryMethodID: ", deliveryMethodID)
-    console.log("selectedCollectionPoint: ", $selectedCollectionPoint)
-    console.log("total: ", total)
-
     const resp = await fetch('/api/webshop/guest-preverify-order',{
         method:'POST',
         headers:httpRequestHeader(false,'client',true),
@@ -174,7 +171,7 @@ const guestCheckout = async (form:HTMLFormElement) => {
         return
     }
     const {apiResponse:{userExists,orderID}} = await resp.json() as { apiResponse:{userExists: boolean;orderID:number;}}
-    console.log(userExists, orderID)
+    console.log("userExists: ", userExists, ", orderID: ", orderID)
     checkoutOrderID.set(orderID)
     if (userExists) {
         paymentInProcessCheckbox.checked = false
