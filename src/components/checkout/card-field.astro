@@ -176,13 +176,13 @@ const guestCheckout = async (form:HTMLFormElement) => {
     if (userExists) {
         paymentInProcessCheckbox.checked = false
         userExistsModalCheckbox.checked = true
-    } else {
+    } /*else {
         cardField.submit({
             name:`${billingFirstName} ${billingLastName}`.trim(),
             email,
             billingAddress,
         })
-    }
+    }*/
 }
 
 const onSubmit = (e:SubmitEvent) => {
