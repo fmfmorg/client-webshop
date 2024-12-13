@@ -217,10 +217,20 @@ type ICartApiResponse = {success?:boolean} & IAddToBagResponse
 const updateCartItemMap = (e:ICartApiResponse) => dispatchInternalEvent(UPDATE_CART_ITEM_MAP,e)
 
 const wsPaymentUpdate = async (e:'start'|'fail'|'success') => {
-    if (thisClientPaymentInProcess.get()){
-        const orderID = checkoutOrderID.get()
-        if (e === 'success' && orderID !== 0) window.location.assign(`/track-order?order=${orderID}`)
-    } else otherClientPaymentInProcess.set(e === 'start')
+    const orderID = checkoutOrderID.get()
+    switch (e){
+        case 'start':
+            if (!orderID) otherClientPaymentInProcess.set(true)
+            break
+        case 'fail':
+            if (otherClientPaymentInProcess.get()) otherClientPaymentInProcess.set(false)
+            break
+        case 'success':
+            if (!!orderID) window.location.assign(`/track-order?order=${orderID}`)
+            else if (otherClientPaymentInProcess.get()) otherClientPaymentInProcess.set(false)
+            break
+        default: break
+    }
 }
 
 const wsSelectedCollectionPointUpdate = (e:number) => {
