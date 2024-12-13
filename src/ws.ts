@@ -220,13 +220,13 @@ const wsPaymentUpdate = async (e:'start'|'fail'|'success') => {
     const orderID = checkoutOrderID.get()
     switch (e){
         case 'start':
-            if (!orderID) otherClientPaymentInProcess.set(true)
+            if (!thisClientPaymentInProcess.get()) otherClientPaymentInProcess.set(true)
             break
         case 'fail':
             if (otherClientPaymentInProcess.get()) otherClientPaymentInProcess.set(false)
             break
         case 'success':
-            if (!!orderID) window.location.assign(`/track-order?order=${orderID}`)
+            if (thisClientPaymentInProcess.get() && !!orderID) window.location.assign(`/track-order?order=${orderID}`)
             else if (otherClientPaymentInProcess.get()) otherClientPaymentInProcess.set(false)
             break
         default: break
