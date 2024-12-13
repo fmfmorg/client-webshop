@@ -61,7 +61,7 @@ const CartList = (
     const [cartItemMap, setCartItemMap] = createStore(itemsMap)
     const [cartContent, setCartContent] = createStore(cartCalculation)
     const [prodDetailsMap, setProdDetailsMap] = createStore(productDetailsMap)
-    const cartItemIDs = createMemo(()=>!!Object.entries(cartItemMap).length ? Object.values(cartItemMap).sort((a,b)=>b.dateAdded - a.dateAdded).map(e=>e.id) : [])
+    const cartItemIDs = createMemo(()=>!!Object.entries(cartItemMap).length ? Object.values(cartItemMap).sort((a,b)=>b.dateAdded - a.dateAdded).filter(e=>!!e.quantity).map(e=>e.id) : [])
     const subtotalBeforeDiscounts = createMemo(()=>isCheckoutPage ? Object.values(cartItemMap).map(({finalPrice,quantity})=>finalPrice * quantity).reduce((a,b)=>a+b,0) : 0)
     const itemCount = createMemo(()=>!!Object.values(cartItemMap).length ? Object.values(cartItemMap).map(e=>e.quantity).reduce((a,b)=>a+b,0) : 0)
     const [deleteID, setDeleteID] = createSignal('')
