@@ -137,13 +137,14 @@ import { observer } from "./observer";
 
                     const json = await resp.json()
                     const { apiResponse } = json as {apiResponse:IAddToBagResponse}
-                    const { cartItemMap } = apiResponse
+                    console.log(apiResponse)
+                    // const { cartItemMap } = apiResponse
 
-                    dispatchInternalEvent(ADD_TO_BAG_FROM_CATALOGUE,apiResponse)
+                    // dispatchInternalEvent(ADD_TO_BAG_FROM_CATALOGUE,apiResponse)
 
-                    qtyInCart = cartItemMap[id].quantity
-                    updateAddToBagBtn()
-                    setLoading(false)
+                    // qtyInCart = cartItemMap[id].quantity
+                    // updateAddToBagBtn()
+                    // setLoading(false)
                 } else if (!!currentCollectionPoint) {
                     const collectionPontOnQtyIncreaseCheckbox = document.getElementById("collection-point-on-qty-increase") as HTMLInputElement
                     const collectionPointNameElem = document.getElementById('current-collection-point-name') as HTMLSpanElement
