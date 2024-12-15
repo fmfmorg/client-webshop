@@ -403,7 +403,7 @@ const CartList = (
                 <h3 class={`font-semibold text-lg tracking-wider [word-spacing:0.2rem] ${$signedIn() ? 'text-center' : ''}`}>Your shopping bag is empty!</h3>
                 <Show when={$signedIn()} fallback={<SignInBtn />} children={<ContinueShopping />} />
             </div>
-            <div ref={cartLockedRef} class={`${!isCheckoutPage && $otherClientPaymentInProcess() && !!cartItemIDs().length ? 'flex' : 'hidden'} flex-col justify-center`}>
+            <div ref={cartLockedRef} class={`${!isCheckoutPage && $otherClientPaymentInProcess() ? 'flex' : 'hidden'} flex-col justify-center`}>
                 <p class="text-center font-light italic text-sm sm:text-base">Cart locked during checkout process</p>
             </div>
             <Show 

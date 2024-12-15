@@ -1,9 +1,10 @@
-<div id="checkout-cart-locked" class="hidden flex-col justify-center">
+<div id="checkout-cart-locked" class="hidden flex-col justify-center px-4 bg-white">
     <p class="text-center font-light italic">Cart locked during checkout process</p>
 </div>
 
 <script>
 import { otherClientPaymentInProcess } from "@stores"
+    // on payment status change
     let timeout
     const cartLockedDiv = document.getElementById('checkout-cart-locked') as HTMLDivElement
     const toggleClasses = (v:boolean) => {
@@ -15,4 +16,21 @@ import { otherClientPaymentInProcess } from "@stores"
         timeout = setTimeout(toggleClasses,100,v)
     }
     otherClientPaymentInProcess.subscribe(resetTimeout)
+
+    // on resize
+    let resizeTimeout
+    const header = document.getElementsByTagName('header')[0] as HTMLDivElement
+    const footer = document.getElementsByTagName('footer')[0] as HTMLDivElement
+    const resize = () => {
+        const { innerHeight } = window
+        const headerHeight = header.getBoundingClientRect().height
+        const footerHeight = footer.getBoundingClientRect().height
+        cartLockedDiv.style.minHeight = `${innerHeight - headerHeight - footerHeight}px`
+    }
+    const onResize = () => {
+        clearTimeout(resizeTimeout)
+        resizeTimeout = setTimeout(resize,200)
+    }
+    window.addEventListener('load',resize,{once:true})
+    window.addEventListener('resize',onResize,true)
 </script>

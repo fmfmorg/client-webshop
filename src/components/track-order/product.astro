@@ -13,7 +13,7 @@ interface Props {
 
 const { product:{name: productName, images, url, id}, item:{ finalPrice, quantity } } = Astro.props as Props
 const { name:imgName, ext } = images[0]
-const style = `background-image: image-set(${['.avif','.webp',ext].map(e=>`url(${imageUrlPrefix}${imgName}${e}) type('image/${e === '.jpg' ? 'jpeg' : e.replace('.','').toLowerCase()}')`).join(', ')})`
+const style = `background-image: image-set(${['.avif','.webp',ext].map(e=>`url(${imageUrlPrefix}${imgName}_256x256${e}) type('image/${e === '.jpg' ? 'jpeg' : e.replace('.','').toLowerCase()}')`).join(', ')})`
 ---
 
 <li>
