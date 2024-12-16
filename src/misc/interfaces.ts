@@ -121,6 +121,8 @@ export interface IOrderDetails {
     trackingNumber:string;
     deliveryMethod:string;
     deliveryCost:number;
+    deliveredDT:number;
+    deliveryProofImageFilename:string;
 }
 
 export interface ITrackOrderResponse {

@@ -3,6 +3,7 @@ import type { ITrackOrderResponse } from '@misc';
 import Products from './products.astro';
 import OrderStatus from './order-status.astro';
 import OrderDetails from './order-details.astro';
+import DeliveryProof from './delivery-proof.astro';
 
 interface Props {
     order:ITrackOrderResponse;
@@ -15,7 +16,8 @@ const { order:{shippingAddress,orderDetails,cartContent,productDetails}, orderID
     <h1 class="font-serif text-2xl [word-spacing:0.3rem]">Order {orderID}</h1>
     <hr class="mt-3" />
     <OrderStatus {...orderDetails} />
-    <Products {...{items:cartContent.items,productDetails,trackingNumber:orderDetails.trackingNumber}} />
+    {!!orderDetails.deliveryProofImageFilename && <DeliveryProof filename={orderDetails.deliveryProofImageFilename} />}
+    <Products {...{items:cartContent.items,productDetails,trackingNumber:orderDetails.trackingNumber,hasDeliveryProof:!!orderDetails.deliveryProofImageFilename}} />
     <OrderDetails {...{shippingAddress,orderDetails,cartContent, orderID}} />
     <!-- <p class="hidden font-barcode text-5xl text-center mt-8 2xs:text-6xl xs:text-7xl">{orderID.toString().padStart(10,'0')}</p>
     <p class="text-xs text-center font-light tracking-wide mt-[-1.5rem]">This barcode is scannable and unique for this order.</p> -->

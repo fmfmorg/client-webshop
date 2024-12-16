@@ -7,14 +7,15 @@ interface Props {
     items:ICartItem[];
     productDetails:IProduct[];
     trackingNumber:string;
+    hasDeliveryProof:boolean;
 }
 
-const { items, productDetails, trackingNumber } = Astro.props as Props
+const { items, productDetails, trackingNumber, hasDeliveryProof } = Astro.props as Props
 const itemCount = items.map(e=>e.quantity).reduce((a,b)=>a+b,0)
 const productDetailsMap = productDetails.map(e=>({[e.id]:e})).reduce((a,b)=>({...a,...b}),{})
 ---
 
-<div class=`${!!trackingNumber ? 'mt-6' : 'mt-4'} border border-gray-300 p-3 rounded-md`>
+<div class=`${(!!trackingNumber || hasDeliveryProof) ? 'mt-6' : 'mt-4'} border border-gray-300 p-3 rounded-md`>
     <input type="checkbox" class="peer" checked hidden id="show-products" />
     <label for="show-products" class="cursor-pointer flex justify-between uppercase text-sm tracking-widest font-semibold peer-checked:[&>svg]:rotate-180">
         <p>Products ({itemCount})</p>

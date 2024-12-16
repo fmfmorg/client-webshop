@@ -24,13 +24,15 @@ const { shippingAddress:{
     deliveryMethod,
     paymentMethod,
     location,
-    orderDate
+    orderDate,
+    deliveredDT,
+    deliveryProofImageFilename
 }, cartContent: {
     staffDiscount,
     memberDiscount,
     memberDiscountRate,
-    campaignDiscount,
-    campaignName,
+    campaignDiscounts,
+    voucherDiscounts,
     subtotalBeforeDelivery
 }, orderID } = Astro.props as Props
 ---
@@ -53,6 +55,9 @@ const { shippingAddress:{
         <OrderDetail title="Date of Purchase">
             <p>{new Intl.DateTimeFormat('en-GB',{year:'numeric',month:'long',day:'numeric'}).format(orderDate)}</p>
         </OrderDetail>
+        {!!deliveredDT && <OrderDetail title="Date of Delivery">
+            <p>{new Intl.DateTimeFormat('en-GB',{year:'numeric',month:'long',day:'numeric',hour:'numeric',minute:'2-digit',hour12:true}).format(orderDate)}</p>
+        </OrderDetail>}
         <OrderDetail title="Payment Method">
             <p>{paymentMethod}</p>
         </OrderDetail>
@@ -66,10 +71,15 @@ const { shippingAddress:{
             <p>{countryName}</p>
         </OrderDetail>}
         {!!staffDiscount && <OrderDetail title="Staff Discount">{formatPrice(staffDiscount)}</OrderDetail>}
-        {!!campaignDiscount && <OrderDetail title={`Discount: ${campaignName}`}>{formatPrice(campaignDiscount)}</OrderDetail>}
+        {!!campaignDiscounts && !!campaignDiscounts.length && campaignDiscounts.map(({name,amount})=>(
+            <OrderDetail title={`Discount: ${name}`}>{formatPrice(amount)}</OrderDetail>
+        ))}
+        {!!voucherDiscounts && !!voucherDiscounts.length && voucherDiscounts.map(({code,amount})=>(
+            <OrderDetail title={`Discount: ${code}`}>{formatPrice(amount)}</OrderDetail>
+        ))}
         {!!memberDiscount && <OrderDetail title={`Member Discount: ${memberDiscountRate * 100}% off`}>{formatPrice(memberDiscount)}</OrderDetail>}
         <OrderDetail title='Subtotal'>{formatPrice(subtotalBeforeDelivery)}</OrderDetail>
-        {!!deliveryCost && <OrderDetail title='Delivery Cost'>{formatPrice(deliveryCost)}</OrderDetail>}
+        <OrderDetail title='Delivery Cost'>{!!deliveryCost ? formatPrice(deliveryCost) : 'FREE'}</OrderDetail>
         <hr class="border-black border-[1px]" />
         <div class="flex justify-between">
             <p class="font-semibold">Total</p>
