@@ -25,7 +25,7 @@ const qtyInCart = cartItemObj[id]?.quantity || 0
     data-stock-quantities={JSON.stringify(stockQuantities)} 
     data-qty-in-cart={qtyInCart}
 >
-    <div id="product-container" class="space-y-2 md:space-y-0 md:w-screen md:-ml-4 md:grid md:grid-cols-5 md:gap-4 md:overflow-y-hidden lg:grid-cols-8">
+    <div id="product-container" class="space-y-2 md:space-y-0 md:w-screen md:-ml-4 md:grid md:grid-cols-5 md:gap-4 md:overflow-y-hidden lg:grid-cols-9">
         <div class="md:col-span-3 lg:col-span-5 md:overflow-y-auto hide-scrollbar">
             <div class="md:hidden">
                 <ImagesHorizontal id={id} images={images} />
@@ -34,13 +34,13 @@ const qtyInCart = cartItemObj[id]?.quantity || 0
                 <ImagesVertical images={images} />
             </div>
         </div>
-        <div class="text-container px-3 md:col-span-2 lg:col-span-3 md:overflow-y-auto md:pt-4 hide-scrollbar">
+        <div class="text-container px-3 md:col-span-2 lg:col-span-4 md:overflow-y-auto md:pt-4 hide-scrollbar">
             <Text productDetails={productObj[id]} />
         </div>
     </div>
     <div class=`w-full px-3 ${!!relatedProductIDs.length ? '' : 'hidden'}`>
         <h2 class="text-center font-serif my-6 uppercase [letter-spacing:0.3rem] [word-spacing:0.3rem] text-base sm:text-lg md:text-xl">You may also like ...</h2>
-        <div class="px-2 grid grid-cols-2 gap-x-1 2xs:gap-x-2 xs:grid-cols-3 md:gap-x-4 lg:grid-cols-4 2xl:grid-cols-6 gap-y-8">
+        <div class="px-2 grid grid-cols-2 gap-x-1 2xs:gap-x-2 xs:grid-cols-3 md:gap-x-4 lg:grid-cols-4 gap-y-8">
             {
                 relatedProductIDs.map(e=>(
                     <CatalogueItem 

@@ -6,3 +6,4 @@ export const imageUrlPrefix = import.meta.env.PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX
 export const turnstileSiteKey = import.meta.env.PUBLIC_FM_TURNSTILE_SITEKEY
 export const acceptMembership = import.meta.env.PUBLIC_FM_ACCEPT_MEMBERSHIP === "true"
 export const deliveryProofPrefix = import.meta.env.PUBLIC_FM_DELIVERY_PROOF_IMAGE_URL_PREFIX
+export const companyNumber = import.meta.env.PUBLIC_FM_COMPANY_NUMBER

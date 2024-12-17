@@ -1,0 +1,47 @@
+---
+import { companyNameFull, companyNumber } from "@misc/env-vars"
+import type { ILink } from "./interfaces"
+import Section from "./section.astro"
+
+const customerServiceLinks:ILink[] = [
+    {
+        name:'Track Order',
+        url:'/track-order',
+    },
+    {
+        name:'Delivery Information',
+        url:'/terms/delivery'
+    },
+    {
+        name:'Returns & Refunds',
+        url:'/terms/returns-refunds'
+    },
+    {
+        name:'Contact Us',
+        url:'/contact'
+    },
+]
+
+const legalLinks:ILink[] = [
+    {
+        name:'Terms and Conditions',
+        url:'/terms/terms-and-conditions'
+    }
+]
+
+const year = new Date().getFullYear()
+---
+
+<footer class="shadow bg-stone-200">
+    <div class="w-full px-4 pt-4 pb-2 grid xs:flex xs:justify-center gap-y-2 xs:gap-y-0 xs:gap-x-20">
+        <Section title="Customer Service" links={customerServiceLinks} />
+        <Section title="Legal" links={legalLinks} />
+    </div>
+    <hr class="border-stone-400 mx-4" />
+    <div class="p-4 text-center text-xs leading-5">
+        <p>&copy; {year} {companyNameFull}. <br class="2xs:hidden" />All Rights Reserved.</p>
+        <p>Registered in Scotland</p>
+        <p>Company Number {companyNumber}</p>
+        <p>Registered Office: <br class="xs:hidden" />5 South Charlotte Street, Edinburgh, EH2 4AN</p>
+    </div>
+</footer>

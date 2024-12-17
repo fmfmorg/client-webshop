@@ -1,6 +1,6 @@
 ---
 import Header from './header/index.astro';
-import Footer from './footer.astro';
+import Footer from './footer/index.astro';
 import type { IShopAddressMap, IShoppingBagSidebarProp } from '@misc';
 import LoadingOverlay from './loading-overlay.astro';
 import ErrorMsgModal from './error-msg-modal.astro';
@@ -118,12 +118,6 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
 
     @media screen and (min-width: 1024px) and (max-width: 1535px) {
       .related-product:nth-child(n+5) {
-        display:none;
-      }
-    }
-
-    @media screen and (min-width: 1536px){
-      .related-product:nth-child(n+7) {
         display:none;
       }
     }

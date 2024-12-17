@@ -20,7 +20,7 @@ const {
 
 <div class="divide-y gap-y-4">
     <div class="md:mb-8">
-        <h1 class="font-display text-2xl [letter-spacing:-0.18rem] [word-spacing:0.3rem] mb-6 md:text-3xl md:[letter-spacing:-0.2rem] md:[word-spacing:0.4rem]">{name}</h1>
+        <h1 class="font-display text-2xl [letter-spacing:-0.18rem] [word-spacing:0.3rem] mb-6">{name}</h1>
         <div class="fixed bottom-0 left-0 right-0 bg-white p-3 shadow-[0_12px_8px_10px_rgba(0,0,0,0.3)] z-20 md:z-0 md:shadow-none md:static md:bg-transparent md:p-0">
             <div class="text-center md:text-left mb-2 md:mb-4">
                 <p class={`without-discount original-price font-serif font-black tracking-widest text-xl md:text-2xl ${price === discountedPrice ? '' : 'hidden'}`}>{formatPrice(price)}</p>

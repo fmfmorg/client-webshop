@@ -1,0 +1,28 @@
+---
+import type { ILink } from './interfaces';
+
+interface Props {
+    title:string;
+    links:ILink[];
+}
+
+const { title, links } = Astro.props as Props
+
+const inputID = crypto.randomUUID()
+---
+
+<div class="has-[:checked]:pb-4 xs:pt-2 xs:pb-4">
+    <input type="checkbox" id={inputID} hidden class="peer" />
+    <label for={inputID} class="cursor-pointer xs:cursor-default flex justify-between peer-checked:[&>svg>line:first-child]:hidden">
+        <p class="uppercase text-sm xs:text-xs tracking-widest [word-spacing:0.2rem] font-semibold">{title}</p>
+        <svg viewBox="0 0 100 100" class="w-3 h-3 my-auto xs:hidden" stroke="black" stroke-width="0.8em">
+            <line x1="50" y1="5" x2="50" y2="95" />
+            <line x1="5" y1="50" x2="95" y2="50" />
+        </svg>
+    </label>
+    <ul class="pt-2 max-h-0 xs:max-h-fit overflow-y-hidden peer-checked:max-h-fit text-sm xs:text-xs tracking-wider [word-spacing:0.1rem] text-gray-800">
+        {links.map(({name,url})=>(
+            <ul><a href={url} class="xs:leading-6 xs:py-0.5">{name}</a></ul>
+        ))}
+    </ul>
+</div>
