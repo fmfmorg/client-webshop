@@ -4,10 +4,12 @@ import { imageUrlPrefix } from '@misc'
 const Image = (
     {
         name,
-        ext
+        ext,
+        alt
     }:{
         name:string;
         ext:string;
+        alt:string;
     }
 ) => (
     <picture>
@@ -18,7 +20,7 @@ const Image = (
                 ext
             ].map(e=>(
                 e === ext ?
-                <img src={`${imageUrlPrefix}${name}_256x256${e}`} />
+                <img src={`${imageUrlPrefix}${name}_256x256${e}`} alt={alt} />
                 :
                 <source srcset={`${imageUrlPrefix}${name}_256x256${e}`} />
             ))

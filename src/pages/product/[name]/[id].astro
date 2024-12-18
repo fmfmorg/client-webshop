@@ -2,9 +2,9 @@
 import Product from '@components/product-page/index.astro';
 import Layout from '@components/layout/index.astro'
 import type { IProduct } from '@components/catalogue-item/interfaces';
-import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
+import { httpRequestHeader, imageUrlPrefix, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import CollectionPointsSidebar from '@components/product-page/collection-points-sidebar';
-import { FM_CLIENT_WEBSHOP_API_URL, FM_ENV_MODE } from 'astro:env/server'
+import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
 import { headerCarouselOffKey } from '@misc'
 
 interface IApiResponse {
@@ -15,7 +15,7 @@ interface IApiResponse {
 let { name, id } = Astro.params;
 if (id !== id.toUpperCase()) return Astro.redirect(`/product/${name}/${id.toUpperCase()}`)
 
-const isProduction = FM_ENV_MODE === 'production'
+const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/product-page-init/${id}`,{
@@ -51,7 +51,7 @@ let {
 let finalName = productMap[id].url
 if (finalName !== name) return Astro.redirect(`/product/${finalName}/${id}`)
 
-Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isProduction,expiresAt))
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
 
 productMap = {...productMap,...cartProductDetailsMap}
 
@@ -63,7 +63,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
     productDetailsMap:productMap
 }
 
-Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isProduction))
+Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 const productName = productMap[id].name
 ---
 
@@ -78,7 +78,12 @@ const productName = productMap[id].name
     title:productName,
     isProductPage:true,
     headerCarouselTexts,
-    titleAddForHer:true
+    titleAddForHer:true,
+    description:productMap[id].description.replaceAll('<p>','').replaceAll('</p>','').trim(),
+    imageURL:imageUrlPrefix+productMap[id].images[0].name+productMap[id].images[0].ext,
+    images:productMap[id].images,
+    price:productMap[id].discountedPrice,
+    productID:id
 }}>
     <Product 
         id={id} 

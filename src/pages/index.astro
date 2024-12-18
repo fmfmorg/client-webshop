@@ -1,10 +1,17 @@
 ---
 import Layout from '../components/layout/index.astro';
 import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
-import { FM_CLIENT_WEBSHOP_API_URL, FM_ENV_MODE } from 'astro:env/server'
+import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
 import { headerCarouselOffKey } from '@misc'
+import Homepage from '@components/homepage/index.astro'
+import type { IProduct } from '@components/catalogue-item/interfaces';
 
-const isProduction = FM_ENV_MODE === 'production'
+interface IApiResponse {
+    productIDs:string[];
+    productMap:{[k:string]:IProduct};
+}
+
+const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
 
@@ -12,27 +19,37 @@ const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/index-page-init
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })
 
-if (!resp.ok) return Astro.redirect('/maintenance')
+if (!resp.ok) return new Response(null,{status:500})
 
 const json = await resp.json()
-const {mdwResponse} = json as {mdwResponse: IMdwResponse}
-const {
-    expiresAt,
-    sessionID,
-    signedIn,
-    cartProductDetailsMap,
-    cartItemMap,
-    cartContent,
-    paymentInProcess,
-    selCollectionPoint,
-    prfCollectionPoint,
-    shopAddressMap,
-    minSpendForFreeShipping,
-    firstName,
-    headerCarouselTexts,
-} = mdwResponse
+let {
+    mdwResponse:{
+        expiresAt,
+        sessionID,
+        signedIn,
+        cartProductDetailsMap,
+        cartItemMap,
+        cartContent,
+        paymentInProcess,
+        selCollectionPoint,
+        prfCollectionPoint,
+        shopAddressMap,
+        minSpendForFreeShipping,
+        firstName,
+        headerCarouselTexts,
+    },
+    apiResponse:{
+        productIDs,
+        productMap,
+    }
+} = json as {
+    mdwResponse:IMdwResponse;
+    apiResponse:IApiResponse;
+}
 
-Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isProduction,expiresAt))
+productMap = {...productMap,...cartProductDetailsMap}
+
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
 
 const shoppingBagProp:IShoppingBagSidebarProp = {
     isSignedIn:signedIn,
@@ -42,7 +59,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
     productDetailsMap:cartProductDetailsMap
 }
 
-Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isProduction))
+Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 
 ---
 
@@ -57,62 +74,5 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     title:'',
     headerCarouselTexts,
 }}>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
-    <h1 class="uppercase">Hello, World!</h1>
+    <Homepage productIDs={productIDs || []} productObj={productMap} cartItemObj={cartItemMap}  />
 </Layout>

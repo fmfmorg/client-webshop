@@ -4,14 +4,15 @@ import type { IProductImages } from "@components/catalogue-item/interfaces";
 
 interface Props {
     images: IProductImages[];
+    alt:string;
 }
 
-const { images } = Astro.props as Props
+const { images, alt } = Astro.props as Props
 ---
 <div>
     {
         images.map(({name,ext})=>(
-            <ImageVertical name={name} ext={ext} />
+            <ImageVertical name={name} ext={ext} alt={alt} catalogue />
         ))
     }
 </div>

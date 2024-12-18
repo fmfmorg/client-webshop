@@ -13,14 +13,17 @@ const { productDetails } = Astro.props
 const {
     name,
     description,
+    specification = '',
     price,
     discountedPrice,
+    id
 } = productDetails
 ---
 
 <div class="divide-y gap-y-4">
     <div class="md:mb-8">
-        <h1 class="font-display text-2xl [letter-spacing:-0.18rem] [word-spacing:0.3rem] mb-6">{name}</h1>
+        <h1 class="font-display text-2xl [letter-spacing:-0.18rem] [word-spacing:0.3rem]">{name}</h1>
+        <p class="text-gray-600 text-xs font-light tracking-widest mb-6">SKU: {id}</p>
         <div class="fixed bottom-0 left-0 right-0 bg-white p-3 shadow-[0_12px_8px_10px_rgba(0,0,0,0.3)] z-20 md:z-0 md:shadow-none md:static md:bg-transparent md:p-0">
             <div class="text-center md:text-left mb-2 md:mb-4">
                 <p class={`without-discount original-price font-serif font-black tracking-widest text-xl md:text-2xl ${price === discountedPrice ? '' : 'hidden'}`}>{formatPrice(price)}</p>
@@ -30,16 +33,16 @@ const {
                 </p>
             </div>
             <div class="hidden w-full add-to-bag-buttons">
-                <button id="product-page-qty-minus" class="p-3 w-10 h-10 flex-none text-3xl font-light bg-gray-600 border border-gray-600">
+                <button aria-label="Decrease Quantity" id="product-page-qty-minus" class="p-3 w-10 h-10 flex-none text-3xl font-light bg-gray-600 border border-gray-600">
                     <svg viewBox="0 0 100 100" class="w-full h-full" stroke="white" stroke-width="0.4em">
                         <line x1="5" y1="50" x2="95" y2="50" />
                     </svg>
                 </button>
-                <button id="product-page-add-to-bag" class="flex-1 bg-gray-600 border border-gray-600">
+                <button aria-label="Add to Bag" id="product-page-add-to-bag" class="flex-1 bg-gray-600 border border-gray-600">
                     <p class="text-white uppercase text-xs [letter-spacing:0.15rem] [word-spacing:0.15rem]">Add <span class="add-to-bag-quantity" /> to Bag</p>
                     <LoadingSmall className="fill-white animate-spin h-5 w-5 mx-auto hidden" />
                 </button>
-                <button id="product-page-qty-add" class="p-3 w-10 h-10 flex-none text-3xl font-light bg-gray-600 border border-gray-600">
+                <button aria-label="Increase Quantity" id="product-page-qty-add" class="p-3 w-10 h-10 flex-none text-3xl font-light bg-gray-600 border border-gray-600">
                     <svg viewBox="0 0 100 100" class="w-full h-full" stroke="white" stroke-width="0.4em">
                         <line x1="5" y1="50" x2="95" y2="50" />
                         <line x1="50" y1="5" x2="50" y2="95" />
@@ -53,8 +56,39 @@ const {
     </div>
     <ClickCollectBtn product={productDetails} client:only="solid-js" />
     <SubText title="Description">
-        <!-- <p>{Array(100).fill(description).join(' ')}</p> -->
         <div set:html={description} />
+        {!!specification && <>
+            <p><br /></p>
+            <div set:html={specification} />
+        </>}
+    </SubText>
+    <SubText title="How to Care">
+        <p class="mb-2">To keep your earrings looking beautiful:</p>
+        <ul class="list-disc list-inside">
+            <li>Avoid contact with water, perfume, and lotions.</li>
+            <li>Store in a dry place away from direct sunlight.</li>
+            <li>Clean gently with a soft, dry cloth.</li>
+            <li>Remove before showering, swimming, or sleeping.</li>
+            <li>Avoid exposure to chemicals or harsh environments.</li>
+        </ul>
+        <p class="italic mt-2">Tip: Store in a sealed bag or jewellery box to prevent tarnishing.</p>
+    </SubText>
+    <SubText title='Delivery'>
+        <p class="font-semibold">UK Delivery:</p>
+        <ul class="list-disc list-inside">
+            <li>Standard: Free for orders £20 or over, or £4 for orders under £20.</li>
+            <li>Express: £5</li>
+        </ul>
+        <p class="mt-2 font-semibold">International:</p>
+        <ul class="list-disc list-inside">
+            <li>Shipping costs vary and will be displayed at checkout once the shipping address is entered.</li>
+            <li>Customer/recipient is responsible for all customs duties and taxes upon receipt of the shipment.</li>
+        </ul>
+        <p class="mt-2">For details please visit our <a href="/terms/delivery" class="underline">Delivery Policy</a>.</p>
+    </SubText>
+    <SubText title="Returns & Refunds">
+        <p>Due to hygiene reasons, we only accept returns for faulty items within 48 hours of the shipment being marked as 'delivered'.</p>
+        <p>For details please visit our <a href="/terms/returns-refunds" class="underline">Returns & Refunds Policy</a>.</p>
     </SubText>
     <div />
 </div>

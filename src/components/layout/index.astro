@@ -5,7 +5,8 @@ import type { IShopAddressMap, IShoppingBagSidebarProp } from '@misc';
 import LoadingOverlay from './loading-overlay.astro';
 import ErrorMsgModal from './error-msg-modal.astro';
 import CollectionPointOnQtyIncrease from './collection-point-on-qty-increase.astro'
-import { companyNameShort } from '@misc'
+import { companyNameShort, imageUrlPrefix } from '@misc'
+import type { IProductImages } from '@components/catalogue-item/interfaces';
 
 interface Props {
   paymentInProcess:boolean;
@@ -22,6 +23,11 @@ interface Props {
   isProductPage?:boolean;
   headerCarouselTexts:string[];
   titleAddForHer?:boolean;
+  description?:string;
+  imageURL?:string;
+  images?:IProductImages[];
+  price?:number;
+  productID?:string;
 }
 
 const { 
@@ -38,7 +44,12 @@ const {
   title,
   isProductPage = false,
   headerCarouselTexts,
-  titleAddForHer = false
+  titleAddForHer = false,
+  description = '',
+  imageURL = '',
+  images = [],
+  price = 0,
+  productID = '',
 } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
 
@@ -51,6 +62,27 @@ if (!!shoppingBagProp){
 } else cartHasItems = hasItemsInCart
 
 const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : title.trim()} | ${companyNameShort}` : `${companyNameShort} | Fashion Jewellery For Her`
+
+const productSchema = isProductPage ? {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": title,
+  "description": description,
+  "brand": {
+    "@type": "Brand",
+    "name": companyNameShort
+  },
+  "image": images.map(({name,ext})=>imageUrlPrefix+name+ext),
+  "size": "Standard",
+  "sku": productID,
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "GBP",
+    "price": (price * 0.01).toFixed(2),
+    "availability": "https://schema.org/InStock",
+    "url": Astro.url.href
+  }
+} : {}
 
 ---
 
@@ -66,7 +98,6 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Yuji+Syuku&display=swap" rel="stylesheet">
 
-
   <link rel="shortcut icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -74,16 +105,25 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
   <link rel="canonical" href={Astro.url.href} />
 
   {['og','twitter'].map(e=>(
-    <>
     <meta property={`${e}:title`} content={isProductPage ? title.trim() : fullTitle}>
-    </>
   ))}
 
   <meta name="og:type" content="website">
   <meta name="og:url" content={Astro.url.href}>
   <meta name="og:site_name" content={companyNameShort}>
-
+  
   <meta name="twitter:card" content="summary_large_image">
+
+  {!!description && <>
+    <meta name="description" content={description} />
+    <meta property="og:description" content={description} />
+  </>}
+
+  {!!imageURL && <>
+    <meta property="og:image" content={imageURL} />
+  </>}
+
+  {isProductPage && <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />}
 
   <style is:global>
     .hide-scrollbar {
@@ -105,19 +145,20 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
     }
 
     @media screen and (max-width: 474px) {
-      .related-product:nth-child(n+5) {
+      .related-product:nth-of-type(n+5) {
         display:none;
       }
     }
 
     @media screen and (min-width: 475px) and (max-width: 1023px) {
-      .related-product:nth-child(n+4) {
+      .related-product:nth-of-type(n+4),
+      .homepage-bestseller:nth-of-type(n+4) {
         display:none;
       }
     }
 
     @media screen and (min-width: 1024px) and (max-width: 1535px) {
-      .related-product:nth-child(n+5) {
+      .related-product:nth-of-type(n+5) {
         display:none;
       }
     }

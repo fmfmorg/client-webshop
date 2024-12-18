@@ -61,7 +61,7 @@ const CartItem = (
     return (
         <div class="grid grid-cols-3 grid-flow-dense relative" data-id={p.id}>
             <a href={`/product/${productDetail().url}/${p.id}`} class="col-span-1 p-2">
-                <Image name={productDetail().images[0].name} ext={productDetail().images[0].ext} />
+                <Image name={productDetail().images[0].name} ext={productDetail().images[0].ext} alt={productDetail().name} />
             </a>
             <div class="col-span-2 py-2 pr-1">
                 <div class='flex w-full justify-between'>

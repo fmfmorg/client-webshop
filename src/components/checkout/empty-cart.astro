@@ -1,5 +1,6 @@
 ---
 import { whiteBtnClass } from "@misc";
+import { acceptMembership } from "@misc/env-vars";
 
 interface Props {
     signedIn:boolean;
@@ -16,11 +17,11 @@ const signInPath = `/sign-in?rd=${encodeURIComponent(pathname + search)}`
     <div class="flex justify-center">
         <div class="mx-2">
             <h3 class={`font-semibold text-lg tracking-wider [word-spacing:0.2rem] text-center`}>Your shopping bag is empty!</h3>
-            {!signedIn && <>
+            {acceptMembership && !signedIn && <>
             <p class='tracking-widest uppercase text-xs text-center mt-2 mb-8'>Sign in to access your items already saved in your shopping bag.</p>
             <a href={signInPath} class={whiteBtnClass.replace('w-full','max-w-60 mx-auto')}>Sign In</a>
             </>}
-            {signedIn && <a href="/shop" class={whiteBtnClass.replace('w-full','max-w-60 text-center mx-auto')}>Go to shop</a>}
+            {(!acceptMembership || signedIn) && <a href="/shop" class={whiteBtnClass.replace('w-full','max-w-60 text-center mx-auto')}>Go to shop</a>}
         </div>
     </div>
 </div>

@@ -14,7 +14,7 @@ interface Props {
 }
 
 const { id, productObj, cartItemObj, relatedProductIDs } = Astro.props
-const { images, stockQuantities } = productObj[id]
+const { images, stockQuantities, name } = productObj[id]
 const qtyInCart = cartItemObj[id]?.quantity || 0
 ---
 
@@ -31,7 +31,7 @@ const qtyInCart = cartItemObj[id]?.quantity || 0
                 <ImagesHorizontal id={id} images={images} />
             </div>
             <div class="hidden md:block">
-                <ImagesVertical images={images} />
+                <ImagesVertical images={images} alt={name} />
             </div>
         </div>
         <div class="text-container px-3 md:col-span-2 lg:col-span-4 md:overflow-y-auto md:pt-4 hide-scrollbar">

@@ -3,8 +3,10 @@
 import { imageUrlPrefix } from '@misc'
 import type { IProductImages } from "@components/catalogue-item/interfaces";
 
+type Props = IProductImages & {alt:string}
 
-const { name, ext } = Astro.props as IProductImages
+
+const { name, ext, alt } = Astro.props as Props
 ---
 
 <picture>
@@ -15,7 +17,7 @@ const { name, ext } = Astro.props as IProductImages
             ext
         ].map(e=>(
             e === ext ?
-            <img src={`${imageUrlPrefix}${name}${e}`} />
+            <img src={`${imageUrlPrefix}${name}${e}`} alt={alt} />
             :
             <source srcset={`${imageUrlPrefix}${name}${e}`} />
         ))

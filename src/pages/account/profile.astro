@@ -6,7 +6,7 @@ import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppi
 import EditorContainer from '@components/account-profile/editor-container.astro';
 import EditorPersonalInfo from '@components/account-profile/editor-personal-info.astro';
 import EditorPassword from '@components/account-profile/editor-password.astro';
-import { FM_CLIENT_WEBSHOP_API_URL, FM_ENV_MODE } from 'astro:env/server'
+import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
 import { headerCarouselOffKey } from '@misc'
 import { acceptMembership } from '@misc/env-vars';
 
@@ -20,7 +20,7 @@ interface IApiResponse {
 
 if (!acceptMembership) return new Response(null,{status:404})
 
-const isProduction = FM_ENV_MODE === 'production'
+const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
 
@@ -59,7 +59,7 @@ let {
     apiResponse:IApiResponse;
 }
 
-Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isProduction,expiresAt))
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
 
 const fullName = `${firstName} ${lastName}`.trim()
 
@@ -71,7 +71,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
     productDetailsMap:cartProductDetailsMap
 }
 
-Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isProduction))
+Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 ---
 
 <Layout {...{

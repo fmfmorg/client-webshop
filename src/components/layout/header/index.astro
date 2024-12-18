@@ -9,7 +9,7 @@ import ShoppingBagSidebar from './shopping-bag-sidebar.astro'
 import type { IShoppingBagSidebarProp } from '@misc'
 import Logo from '@components/logo.astro'
 import TextCarousel from './text-carousel'
-import { acceptMembership } from '@misc/env-vars'
+import { acceptMembership, companyNameShort } from '@misc/env-vars'
 
 interface Props {
   signedIn:boolean;
@@ -35,7 +35,7 @@ const isCheckoutPage = Astro.url.pathname === '/checkout'
                 <HamburgerIcon />
             </button> -->
         </div>
-        <a href="/" class=`py-2 xs:py-3 w-[140px] md:w-[162px] ${isCheckoutPage ? 'flex flex-col justify-center h-10 md:h-12' : ''}`>
+        <a href="/" aria-label=`Homepage | ${companyNameShort}` class=`py-2 xs:py-3 w-[140px] md:w-[162px] ${isCheckoutPage ? 'flex flex-col justify-center h-10 md:h-12' : ''}`>
             <Logo className='h-[16.62px] md:h-[19.22px]' />
         </a>
         <nav class={isCheckoutPage ? 'hidden' : 'hidden md:block'}>

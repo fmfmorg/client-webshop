@@ -22,7 +22,7 @@ const inputID = crypto.randomUUID()
     </label>
     <ul class="pt-2 max-h-0 xs:max-h-fit overflow-y-hidden peer-checked:max-h-fit text-sm xs:text-xs tracking-wider [word-spacing:0.1rem] text-gray-800">
         {links.map(({name,url})=>(
-            <ul><a href={url} class="xs:leading-6 xs:py-0.5">{name}</a></ul>
+            <li><a href={url} class="xs:leading-6 xs:py-0.5">{name}</a></li>
         ))}
     </ul>
 </div>

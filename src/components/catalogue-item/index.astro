@@ -12,9 +12,10 @@ interface Props {
     productCartDetails:ICartItem;
     group:number;
     observe:boolean;
+    homepageBestseller?:boolean;
 }
 
-const { id, productPageProduct = false, productDetails, productCartDetails, group, observe } = Astro.props
+const { id, productPageProduct = false, productDetails, productCartDetails, group, observe, homepageBestseller = false } = Astro.props
 const {
     url,
     images,
@@ -30,10 +31,9 @@ const imageLen = images.filter(e=>e.catalogue).length
     data-len={imageLen} 
     data-gp={group}
     data-obs={observe ? '1' : '0'}
-    {...productPageProduct && {class:'related-product'}}
     data-qty-in-cart={productCartDetails?.quantity || 0}
     data-stock-quantities={JSON.stringify(stockQuantities)}
-    class={!!group ? "relative hidden" : "relative"}
+    class={`${!!group ? "relative hidden" : "relative"}${productPageProduct ? ' related-product' : ''}${homepageBestseller ? ' homepage-bestseller' : ''}`.trim()}
 >
     <a href=`/product/${url}/${id}`>
         <Product id={id} productDetails={productDetails} renderImages={!group} />
@@ -214,7 +214,7 @@ import { observer } from "./observer";
                     radios[0].click()
                 }
                 
-                container.addEventListener('mouseleave',onMouseLeave,true)
+                container.addEventListener('mouseleave',onMouseLeave)
 
                 const buttonsOnClick = (e:MouseEvent) => {
                     const targetElem = e.target as HTMLElement

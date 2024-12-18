@@ -4,21 +4,11 @@ import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
 import { headerCarouselOffKey, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc'
 import Terms from '@components/terms/index.astro'
 
-let { slug } = Astro.params;
-
-const slugs = [
-    'terms-and-conditions',
-    'delivery',
-    'returns-refunds'
-]
-
-if (slugs.indexOf(slug) === -1) return new Response(null,{status:404})
-
 const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
 
-const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/terms-text/${slug}`,{
+const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/terms-text/jewellery-care-guide`,{
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })
 

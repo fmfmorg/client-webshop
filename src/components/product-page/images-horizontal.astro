@@ -13,12 +13,12 @@ const { id, images } = Astro.props as Props
     <div id=`main-carousel-${id}` class="w-full relative width-1/2 pb-[100%] group mb-8 2xs:mb-12">
         <Carousel images={images} id={id} productPageProduct renderImages />
         <div class="touchscreen:hidden">
-            <button id="main-carousel-leftward" class="leftward absolute top-0 h-full left-0 w-2/12 peer/left">
+            <button aria-label="Previous Image" id="main-carousel-leftward" class="leftward absolute top-0 h-full left-0 w-2/12 peer/left">
                 <svg viewBox="0 0 70 100" stroke-width="0.8rem" stroke-linecap="round" stroke-linejoin="round" fill="none" class="absolute h-4 xs:h-6 sm:h-8 left-[15%] stroke-gray-700 duration-500 opacity-30 peer-hover/left:opacity-100 pointer-events-none" style="top:calc(50% - 0.5em)">
                     <polyline points="65,5 20,50 65,95" />
                 </svg>
             </button>
-            <button id="main-carousel-rightward" class="rightward absolute top-0 h-full right-0 w-2/12 peer/right">
+            <button aria-label="Next Image" id="main-carousel-rightward" class="rightward absolute top-0 h-full right-0 w-2/12 peer/right">
                 <svg viewBox="0 0 70 100" stroke-width="0.8rem" stroke-linecap="round" stroke-linejoin="round" fill="none" class="absolute h-4 xs:h-6 sm:h-8 right-[15%] stroke-gray-700 duration-500 opacity-30 peer-hover/right:opacity-100 pointer-events-none" style="top:calc(50% - 0.5em)">
                     <polyline points="5,5 50,50 5,95" />
                 </svg>

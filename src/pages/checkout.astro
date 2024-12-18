@@ -12,7 +12,7 @@ import Layout from '@components/layout/index.astro'
 import EmptyCart from '@components/checkout/empty-cart.astro'
 import CheckoutForm from '@components/checkout/index.astro'
 import CartLocked from '@components/checkout/cart-locked.astro';
-import { FM_CLIENT_WEBSHOP_API_URL, FM_ENV_MODE } from 'astro:env/server'
+import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
 
 interface IApiResponse {
     addressMap:IUserAddressMap;
@@ -26,13 +26,13 @@ interface IApiResponse {
     email:string;
 }
 
-const isProduction = FM_ENV_MODE === 'production'
+const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/checkout-page-init`,{
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,false)
 })
-if (!resp.ok) return Astro.redirect('/')
+if (!resp.ok) return new Response(null,{status:500})
 
 const json = await resp.json()
 
@@ -66,11 +66,11 @@ const {
 
 const hasItemsInCart = !!Object.values(cartItemMap).map(e=>e.quantity).filter(e=>!!e).length
 
-Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isProduction,expiresAt))
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
 
 const isCheckoutPage = Astro.url.pathname === '/checkout'
 
-Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isProduction))
+Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 ---
 
 <Layout {...{

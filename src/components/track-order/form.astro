@@ -10,7 +10,7 @@ interface Props {
 const { fetchedOrder, orderID } = Astro.props as Props
 ---
 
-<form class=`max-w-96 mx-auto hidden flex-col justify-center py-4` id="track-order-form" data-fetchedorder={fetchedOrder ? 1 : 0}>
+<form class=`max-w-96 px-4 mx-auto hidden flex-col justify-center py-4` id="track-order-form" data-fetchedorder={fetchedOrder ? 1 : 0}>
     <h1 class="font-display text-2xl [word-spacing:0.3rem]">Track Order</h1>
     <input type="text" id="track-order-phone" name="track-order-phone" class="fixed top-[-100px]" />
     <TextInput 

@@ -6,7 +6,18 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
     server:{
-        host:true
+        host:true,
+        headers: {
+            "Content-Security-Policy": [
+                "default-src 'self';",
+                "script-src 'self' https://challenges.cloudflare.com 'unsafe-inline';",
+                "style-src 'self' https://fonts.googleapis.com 'unsafe-inline';",
+                "img-src 'self' https://link.storjshare.io;",
+                "frame-src 'self' https://challenges.cloudflare.com;",
+                "font-src 'self' https://fonts.gstatic.com;",
+                `connect-src 'self' ${process.env.FM_WEBSOCKET_URL}`,
+            ].join(' ')
+        },
     },
     integrations: [
         solid(),
@@ -33,7 +44,7 @@ export default defineConfig({
                 context:'server',
                 access:'secret'
             }),
-            FM_ENV_MODE:envField.string({
+            FM_IS_ONLINE:envField.string({
                 context:'server',
                 access:'secret'
             })

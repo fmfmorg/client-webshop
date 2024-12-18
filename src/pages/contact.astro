@@ -1,11 +1,11 @@
 ---
 import Layout from '@components/layout/index.astro';
 import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
-import { FM_CLIENT_WEBSHOP_API_URL, FM_ENV_MODE } from 'astro:env/server'
+import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
 import { headerCarouselOffKey } from '@misc'
 import ContactForm from '@components/contact/index.astro'
 
-const isProduction = FM_ENV_MODE === 'production'
+const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
 
@@ -13,7 +13,7 @@ const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/index-page-init
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })
 
-if (!resp.ok) return Astro.redirect('/maintenance')
+if (!resp.ok) return new Response(null,{status:500})
 
 const json = await resp.json()
 const {mdwResponse} = json as {mdwResponse: IMdwResponse}
@@ -33,7 +33,7 @@ const {
     headerCarouselTexts,
 } = mdwResponse
 
-Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isProduction,expiresAt))
+Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
 
 const shoppingBagProp:IShoppingBagSidebarProp = {
     isSignedIn:signedIn,
@@ -43,7 +43,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
     productDetailsMap:cartProductDetailsMap
 }
 
-Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isProduction))
+Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 ---
 
 <Layout {...{

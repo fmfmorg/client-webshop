@@ -14,6 +14,7 @@ export interface IProduct {
     id:string;
     name:string;
     description:string;
+    specification?:string;
     price:number;
     discountedPrice:number;
     url:string;

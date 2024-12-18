@@ -23,7 +23,7 @@ const ProblemCartItem = (p:{productID:string;addressID:number;}) => {
     const image = createMemo(()=>productDetailsMap[p.productID].images[0])
     return (
         <li class='grid grid-flow-dense grid-cols-3 xs:grid-cols-4'>
-            <Image name={image().name} ext={image().ext} />
+            <Image name={image().name} ext={image().ext} alt={name()} />
             <div class='col-span-2 xs:col-span-3 flex flex-col justify-center text-sm'>
                 <p class='tracking-wide font-light'>{name}</p>
                 <p>{qtyAvailable} of {qtyInCart} available</p>
