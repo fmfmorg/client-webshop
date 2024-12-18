@@ -10,7 +10,7 @@ export default defineConfig({
         headers: {
             "Content-Security-Policy": [
                 "default-src 'self';",
-                "script-src 'self' https://challenges.cloudflare.com 'unsafe-inline';",
+                "script-src 'self' https://challenges.cloudflare.com https://sandbox-merchant.revolut.com 'unsafe-inline';",
                 "style-src 'self' https://fonts.googleapis.com 'unsafe-inline';",
                 `img-src 'self' https://link.storjshare.io ${process.env.PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX};`,
                 "frame-src 'self' https://challenges.cloudflare.com;",
