@@ -12,7 +12,7 @@ export default defineConfig({
                 "default-src 'self';",
                 "script-src 'self' https://challenges.cloudflare.com 'unsafe-inline';",
                 "style-src 'self' https://fonts.googleapis.com 'unsafe-inline';",
-                "img-src 'self' https://link.storjshare.io;",
+                `img-src 'self' https://link.storjshare.io ${process.env.PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX};`,
                 "frame-src 'self' https://challenges.cloudflare.com;",
                 "font-src 'self' https://fonts.gstatic.com;",
                 `connect-src 'self' ${process.env.FM_WEBSOCKET_URL}`,
