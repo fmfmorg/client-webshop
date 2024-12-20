@@ -53,7 +53,7 @@ if (finalName !== name) return Astro.redirect(`/product/${finalName}/${id}`)
 
 Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
 
-productMap = {...productMap,...cartProductDetailsMap}
+productMap = {...cartProductDetailsMap,...productMap}
 
 const shoppingBagProp:IShoppingBagSidebarProp = {
     isSignedIn:signedIn,

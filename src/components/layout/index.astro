@@ -214,7 +214,7 @@ const productSchema = isProductPage ? {
   data-shop-name-map={JSON.stringify(shopNameMap)}
   data-signed-in={signedIn ? '1' : '0'}
   data-has-items={cartHasItems ? '1' : '0'}
-  class={`${isCheckoutPage ? 'bg-gray-100' : 'bg-white'} hidden text-gray-900 flex flex-col min-h-screen overflow-x-hidden`}
+  class={`${isCheckoutPage ? 'bg-gray-100' : 'bg-white'} text-gray-900 flex flex-col min-h-screen overflow-x-hidden`}
   data-member-total={total}
 >
   <svg style="display: none;">
@@ -288,9 +288,6 @@ declare global {
   }
 }
 
-if (performance.getEntriesByType('navigation')[0]['type'] === "back_forward") window.location.reload()
-else document.body.classList.remove('hidden')
-
 const reloadBC = new BroadcastChannel('reload')
 const barcodes = document.getElementsByClassName('font-barcode')
 const barcodeLen = barcodes.length
@@ -319,6 +316,18 @@ const onResize = () => {
   clearTimeout(resizeTimeout)
   resizeTimeout = setTimeout(resize,200)
 }
+
+const collapseSidebarsBeforeUnload = () => {
+  [
+    'shopping-bag-sidebar-checkbox',
+    'user-sidebar-checkbox',
+    "menu-sidebar-checkbox"
+  ].forEach(e=>{
+    const checkbox = document.getElementById(e) as HTMLInputElement
+    if (!!checkbox) checkbox.checked = false
+  })
+}
+
 memberTotalToPay.set(+document.body.dataset.memberTotal)
 cartHasItems.set(!!(+document.body.dataset.hasItems))
 signedIn.set(!!(+document.body.dataset.signedIn))
@@ -332,6 +341,7 @@ document.addEventListener(SHOPPING_BAG_LOADED,()=>shoppingBagLoaded.set(true))
 document.addEventListener(HEADER_TEXT_CAROUSEL_LOADED,resize,true)
 window.addEventListener('resize',onResize,true)
 window.addEventListener('load',resize,{once:true})
+window.addEventListener('beforeunload',collapseSidebarsBeforeUnload)
 
 window.onloadTurnstileCallback = () => {
   window.turnstile.render("#turnstile-tag", {

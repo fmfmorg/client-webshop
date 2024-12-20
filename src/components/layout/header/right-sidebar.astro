@@ -10,7 +10,7 @@ const { id, show = true } = Astro.props as Props
 ---
 
 <astro-sidebar data-id={id} data-show={show ? '1' : '0'}>
-    {!!show && <input type="checkbox" hidden class="peer" id={`${id}-checkbox`} />}
+    {!!show && <input type="checkbox" class="peer" id={`${id}-checkbox`} />}
     <div class="overlay fixed bottom-0 left-0 w-full h-full hidden transition-opacity duration-300 z-10" />
     <label id={`${id}-overlay`} for={`${id}-checkbox`} class="fixed w-screen h-screen top-0 left-0 hidden z-[25] before:absolute before:w-full before:h-full before:backdrop-blur-sm" />
     <div id={id} class='sidebar fixed right-[-410px] bottom-0 peer-checked:right-0 w-full max-w-[400px] bg-white shadow-lg transition-all duration-300 z-30'>
@@ -63,6 +63,7 @@ const { id, show = true } = Astro.props as Props
 
                     if (isOpen) {
                         overlay.classList.toggle('hidden', !isOpen);
+                        header.classList.remove('-translate-y-full');
                         headerResizeObserver.observe(header)
                     }
                     else {
