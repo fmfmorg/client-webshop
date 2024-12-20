@@ -9,7 +9,8 @@ export async function GET({url}:{url:URL}) {
     if (!resp.ok) return new Response(null, {status:500})
     const { products } = await resp.json() as { products: IProduct[] }
 
-    const { origin } = url
+    let { origin } = url
+    origin = origin.replaceAll('http://','https://')
 
     const currentDT = new Date().toISOString()
 
