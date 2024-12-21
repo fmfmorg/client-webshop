@@ -27,40 +27,72 @@ export default defineConfig({
     adapter:node({
         mode:'standalone',
     }),
-    ...(process.env.FM_IS_ONLINE === 'true' && {
-        hooks:{
-            'astro:server:setup': ({ server }) => {
-                console.log('Middleware setup initialized')
-                server.middlewares.use('/api', async (req, res, next) => {
-                    const targetUrl = `${process.env.FM_CLIENT_WEBSHOP_API_URL}${req.url}`;
-                    console.log('Target URL:', targetUrl);
-                    console.log('Request Method:', req.method);
-                    console.log('Request Headers:', req.headers);
+    // ...(process.env.FM_IS_ONLINE === 'true' && {
+    //     hooks:{
+    //         'astro:server:setup': ({ server }) => {
+    //             console.log('Middleware setup initialized')
+    //             server.middlewares.use('/api', async (req, res, next) => {
+    //                 const targetUrl = `${process.env.FM_CLIENT_WEBSHOP_API_URL}${req.url}`;
+    //                 console.log('Target URL:', targetUrl);
+    //                 console.log('Request Method:', req.method);
+    //                 console.log('Request Headers:', req.headers);
 
-                    try {
-                        const response = await fetch(targetUrl, {
-                            method: req.method,
-                            headers: req.headers,
-                            body: req.method !== 'GET' ? await req.text() : undefined,
-                        });
+    //                 try {
+    //                     const response = await fetch(targetUrl, {
+    //                         method: req.method,
+    //                         headers: req.headers,
+    //                         body: req.method !== 'GET' ? await req.text() : undefined,
+    //                     });
 
-                        // Check if response is OK
-                        if (!response.ok) {
-                            console.error(`Error fetching from ${targetUrl}: ${response.statusText}`);
-                            res.writeHead(response.status);
-                            return res.end();
-                        }
+    //                     // Check if response is OK
+    //                     if (!response.ok) {
+    //                         console.error(`Error fetching from ${targetUrl}: ${response.statusText}`);
+    //                         res.writeHead(response.status);
+    //                         return res.end();
+    //                     }
 
-                        res.writeHead(response.status, Object.fromEntries(response.headers));
-                        response.body.pipe(res);
-                    } catch (error) {
-                        console.error('Fetch error:', error);
-                        next(error);
+    //                     res.writeHead(response.status, Object.fromEntries(response.headers));
+    //                     response.body.pipe(res);
+    //                 } catch (error) {
+    //                     console.error('Fetch error:', error);
+    //                     next(error);
+    //                 }
+    //             });
+    //         },
+    //     }
+    // }),
+    hooks:{
+        'astro:server:setup': ({ server }) => {
+            console.log('Middleware setup initialized')
+            server.middlewares.use('/api', async (req, res, next) => {
+                const targetUrl = `${process.env.FM_CLIENT_WEBSHOP_API_URL}${req.url}`;
+                console.log('Target URL:', targetUrl);
+                console.log('Request Method:', req.method);
+                console.log('Request Headers:', req.headers);
+
+                try {
+                    const response = await fetch(targetUrl, {
+                        method: req.method,
+                        headers: req.headers,
+                        body: req.method !== 'GET' ? await req.text() : undefined,
+                    });
+
+                    // Check if response is OK
+                    if (!response.ok) {
+                        console.error(`Error fetching from ${targetUrl}: ${response.statusText}`);
+                        res.writeHead(response.status);
+                        return res.end();
                     }
-                });
-            },
-        }
-    }),
+
+                    res.writeHead(response.status, Object.fromEntries(response.headers));
+                    response.body.pipe(res);
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    next(error);
+                }
+            });
+        },
+    }
     ...(process.env.FM_IS_ONLINE !== 'true' && {
         vite: {
             server: {
