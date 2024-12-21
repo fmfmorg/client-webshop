@@ -28,14 +28,12 @@ export default defineConfig({
             const proxyMiddleware = createProxyMiddleware(targetUrl);
       
             httpServer.on('request', (req, res) => {
-              const url = req.url ?? ''; // Use empty string as default if req.url is null/undefined
+              const url = req.url ?? '';
               if (url.startsWith('/api/')) {
                 proxyMiddleware(req, res);
-              } else {
-                // Handle other requests as usual
               }
             });
-          },
+        },
     },
     integrations: [
         solid(),
