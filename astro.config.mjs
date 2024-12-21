@@ -30,18 +30,32 @@ export default defineConfig({
     ...(process.env.FM_IS_ONLINE === 'true' && {
         hooks:{
             'astro:server:setup': ({ server }) => {
-                server.middlewares.use('/api', (req, res, next) => {
+                server.middlewares.use('/api', async (req, res, next) => {
                     const targetUrl = `${process.env.FM_CLIENT_WEBSHOP_API_URL}${req.url}`;
-                    fetch(targetUrl, {
-                        method: req.method,
-                        headers: req.headers,
-                        body: req.method !== 'GET' ? req : undefined,
-                    })
-                        .then((response) => {
-                            res.writeHead(response.status, Object.fromEntries(response.headers));
-                            response.body.pipe(res);
-                        })
-                        .catch(next);
+                    console.log('Target URL:', targetUrl);
+                    console.log('Request Method:', req.method);
+                    console.log('Request Headers:', req.headers);
+
+                    try {
+                        const response = await fetch(targetUrl, {
+                            method: req.method,
+                            headers: req.headers,
+                            body: req.method !== 'GET' ? await req.text() : undefined,
+                        });
+
+                        // Check if response is OK
+                        if (!response.ok) {
+                            console.error(`Error fetching from ${targetUrl}: ${response.statusText}`);
+                            res.writeHead(response.status);
+                            return res.end();
+                        }
+
+                        res.writeHead(response.status, Object.fromEntries(response.headers));
+                        response.body.pipe(res);
+                    } catch (error) {
+                        console.error('Fetch error:', error);
+                        next(error);
+                    }
                 });
             },
         }
