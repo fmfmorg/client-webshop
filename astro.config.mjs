@@ -2,7 +2,6 @@ import { defineConfig, envField } from 'astro/config';
 import solid from '@astrojs/solid-js';
 import node from '@astrojs/node';
 import tailwind from '@astrojs/tailwind';
-import { createProxyMiddleware } from './proxyMiddleware';
 
 // https://astro.build/config
 export default defineConfig({
