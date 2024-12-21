@@ -19,115 +19,26 @@ export default defineConfig({
                 `connect-src 'self' ${process.env.FM_WEBSOCKET_URL}`,
             ].join(' ')
         },
-        async setup({ httpServer }) {
-            const targetUrl = process.env.FM_CLIENT_WEBSHOP_API_URL;
-            if (!targetUrl) {
-              throw new Error('FM_CLIENT_WEBSHOP_API_URL environment variable is required');
-            }
-      
-            const proxyMiddleware = createProxyMiddleware(targetUrl);
-      
-            httpServer.on('request', (req, res) => {
-              const url = req.url ?? '';
-              console.log("Incoming request URL:", url); // Log EVERY incoming URL
-      
-              if (url.startsWith('/api/')) {
-                console.log("Request matches /api/ prefix. Proceeding to proxy."); // Confirmation log
-                proxyMiddleware(req, res);
-              } else {
-                console.log("Request does NOT match /api/ prefix. Handling normally."); // Important log
-              }
-            });
-        },
     },
     integrations: [
         solid(),
-        tailwind()
+        tailwind(),
     ],
     output:'server',
     adapter:node({
         mode:'standalone',
     }),
-    // ...(process.env.FM_IS_ONLINE === 'true' && {
-    //     hooks:{
-    //         'astro:server:setup': ({ server }) => {
-    //             console.log('Middleware setup initialized')
-    //             server.middlewares.use('/api', async (req, res, next) => {
-    //                 const targetUrl = `${process.env.FM_CLIENT_WEBSHOP_API_URL}${req.url}`;
-    //                 console.log('Target URL:', targetUrl);
-    //                 console.log('Request Method:', req.method);
-    //                 console.log('Request Headers:', req.headers);
-
-    //                 try {
-    //                     const response = await fetch(targetUrl, {
-    //                         method: req.method,
-    //                         headers: req.headers,
-    //                         body: req.method !== 'GET' ? await req.text() : undefined,
-    //                     });
-
-    //                     // Check if response is OK
-    //                     if (!response.ok) {
-    //                         console.error(`Error fetching from ${targetUrl}: ${response.statusText}`);
-    //                         res.writeHead(response.status);
-    //                         return res.end();
-    //                     }
-
-    //                     res.writeHead(response.status, Object.fromEntries(response.headers));
-    //                     response.body.pipe(res);
-    //                 } catch (error) {
-    //                     console.error('Fetch error:', error);
-    //                     next(error);
-    //                 }
-    //             });
-    //         },
-    //     }
-    // }),
-        // ...(process.env.FM_IS_ONLINE !== 'true' && {
-    //     vite: {
-    //         server: {
-    //             proxy: {
-    //                 '/api': {
-    //                     target: process.env.FM_CLIENT_WEBSHOP_API_URL,
-    //                     changeOrigin: true,
-    //                     rewrite: (path) => path.replace(/^\/api/, ''),
-    //                 },
-    //             },
-    //         },
-    //     }
-    // }),
-    // hooks:{
-    //     'astro:server:setup': ({ server }) => {
-    //         console.log('Middleware setup initialized')
-    //         server.middlewares.use('/api', async (req, res, next) => {
-    //             const targetUrl = `${process.env.FM_CLIENT_WEBSHOP_API_URL}${req.url}`;
-    //             console.log('Target URL:', targetUrl);
-    //             console.log('Request Method:', req.method);
-    //             console.log('Request Headers:', req.headers);
-
-    //             try {
-    //                 const response = await fetch(targetUrl, {
-    //                     method: req.method,
-    //                     headers: req.headers,
-    //                     body: req.method !== 'GET' ? await req.text() : undefined,
-    //                 });
-
-    //                 // Check if response is OK
-    //                 if (!response.ok) {
-    //                     console.error(`Error fetching from ${targetUrl}: ${response.statusText}`);
-    //                     res.writeHead(response.status);
-    //                     return res.end();
-    //                 }
-
-    //                 res.writeHead(response.status, Object.fromEntries(response.headers));
-    //                 response.body.pipe(res);
-    //             } catch (error) {
-    //                 console.error('Fetch error:', error);
-    //                 next(error);
-    //             }
-    //         });
-    //     },
-    // },
-    
+    vite: {
+        server: {
+            proxy: {
+                '/api': {
+                    target: process.env.FM_CLIENT_WEBSHOP_API_URL,
+                    changeOrigin: true,
+                    rewrite: (path) => path.replace(/^\/api/, ''),
+                },
+            },
+        },
+    },
     env:{
         schema:{
             FM_CLIENT_WEBSHOP_API_URL:envField.string({
