@@ -27,17 +27,38 @@ export default defineConfig({
     adapter:node({
         mode:'standalone',
     }),
-    vite: {
-        server: {
-            proxy: {
-                '/api': {
-                    target: process.env.FM_CLIENT_WEBSHOP_API_URL,
-                    changeOrigin: true,
-                    rewrite: (path) => path.replace(/^\/api/, ''),
+    ...(process.env.FM_IS_ONLINE === 'true' && {
+        hooks:{
+            'astro:server:setup': ({ server }) => {
+                server.middlewares.use('/api', (req, res, next) => {
+                    const targetUrl = `${process.env.FM_CLIENT_WEBSHOP_API_URL}${req.url}`;
+                    fetch(targetUrl, {
+                        method: req.method,
+                        headers: req.headers,
+                        body: req.method !== 'GET' ? req : undefined,
+                    })
+                        .then((response) => {
+                            res.writeHead(response.status, Object.fromEntries(response.headers));
+                            response.body.pipe(res);
+                        })
+                        .catch(next);
+                });
+            },
+        }
+    }),
+    ...(process.env.FM_IS_ONLINE !== 'true' && {
+        vite: {
+            server: {
+                proxy: {
+                    '/api': {
+                        target: process.env.FM_CLIENT_WEBSHOP_API_URL,
+                        changeOrigin: true,
+                        rewrite: (path) => path.replace(/^\/api/, ''),
+                    },
                 },
             },
-        },
-    },
+        }
+    }),
     env:{
         schema:{
             FM_CLIENT_WEBSHOP_API_URL:envField.string({
