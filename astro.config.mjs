@@ -30,6 +30,7 @@ export default defineConfig({
     ...(process.env.FM_IS_ONLINE === 'true' && {
         hooks:{
             'astro:server:setup': ({ server }) => {
+                console.log('Middleware setup initialized')
                 server.middlewares.use('/api', async (req, res, next) => {
                     const targetUrl = `${process.env.FM_CLIENT_WEBSHOP_API_URL}${req.url}`;
                     console.log('Target URL:', targetUrl);
