@@ -2,6 +2,7 @@ import { defineConfig, envField } from 'astro/config';
 import solid from '@astrojs/solid-js';
 import node from '@astrojs/node';
 import tailwind from '@astrojs/tailwind';
+import { createProxyMiddleware } from './proxyMiddleware';
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,6 +19,23 @@ export default defineConfig({
                 `connect-src 'self' ${process.env.FM_WEBSOCKET_URL}`,
             ].join(' ')
         },
+        async setup({ httpServer }) {
+            const targetUrl = process.env.FM_CLIENT_WEBSHOP_API_URL;
+            if (!targetUrl) {
+              throw new Error('FM_CLIENT_WEBSHOP_API_URL environment variable is required');
+            }
+      
+            const proxyMiddleware = createProxyMiddleware(targetUrl);
+      
+            httpServer.on('request', (req, res) => {
+              const url = req.url ?? ''; // Use empty string as default if req.url is null/undefined
+              if (url.startsWith('/api/')) {
+                proxyMiddleware(req, res);
+              } else {
+                // Handle other requests as usual
+              }
+            });
+          },
     },
     integrations: [
         solid(),
@@ -74,38 +92,39 @@ export default defineConfig({
     //         },
     //     }
     // }),
-    hooks:{
-        'astro:server:setup': ({ server }) => {
-            console.log('Middleware setup initialized')
-            server.middlewares.use('/api', async (req, res, next) => {
-                const targetUrl = `${process.env.FM_CLIENT_WEBSHOP_API_URL}${req.url}`;
-                console.log('Target URL:', targetUrl);
-                console.log('Request Method:', req.method);
-                console.log('Request Headers:', req.headers);
+    // hooks:{
+    //     'astro:server:setup': ({ server }) => {
+    //         console.log('Middleware setup initialized')
+    //         server.middlewares.use('/api', async (req, res, next) => {
+    //             const targetUrl = `${process.env.FM_CLIENT_WEBSHOP_API_URL}${req.url}`;
+    //             console.log('Target URL:', targetUrl);
+    //             console.log('Request Method:', req.method);
+    //             console.log('Request Headers:', req.headers);
 
-                try {
-                    const response = await fetch(targetUrl, {
-                        method: req.method,
-                        headers: req.headers,
-                        body: req.method !== 'GET' ? await req.text() : undefined,
-                    });
+    //             try {
+    //                 const response = await fetch(targetUrl, {
+    //                     method: req.method,
+    //                     headers: req.headers,
+    //                     body: req.method !== 'GET' ? await req.text() : undefined,
+    //                 });
 
-                    // Check if response is OK
-                    if (!response.ok) {
-                        console.error(`Error fetching from ${targetUrl}: ${response.statusText}`);
-                        res.writeHead(response.status);
-                        return res.end();
-                    }
+    //                 // Check if response is OK
+    //                 if (!response.ok) {
+    //                     console.error(`Error fetching from ${targetUrl}: ${response.statusText}`);
+    //                     res.writeHead(response.status);
+    //                     return res.end();
+    //                 }
 
-                    res.writeHead(response.status, Object.fromEntries(response.headers));
-                    response.body.pipe(res);
-                } catch (error) {
-                    console.error('Fetch error:', error);
-                    next(error);
-                }
-            });
-        },
-    },
+    //                 res.writeHead(response.status, Object.fromEntries(response.headers));
+    //                 response.body.pipe(res);
+    //             } catch (error) {
+    //                 console.error('Fetch error:', error);
+    //                 next(error);
+    //             }
+    //         });
+    //     },
+    // },
+    
     env:{
         schema:{
             FM_CLIENT_WEBSHOP_API_URL:envField.string({
