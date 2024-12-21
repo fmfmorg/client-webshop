@@ -8,5 +8,5 @@ export const sessionCookieOption = (secure:boolean,expiresAt?:number):AstroCooki
     secure,
     ...(secure && {sameSite:'none'}),
     ...(!!expiresAt && {expires:new Date(expiresAt)}),
-    ...(secure && {domain: FM_CLIENT_WEBSHOP_API_URL.replaceAll('https://','').replaceAll('http://','')})
+    ...(secure && {domain: FM_CLIENT_WEBSHOP_API_URL.replaceAll('https://','').replaceAll('http://','').replaceAll('api-shop','')})
 })
