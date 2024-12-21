@@ -25,5 +25,6 @@
     "globals": "^15.13.0",
     "turnstile-types": "^1.2.3",
     "typescript-eslint": "^8.18.0"
-  }
+  },
+  "type": "module"
 }

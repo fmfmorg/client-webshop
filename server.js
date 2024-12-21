@@ -2,34 +2,36 @@
 import express from 'express';
 import { handler as ssrHandler } from './dist/server/entry.mjs';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
 // Configure proxy settings
 const proxyConfig = {
-  '/api': {  // This will catch all requests to /api/*
-    target: 'https://api-shop.fairymade.top',
+  '/api': {
+    target: 'https://api-shop.fairymade.co', // Replace with your actual API domain
     changeOrigin: true,
     pathRewrite: {
-      '^/api': '', // Remove /api prefix when forwarding
+      '^/api': '',
     },
-    // Optional: modify headers to hide origin
-    onProxyReq: (proxyReq, req, res) => {
-      proxyReq.removeHeader('origin');
-      proxyReq.removeHeader('referer');
-    },
-    // Optional: modify response headers
-    onProxyRes: (proxyRes, req, res) => {
-      proxyRes.headers['x-powered-by'] = 'Your-Custom-Server';
+    // Log proxy activity for debugging
+    logLevel: 'debug',
+    onError(err, req, res) {
+      console.error('Proxy Error:', err);
+      res.status(500).send('Proxy Error');
     }
   }
 };
 
-// Apply proxy middleware before the SSR handler
-app.use(createProxyMiddleware(proxyConfig['/api']));
+// Apply proxy middleware
+app.use('/api', createProxyMiddleware(proxyConfig['/api']));
 
-// Serve static files from the dist/client directory
-app.use(express.static('dist/client'));
+// Serve static files
+app.use(express.static(path.join(__dirname, 'dist/client')));
 
 // Handle all other routes with Astro's SSR handler
 app.use(ssrHandler);
