@@ -92,20 +92,20 @@ export default defineConfig({
                 }
             });
         },
-    }
-    ...(process.env.FM_IS_ONLINE !== 'true' && {
-        vite: {
-            server: {
-                proxy: {
-                    '/api': {
-                        target: process.env.FM_CLIENT_WEBSHOP_API_URL,
-                        changeOrigin: true,
-                        rewrite: (path) => path.replace(/^\/api/, ''),
-                    },
-                },
-            },
-        }
-    }),
+    },
+    // ...(process.env.FM_IS_ONLINE !== 'true' && {
+    //     vite: {
+    //         server: {
+    //             proxy: {
+    //                 '/api': {
+    //                     target: process.env.FM_CLIENT_WEBSHOP_API_URL,
+    //                     changeOrigin: true,
+    //                     rewrite: (path) => path.replace(/^\/api/, ''),
+    //                 },
+    //             },
+    //         },
+    //     }
+    // }),
     env:{
         schema:{
             FM_CLIENT_WEBSHOP_API_URL:envField.string({
