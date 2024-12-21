@@ -4,7 +4,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import handler from './handler.js'; // Assuming this is your server handler
 
 const proxy = createProxyMiddleware('/api', {
-  target: "https://api-shop.fairymade.co",
+  target: "https://api-shop.fairymade.top",
   changeOrigin: true,
   pathRewrite: { '^/api': '' },
 });
