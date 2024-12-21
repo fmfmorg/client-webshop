@@ -5,7 +5,8 @@ import type { IShopAddressMap, IShoppingBagSidebarProp } from '@misc';
 import LoadingOverlay from './loading-overlay.astro';
 import ErrorMsgModal from './error-msg-modal.astro';
 import CollectionPointOnQtyIncrease from './collection-point-on-qty-increase.astro'
-import { companyNameShort, imageUrlPrefix } from '@misc'
+import { imageUrlPrefix } from '@misc'
+import { PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client'
 import type { IProductImages } from '@components/catalogue-item/interfaces';
 
 interface Props {
@@ -61,7 +62,7 @@ if (!!shoppingBagProp){
   if (!!cartItemMap) cartHasItems = !!Object.values(cartItemMap).map(e=>e.quantity).filter(e=>!!e).length
 } else cartHasItems = hasItemsInCart
 
-const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : title.trim()} | ${companyNameShort}` : `${companyNameShort} | Fashion Jewellery For Her`
+const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : title.trim()} | ${PUBLIC_FM_COMPANY_NAME_SHORT}` : `${PUBLIC_FM_COMPANY_NAME_SHORT} | Fashion Jewellery For Her`
 
 const productSchema = isProductPage ? {
   "@context": "https://schema.org",
@@ -70,7 +71,7 @@ const productSchema = isProductPage ? {
   "description": description,
   "brand": {
     "@type": "Brand",
-    "name": companyNameShort
+    "name": PUBLIC_FM_COMPANY_NAME_SHORT
   },
   "image": images.map(({name,ext})=>imageUrlPrefix+name+ext),
   "size": "Standard",
@@ -110,7 +111,7 @@ const productSchema = isProductPage ? {
 
   <meta name="og:type" content="website">
   <meta name="og:url" content={Astro.url.href}>
-  <meta name="og:site_name" content={companyNameShort}>
+  <meta name="og:site_name" content={PUBLIC_FM_COMPANY_NAME_SHORT}>
   
   <meta name="twitter:card" content="summary_large_image">
 

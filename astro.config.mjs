@@ -51,7 +51,11 @@ export default defineConfig({
             PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX:envField.string({
                 context:'server',
                 access:'secret'
-            })
+            }),
+            PUBLIC_FM_COMPANY_NAME_SHORT:envField.string({
+                context:'client',
+                access:'public'
+            }),
             // for github action, cannot have envField with { context:'client', access:'public' }
         }
     },
