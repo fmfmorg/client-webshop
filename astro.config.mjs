@@ -29,8 +29,13 @@ export default defineConfig({
       
             httpServer.on('request', (req, res) => {
               const url = req.url ?? '';
+              console.log("Incoming request URL:", url); // Log EVERY incoming URL
+      
               if (url.startsWith('/api/')) {
+                console.log("Request matches /api/ prefix. Proceeding to proxy."); // Confirmation log
                 proxyMiddleware(req, res);
+              } else {
+                console.log("Request does NOT match /api/ prefix. Handling normally."); // Important log
               }
             });
         },
