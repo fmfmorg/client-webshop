@@ -1,12 +1,13 @@
 ---
 import Layout from '@components/layout/index.astro'
 import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
-import { headerCarouselOffKey, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc'
+import { PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc'
 import Terms from '@components/terms/index.astro'
 
 const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
-const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
+const headerCarouselOff = Astro.cookies.has(PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
 
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/terms-text/jewellery-care-guide`,{
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)

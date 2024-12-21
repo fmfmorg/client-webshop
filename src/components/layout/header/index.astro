@@ -9,7 +9,7 @@ import ShoppingBagSidebar from './shopping-bag-sidebar.astro'
 import type { IShoppingBagSidebarProp } from '@misc'
 import Logo from '@components/logo.astro'
 import TextCarousel from './text-carousel'
-import { acceptMembership, companyNameShort } from '@misc/env-vars'
+import { PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_ACCEPT_MEMBERSHIP } from 'astro:env/client'
 
 interface Props {
   signedIn:boolean;
@@ -19,6 +19,7 @@ interface Props {
   headerCarouselTexts:string[];
 }
 
+const acceptMembership = PUBLIC_FM_ACCEPT_MEMBERSHIP === 'true'
 const { showUserIcon, shoppingBagProp, signedIn, firstName, headerCarouselTexts } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
 ---
@@ -35,7 +36,7 @@ const isCheckoutPage = Astro.url.pathname === '/checkout'
                 <HamburgerIcon />
             </button> -->
         </div>
-        <a href="/" aria-label=`Homepage | ${companyNameShort}` class=`py-2 xs:py-3 w-[140px] md:w-[162px] ${isCheckoutPage ? 'flex flex-col justify-center h-10 md:h-12' : ''}`>
+        <a href="/" aria-label=`Homepage | ${PUBLIC_FM_COMPANY_NAME_SHORT}` class=`py-2 xs:py-3 w-[140px] md:w-[162px] ${isCheckoutPage ? 'flex flex-col justify-center h-10 md:h-12' : ''}`>
             <Logo className='h-[16.62px] md:h-[19.22px]' />
         </a>
         <nav class={isCheckoutPage ? 'hidden' : 'hidden md:block'}>

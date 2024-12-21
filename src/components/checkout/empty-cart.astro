@@ -1,6 +1,6 @@
 ---
 import { whiteBtnClass } from "@misc";
-import { acceptMembership } from "@misc/env-vars";
+import { PUBLIC_FM_ACCEPT_MEMBERSHIP } from 'astro:env/client'
 
 interface Props {
     signedIn:boolean;
@@ -11,6 +11,8 @@ const { signedIn } = Astro.props as Props
 const { pathname, search } = Astro.url
 
 const signInPath = `/sign-in?rd=${encodeURIComponent(pathname + search)}`
+
+const acceptMembership = PUBLIC_FM_ACCEPT_MEMBERSHIP === 'true'
 ---
 
 <div class=`hidden flex-col justify-center bg-white` id="empty-cart">

@@ -1,5 +1,5 @@
 ---
-import { deliveryProofPrefix } from '@misc/env-vars';
+import { PUBLIC_FM_DELIVERY_PROOF_IMAGE_URL_PREFIX } from 'astro:env/client'
 
 interface Props {
     filename:string;
@@ -16,6 +16,6 @@ const { filename } = Astro.props as Props
         </svg>
     </label>
     <div class="max-h-0 overflow-y-hidden peer-checked:max-h-fit peer-checked:mt-4">
-        <img src={deliveryProofPrefix + filename} />
+        <img src={PUBLIC_FM_DELIVERY_PROOF_IMAGE_URL_PREFIX + filename} />
     </div>
 </div>

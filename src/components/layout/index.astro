@@ -5,8 +5,7 @@ import type { IShopAddressMap, IShoppingBagSidebarProp } from '@misc';
 import LoadingOverlay from './loading-overlay.astro';
 import ErrorMsgModal from './error-msg-modal.astro';
 import CollectionPointOnQtyIncrease from './collection-point-on-qty-increase.astro'
-import { imageUrlPrefix } from '@misc'
-import { PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client'
+import { PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
 import type { IProductImages } from '@components/catalogue-item/interfaces';
 
 interface Props {
@@ -73,7 +72,7 @@ const productSchema = isProductPage ? {
     "@type": "Brand",
     "name": PUBLIC_FM_COMPANY_NAME_SHORT
   },
-  "image": images.map(({name,ext})=>imageUrlPrefix+name+ext),
+  "image": images.map(({name,ext})=>PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX+name+ext),
   "size": "Standard",
   "sku": productID,
   "offers": {
@@ -270,7 +269,7 @@ import {
   HEADER_TEXT_CAROUSEL_LOADED, 
   SHOPPING_BAG_LOADED, 
 } from "@misc/event-keys"
-import { turnstileSiteKey } from '@misc/env-vars'
+import { PUBLIC_FM_TURNSTILE_SITEKEY } from 'astro:env/client'
 import { 
   selectedCollectionPoint, 
   otherClientPaymentInProcess, 
@@ -350,7 +349,7 @@ window.addEventListener('beforeunload',collapseSidebarsBeforeUnload)
 
 window.onloadTurnstileCallback = () => {
   window.turnstile.render("#turnstile-tag", {
-    sitekey: turnstileSiteKey,
+    sitekey: PUBLIC_FM_TURNSTILE_SITEKEY,
     callback: () => {
       console.log(`Challenge Success`);
       const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>

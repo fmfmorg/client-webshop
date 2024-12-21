@@ -1,6 +1,8 @@
 import type { Address } from '@revolut/checkout/types/types'
 import { atom, computed, map } from 'nanostores'
+import { PUBLIC_FM_ACCEPT_MEMBERSHIP } from 'astro:env/client'
 
+export const acceptMembership = atom(PUBLIC_FM_ACCEPT_MEMBERSHIP === 'true')
 export const signedIn = atom(false)
 export const cartSubtotal = atom(0)
 export const memberTotalToPay = atom(0)

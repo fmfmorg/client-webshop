@@ -1,5 +1,4 @@
-// import { FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
-import { imageUrlPrefix } from '@misc'
+import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
 
 const Image = (
     {
@@ -20,9 +19,9 @@ const Image = (
                 ext
             ].map(e=>(
                 e === ext ?
-                <img src={`${imageUrlPrefix}${name}_256x256${e}`} alt={alt} />
+                <img src={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${name}_256x256${e}`} alt={alt} />
                 :
-                <source srcset={`${imageUrlPrefix}${name}_256x256${e}`} />
+                <source srcset={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${name}_256x256${e}`} />
             ))
         }
     </picture>

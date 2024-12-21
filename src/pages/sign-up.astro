@@ -3,14 +3,15 @@ import Layout from '../components/layout/index.astro';
 import SignUpForm from '../components/sign-up-form/index.astro';
 import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
-import { headerCarouselOffKey } from '@misc'
-import { acceptMembership } from '@misc/env-vars';
+import { PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY, PUBLIC_FM_ACCEPT_MEMBERSHIP } from 'astro:env/client'
+
+const acceptMembership = PUBLIC_FM_ACCEPT_MEMBERSHIP === 'true'
 
 if (!acceptMembership) return new Response(null,{status:404})
 
 const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
-const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
+const headerCarouselOff = Astro.cookies.has(PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
 
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/sign-up-page-init`,{
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)

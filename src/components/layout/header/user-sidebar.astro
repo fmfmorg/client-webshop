@@ -3,7 +3,7 @@ import { whiteBtnClass } from "@misc";
 
 import Sidebar from "./right-sidebar.astro";
 import SignUpForm from "@components/sign-up-form/index.astro";
-import { acceptMembership } from "@misc/env-vars";
+import { PUBLIC_FM_ACCEPT_MEMBERSHIP } from 'astro:env/client'
 
 interface Props {
   signedIn:boolean;
@@ -15,7 +15,7 @@ const { showUserIcon = true, signedIn, firstName } = Astro.props
 
 const { pathname, search } = Astro.url
 const encodedRedirectURI =  encodeURIComponent(pathname+search)
-
+const acceptMembership = PUBLIC_FM_ACCEPT_MEMBERSHIP === 'true'
 const memberMenuList = [
     {
         name:'Manage Account',

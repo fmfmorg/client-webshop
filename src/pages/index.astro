@@ -2,7 +2,7 @@
 import Layout from '../components/layout/index.astro';
 import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
-import { headerCarouselOffKey } from '@misc'
+import { PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import Homepage from '@components/homepage/index.astro'
 import type { IProduct } from '@components/catalogue-item/interfaces';
 
@@ -13,7 +13,7 @@ interface IApiResponse {
 
 const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
-const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
+const headerCarouselOff = Astro.cookies.has(PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
 
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/index-page-init`,{
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)

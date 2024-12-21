@@ -29,13 +29,6 @@ import { showErrorModal } from './show-error-modal'
 import { sleep } from './sleep'
 import { submitBtnClass } from './submit-btn-class'
 import { whiteBtnClass } from './white-btn-class'
-import {
-    revolutMode,
-    headerCarouselOffKey,
-    companyNameShort,
-    companyNameFull,
-    imageUrlPrefix,
-} from './env-vars'
 
 export {
     formatPrice,
@@ -69,9 +62,4 @@ export {
     sessionLost,
     sleep,
     catalogueItemsOnResize,
-    revolutMode,
-    headerCarouselOffKey,
-    companyNameShort,
-    companyNameFull,
-    imageUrlPrefix,
 }

@@ -1,6 +1,6 @@
 import { createSignal, For, onCleanup, onMount } from 'solid-js'
-// import { FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
-import { dispatchInternalEvent, headerCarouselOffKey } from '@misc'
+import { PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+import { dispatchInternalEvent } from '@misc'
 import { HEADER_TEXT_CAROUSEL_LOADED } from '@misc/event-keys'
 
 const TextCarouselLine = ({texts}:{texts:string[]}) => (
@@ -38,7 +38,7 @@ const TextCarousel = ({texts}:{texts:string[]}) => {
 
     const checkboxOnClick = (ev:InputEvent) => {
         const checked = (ev.target as HTMLInputElement).checked
-        if (checked) document.cookie = `${headerCarouselOffKey}=1; path=/`
+        if (checked) document.cookie = `${PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY}=1; path=/`
     }
 
     const documentOnShow = () => {

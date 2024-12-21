@@ -12,7 +12,7 @@ import {
     submitBtnClass, 
     type ICatalogueMap, 
 } from '@misc';
-import { signedIn, cartSubtotal, memberTotalToPay, cartHasItems, thisClientPaymentInProcess, otherClientPaymentInProcess, selectedCollectionPoint, shopNameMap } from '@stores';
+import { signedIn, cartSubtotal, memberTotalToPay, cartHasItems, thisClientPaymentInProcess, otherClientPaymentInProcess, selectedCollectionPoint, shopNameMap, acceptMembership } from '@stores';
 import SignInBtn from './empty-cart/sign-in-btn';
 import ContinueShopping from './empty-cart/continue-shopping';
 import DeleteItemModal from './delete-item-modal';
@@ -28,7 +28,6 @@ import {
 } from '@misc/event-keys';
 import { CartContext } from './context';
 import DiscountRow from './discount-row';
-import { acceptMembership } from '@misc/env-vars';
 
 type ICartApiResponse = {success?:boolean} & IAddToBagResponse
 
@@ -59,6 +58,7 @@ const CartList = (
         sidebar
 
     const $signedIn = useStore(signedIn)
+    const $acceptMembership = useStore(acceptMembership)
     const [cartItemMap, setCartItemMap] = createStore(itemsMap)
     const [cartContent, setCartContent] = createStore(cartCalculation)
     const [prodDetailsMap, setProdDetailsMap] = createStore(productDetailsMap)
@@ -401,8 +401,8 @@ const CartList = (
                 </div>
             </div>
             <div ref={emptyBagRef} class={`${!!cartItemIDs().length || isCheckoutPage || $otherClientPaymentInProcess() ? 'hidden' : 'flex'} flex-col justify-center px-4 space-y-4`}>
-                <h3 class={`font-semibold text-lg tracking-wider [word-spacing:0.2rem] ${(!acceptMembership || $signedIn()) ? 'text-center' : ''}`}>Your shopping bag is empty!</h3>
-                <Show when={acceptMembership && !$signedIn()} fallback={<ContinueShopping />} children={<SignInBtn />} />
+                <h3 class={`font-semibold text-lg tracking-wider [word-spacing:0.2rem] ${(!$acceptMembership() || $signedIn()) ? 'text-center' : ''}`}>Your shopping bag is empty!</h3>
+                <Show when={$acceptMembership() && !$signedIn()} fallback={<ContinueShopping />} children={<SignInBtn />} />
             </div>
             <div ref={cartLockedRef} class={`${!isCheckoutPage && $otherClientPaymentInProcess() ? 'flex' : 'hidden'} flex-col justify-center`}>
                 <p class="text-center font-light italic text-sm sm:text-base">Cart locked during checkout process</p>

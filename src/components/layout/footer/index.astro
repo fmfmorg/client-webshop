@@ -1,5 +1,5 @@
 ---
-import { companyNameFull, companyNumber } from "@misc/env-vars"
+import { PUBLIC_FM_COMPANY_NAME_FULL, PUBLIC_FM_COMPANY_NUMBER } from 'astro:env/client'
 import type { ILink } from "./interfaces"
 import Section from "./section.astro"
 
@@ -43,9 +43,9 @@ const year = new Date().getFullYear()
     </div>
     <hr class="border-stone-400 mx-4" />
     <div class="p-4 text-center text-xs leading-5">
-        <p>&copy; {year} {companyNameFull}. <br class="2xs:hidden" />All Rights Reserved.</p>
+        <p>&copy; {year} {PUBLIC_FM_COMPANY_NAME_FULL}. <br class="2xs:hidden" />All Rights Reserved.</p>
         <p>Registered in Scotland</p>
-        <p>Company Number {companyNumber}</p>
+        <p>Company Number {PUBLIC_FM_COMPANY_NUMBER}</p>
         <p>Registered Office: <br class="xs:hidden" />5 South Charlotte Street, Edinburgh, EH2 4AN</p>
     </div>
 </footer>

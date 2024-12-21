@@ -2,10 +2,10 @@
 import Product from '@components/product-page/index.astro';
 import Layout from '@components/layout/index.astro'
 import type { IProduct } from '@components/catalogue-item/interfaces';
-import { httpRequestHeader, imageUrlPrefix, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
+import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import CollectionPointsSidebar from '@components/product-page/collection-points-sidebar';
 import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
-import { headerCarouselOffKey } from '@misc'
+import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 
 interface IApiResponse {
     relatedProductIDs:string[];
@@ -17,7 +17,7 @@ if (id !== id.toUpperCase()) return Astro.redirect(`/product/${name}/${id.toUppe
 
 const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
-const headerCarouselOff = Astro.cookies.has(headerCarouselOffKey)
+const headerCarouselOff = Astro.cookies.has(PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/product-page-init/${id}`,{
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })
@@ -80,7 +80,7 @@ const productName = productMap[id].name
     headerCarouselTexts,
     titleAddForHer:true,
     description:productMap[id].description.replaceAll('<p>','').replaceAll('</p>','').trim(),
-    imageURL:imageUrlPrefix+productMap[id].images[0].name+productMap[id].images[0].ext,
+    imageURL:PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX+productMap[id].images[0].name+productMap[id].images[0].ext,
     images:productMap[id].images,
     price:productMap[id].discountedPrice,
     productID:id
