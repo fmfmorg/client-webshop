@@ -81,7 +81,7 @@ import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
             const toSignIn = () => window.location.assign(`/sign-in?rd=${encodeURIComponent('/account/addresses')}`)
 
             const setAsDefault = async () => {
-                const resp = await fetch(`/api/webshop/account-set-default-address/${addressID}`,{
+                const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/account-set-default-address/${addressID}`,{
                     headers:httpRequestHeader(false,'client',false)
                 })
                 if (resp.status === 401) toSignIn()
@@ -90,7 +90,7 @@ import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
             }
 
             const onDelete = async () => {
-                const resp = await fetch(`/api/webshop/account-delete-address/${addressID}`,{
+                const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/account-delete-address/${addressID}`,{
                     headers:httpRequestHeader(false,'client',false)
                 })
                 if (resp.status === 401) toSignIn()

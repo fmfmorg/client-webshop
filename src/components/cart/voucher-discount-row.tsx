@@ -16,7 +16,7 @@ const VoucherDiscountRow = (p:{
         removeBtnRef.classList.add('cursor-not-allowed')
         removeBtnRef.disabled = true
 
-        const resp = await fetch(`/api/webshop/voucher-code-on-remove`,{
+        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/voucher-code-on-remove`,{
             method:"POST",
             headers:httpRequestHeader(false,'client',true),
             body:JSON.stringify({type:p.voucherType})

@@ -61,6 +61,19 @@ export default defineConfig({
     //         },
     //     }
     // }),
+        // ...(process.env.FM_IS_ONLINE !== 'true' && {
+    //     vite: {
+    //         server: {
+    //             proxy: {
+    //                 '/api': {
+    //                     target: process.env.FM_CLIENT_WEBSHOP_API_URL,
+    //                     changeOrigin: true,
+    //                     rewrite: (path) => path.replace(/^\/api/, ''),
+    //                 },
+    //             },
+    //         },
+    //     }
+    // }),
     hooks:{
         'astro:server:setup': ({ server }) => {
             console.log('Middleware setup initialized')
@@ -93,19 +106,6 @@ export default defineConfig({
             });
         },
     },
-    // ...(process.env.FM_IS_ONLINE !== 'true' && {
-    //     vite: {
-    //         server: {
-    //             proxy: {
-    //                 '/api': {
-    //                     target: process.env.FM_CLIENT_WEBSHOP_API_URL,
-    //                     changeOrigin: true,
-    //                     rewrite: (path) => path.replace(/^\/api/, ''),
-    //                 },
-    //             },
-    //         },
-    //     }
-    // }),
     env:{
         schema:{
             FM_CLIENT_WEBSHOP_API_URL:envField.string({

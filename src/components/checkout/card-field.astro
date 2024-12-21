@@ -24,7 +24,7 @@ const paymentFailModalCheckbox = document.getElementById("payment-failed-modal")
 const paymentFailReasonElem = document.getElementById("payment-failed-reason") as HTMLParagraphElement
 
 const getToken = async ():Promise<string> => {
-    const resp = await fetch(`/api/webshop/get-token`)
+    const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/get-token`)
     if (!resp.ok) {
         await sessionLost(resp.status)
         return ''
@@ -34,7 +34,7 @@ const getToken = async ():Promise<string> => {
 }
 
 const announcePaymentActivity = async (isStart:boolean) => {
-    const resp = await fetch(`/api/webshop/update-payment-in-process`,{
+    const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/update-payment-in-process`,{
         method:"POST",
         headers:httpRequestHeader(false,'client',false),
         body:JSON.stringify({paymentInProcess:isStart})
@@ -75,7 +75,7 @@ const memberCheckout = async (form:HTMLFormElement) => {
     const deliveryMethodID = +((form.elements.namedItem('delivery-method') as RadioNodeList)?.value || '0')
     const total = memberTotalToPay.get()
     
-    const resp = await fetch(`/api/webshop/member-preverify-order`,{
+    const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/member-preverify-order`,{
         method:'POST',
         headers:httpRequestHeader(false,'client',true),
         body:JSON.stringify({
@@ -143,7 +143,7 @@ const guestCheckout = async (form:HTMLFormElement) => {
 
     const total = guestTotalToPay.get()
 
-    const resp = await fetch(`/api/webshop/guest-preverify-order`,{
+    const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/guest-preverify-order`,{
         method:'POST',
         headers:httpRequestHeader(false,'client',true),
         body:JSON.stringify({

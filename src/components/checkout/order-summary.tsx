@@ -77,7 +77,7 @@ const OrderSummary = (
         if (!discountCodeElem) return
         const discountCode = discountCodeElem.value.trim().toUpperCase()
         
-        const resp = await fetch(`/api/webshop/voucher-code-on-input/${encodeURIComponent(discountCode)}`,{
+        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/voucher-code-on-input/${encodeURIComponent(discountCode)}`,{
             headers:httpRequestHeader(false,'client',true)
         })
 

@@ -56,7 +56,7 @@ const AddressList = (
             const address = addressMap[id]
             if (address) memberSetBillingAddress(address)
         } else {
-            const resp = await fetch(`/api/webshop/member-shipping-address-on-change/${id}`,{
+            const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/member-shipping-address-on-change/${id}`,{
                 headers:httpRequestHeader(false,'client',true),
             })
             if (!resp.ok) {

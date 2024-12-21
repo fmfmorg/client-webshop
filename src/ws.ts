@@ -30,9 +30,12 @@ const fetchKey = async() => {
         headers:{
             "X-Request-Source":"WS",
         },
-        credentials: 'include'
     })
-    if (!resp.ok) return false
+    if (!resp.ok) {
+        console.log(resp.status)
+        console.log("fetch error: ", await resp.text())
+        return false
+    }
     const {key, url} = await resp.json() as {key:string; url:string}
     cartID = key
     wsUrl = url
