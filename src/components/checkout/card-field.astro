@@ -164,25 +164,23 @@ const guestCheckout = async (form:HTMLFormElement) => {
             collectionPoint:$selectedCollectionPoint
         })
     })
-    console.log("resp.status: ", resp.status)
     if (!resp.ok) {
         if (await sessionLost(resp.status)) return
         showPaymentFailedModal('Server error. Please try again later.')
         return
     }
     const {apiResponse:{userExists,orderID}} = await resp.json() as { apiResponse:{userExists: boolean;orderID:number;}}
-    console.log("userExists: ", userExists, ", orderID: ", orderID)
     checkoutOrderID.set(orderID)
     if (userExists) {
         paymentInProcessCheckbox.checked = false
         userExistsModalCheckbox.checked = true
-    } /*else {
+    } else {
         cardField.submit({
             name:`${billingFirstName} ${billingLastName}`.trim(),
             email,
             billingAddress,
         })
-    }*/
+    }
 }
 
 const onSubmit = (e:SubmitEvent) => {
