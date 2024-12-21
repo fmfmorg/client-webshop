@@ -2,9 +2,10 @@ import { createServer } from 'http';
 import { parse } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import handler from './handler.js'; // Assuming this is your server handler
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
 
 const proxy = createProxyMiddleware('/api', {
-  target: process.env.FM_CLIENT_WEBSHOP_API_URL,
+  target: FM_CLIENT_WEBSHOP_API_URL,
   changeOrigin: true,
   pathRewrite: { '^/api': '' },
 });
