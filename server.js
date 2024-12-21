@@ -13,7 +13,7 @@ const app = express();
 // Configure proxy settings
 const proxyConfig = {
   '/api': {
-    target: 'https://api-shop.fairymade.co', // Replace with your actual API domain
+    target: 'https://api-shop.fairymade.top', // Replace with your actual API domain
     changeOrigin: true,
     pathRewrite: {
       '^/api': '',
