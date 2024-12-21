@@ -282,7 +282,6 @@ memberTotalToPay,
 shoppingBagLoaded,
 turnstilePassed,
 } from "@stores"
-import { companyNameShort, imageUrlPrefix } from '@misc'
 
 declare global {
   interface Window {
@@ -366,8 +365,4 @@ const faviconSvg = document.getElementById('favicon-svg') as HTMLLinkElement
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',(e)=>{
   if (!!faviconSvg) faviconSvg.href = `/favicon-${e.matches ? 'dark' : 'light'}.svg`
 })
-
-console.log('turnstile key: ', turnstileSiteKey)
-console.log('company name: ', companyNameShort)
-console.log('image prefix: ', imageUrlPrefix)
 </script>

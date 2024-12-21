@@ -30,7 +30,11 @@ const fetchKey = async() => {
             "X-Request-Source":"WS",
         }
     })
-    if (!resp.ok) return false
+    if (!resp.ok) {
+        console.log('status: ', resp.status)
+        console.log('error: ', await resp.text())
+        return false
+    }
     const {key, url} = await resp.json() as {key:string; url:string}
     cartID = key
     wsUrl = url
