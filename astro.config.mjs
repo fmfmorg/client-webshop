@@ -41,8 +41,8 @@ export default defineConfig({
     env:{
         schema:{
             FM_CLIENT_WEBSHOP_API_URL:envField.string({
-                context:'server',
-                access:'secret'
+                context:'client',
+                access:'public'
             }),
             FM_IS_ONLINE:envField.string({
                 context:'server',

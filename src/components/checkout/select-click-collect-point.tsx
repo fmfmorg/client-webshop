@@ -6,6 +6,7 @@ import Image from "@components/cart/image";
 import { selectedCollectionPoint } from "@stores";
 import { ADD_TO_BAG_FROM_CATALOGUE, CART_UPDATE, PRODUCT_UPDATE, UPDATE_CART_ITEM_MAP } from "@misc/event-keys";
 import type { IProduct } from "@components/catalogue-item/interfaces";
+import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client";
 
 interface IContext {
     cartItemMap: ICartItemMap;
@@ -68,7 +69,7 @@ const ShopAddressListItem = (
         const modalCheckbox = document.getElementById("select-click-collect-point-modal-checkbox") as HTMLInputElement
         const clickCollectCheckbox = document.getElementById('collect') as HTMLInputElement
 
-        const resp = await fetch(`/api/webshop/select-collection-point/${p.address.id}`,{
+        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/select-collection-point/${p.address.id}`,{
             headers:httpRequestHeader(false,'client',true)
         })
         if (!resp.ok){

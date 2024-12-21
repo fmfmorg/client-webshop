@@ -3,8 +3,8 @@ import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppi
 import Layout from '@components/layout/index.astro'
 import TrackOrderForm from '@components/track-order/form.astro'
 import OrderContainer from "@components/track-order/order-container.astro";
-import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
-import { PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+import { FM_IS_ONLINE } from 'astro:env/server'
+import { PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY, FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
 
 interface IApiResponse {
     order?:ITrackOrderResponse;

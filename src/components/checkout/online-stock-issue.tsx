@@ -6,6 +6,7 @@ import type { IProduct, IProductImages } from '@components/catalogue-item/interf
 import Image from "@components/cart/image";
 import { selectedCollectionPoint } from '@stores';
 import { ADD_TO_BAG_FROM_CATALOGUE, CART_UPDATE, PRODUCT_UPDATE, UPDATE_CART_ITEM_MAP } from '@misc/event-keys';
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client';
 
 interface IProductWithIssue {
     id:string;
@@ -113,7 +114,7 @@ const OnlineStockIssue = (
         checkboxRef.checked = false
         setLoading(true)
 
-        const resp = await fetch('/api/webshop/select-collection-point/1',{
+        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/select-collection-point/1`,{
             headers:httpRequestHeader(false,'client',true)
         })
         if (!resp.ok) {

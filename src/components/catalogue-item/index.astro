@@ -53,6 +53,7 @@ import type { IProduct, IStockQuantity } from "./interfaces";
 import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } from "@stores";
 import { ADD_TO_BAG_FROM_CATALOGUE, CART_QTY_UPDATE, CART_UPDATE, PRODUCT_UPDATE } from "@misc/event-keys";
 import { observer } from "./observer";
+import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client";
 
     class Product extends HTMLElement {
         constructor(){
@@ -120,7 +121,7 @@ import { observer } from "./observer";
 
                 if (qtyInCart < qtyAvailable){
                     setLoading(true)
-                    const resp = await fetch('/api/webshop/product-add-qty',{
+                    const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/product-add-qty`,{
                         method:"POST",
                         headers:httpRequestHeader(false,'client',true),
                         body:JSON.stringify({id,changeInQuantity:1,dateAdded:Date.now()})

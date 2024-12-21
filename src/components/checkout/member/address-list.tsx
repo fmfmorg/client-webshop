@@ -6,6 +6,7 @@ import { memberTotalToPay, userAlreadyHasAddress } from '@stores';
 import { memberSetBillingAddress } from './member-set-billing-address';
 import type { IMemberAddressUpdateAfterDisconnectedResponse, INoServiceCountryMap } from 'src/misc/interfaces';
 import { BACK_ONLINE_ADDRESS_LIST, COUNTRY_CHANGED, MEMBER_DELETE_ADDRESS_UPDATE, MEMBER_EDIT_ADDRESS_UPDATE, MEMBER_NEW_ADDRESS_UPDATE, MEMBER_SHIPPING_ADDRESS_UPDATE, OPEN_EDIT_ADDRESS_MODAL } from '@misc/event-keys';
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client';
 
 const AddressList = (
     p:{
@@ -55,7 +56,7 @@ const AddressList = (
             const address = addressMap[id]
             if (address) memberSetBillingAddress(address)
         } else {
-            const resp = await fetch(`/api/webshop/member-shipping-address-on-change/${id}`,{
+            const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/member-shipping-address-on-change/${id}`,{
                 headers:httpRequestHeader(false,'client',true),
             })
             if (!resp.ok) {

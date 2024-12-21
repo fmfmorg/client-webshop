@@ -28,6 +28,7 @@ import {
 } from '@misc/event-keys';
 import { CartContext } from './context';
 import DiscountRow from './discount-row';
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client';
 
 type ICartApiResponse = {success?:boolean} & IAddToBagResponse
 
@@ -88,7 +89,7 @@ const CartList = (
 
     const apiRequest = async (id:string,changeInQuantity:number,dateAdded:number) => {
         setLoading(id,true)
-        const resp = await fetch('/api/webshop/product-add-qty',{
+        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/product-add-qty`,{
             method:"POST",
             headers:httpRequestHeader(false,'client',true),
             body:JSON.stringify({id,changeInQuantity,dateAdded})

@@ -5,6 +5,7 @@ import DeliveryMethod from "./delivery-method";
 import { cartSubtotal, guestDeliveryCost, signedIn, memberTotalToPay, deliveryAvailable, selectedCollectionPoint, memberDeliveryCost } from "@stores";
 import { useStore } from "@nanostores/solid";
 import { COUNTRY_CHANGED, MEMBER_DELIVERY_METHOD_UPDATE } from "@misc/event-keys";
+import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client";
 const DeliveryMethods = (
     p:{
         shippingMethodsMap:IDeliveryMethodMap;
@@ -52,7 +53,7 @@ const DeliveryMethods = (
 
     const deliveryMethodOnClick = (id:number) => async() => {
         if (signedIn.get()){
-            const resp = await fetch(`/api/webshop/member-delivery-method-on-change/${id}`,{
+            const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/member-delivery-method-on-change/${id}`,{
                 headers:httpRequestHeader(false,'client',true),
             })
             if (!resp.ok) {

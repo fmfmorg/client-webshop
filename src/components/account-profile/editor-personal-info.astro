@@ -41,6 +41,7 @@ const { firstName, lastName, dob } = Astro.props as Props
 
 <script>
 import { httpRequestHeader, sessionLost } from "@misc"
+import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client"
 
     const form = document.getElementById('form-personal-info') as HTMLFormElement
     const errorMsgElem = form.getElementsByClassName('error-msg')[0]
@@ -52,7 +53,7 @@ import { httpRequestHeader, sessionLost } from "@misc"
         const lastName = (form.elements.namedItem('last-name') as HTMLInputElement).value.trim()
         const dob = (form.elements.namedItem('dob') as HTMLInputElement).value.trim()
 
-        const resp = await fetch('/api/webshop/account-profile-update-personal-info',{
+        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/account-profile-update-personal-info`,{
             method:"POST",
             headers:httpRequestHeader(false,'client',false),
             body:JSON.stringify({firstName,lastName,dob})

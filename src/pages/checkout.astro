@@ -12,7 +12,8 @@ import Layout from '@components/layout/index.astro'
 import EmptyCart from '@components/checkout/empty-cart.astro'
 import CheckoutForm from '@components/checkout/index.astro'
 import CartLocked from '@components/checkout/cart-locked.astro';
-import { FM_CLIENT_WEBSHOP_API_URL, FM_IS_ONLINE } from 'astro:env/server'
+import { FM_IS_ONLINE } from 'astro:env/server'
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
 
 interface IApiResponse {
     addressMap:IUserAddressMap;

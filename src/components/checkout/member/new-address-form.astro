@@ -127,6 +127,7 @@ const { countries, noServiceCountryMap, idPrefix } = Astro.props as Props
 import { dispatchInternalEvent, httpRequestHeader, sessionLost, type IUserAddress } from "@misc";
 import { MEMBER_NEW_ADDRESS_UPDATE, TEXT_INPUT_SET_NEW_VALUE } from "@misc/event-keys";
 import { userAlreadyHasAddress } from "@stores";
+import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client";
 
     class CheckoutNewAddressForm extends HTMLElement {
         constructor(){
@@ -194,7 +195,7 @@ import { userAlreadyHasAddress } from "@stores";
                 const countryID = countryIDElem.value
                 const isDefault = !!isDefaultCheckbox && isDefaultCheckbox.checked
 
-                const resp = await fetch('/api/webshop/account-add-update-address',{
+                const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/account-add-update-address`,{
                     method:"POST",
                     headers:httpRequestHeader(false,'client',false),
                     body:JSON.stringify({

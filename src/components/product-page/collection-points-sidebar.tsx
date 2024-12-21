@@ -4,6 +4,7 @@ import type { IProduct } from "@components/catalogue-item/interfaces";
 import { httpRequestHeader, sessionLost, type IShopAddress, type IShopAddressMap } from "@misc";
 import { preferredCollectionPoint } from '@stores';
 import { PRODUCT_UPDATE } from '@misc/event-keys';
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client';
 
 const CollectionPointItem = (
     p:{
@@ -57,7 +58,7 @@ const CollectionPointsSidebar = (
     const itemOnClick = (addressID:number) => async () => {
         checkboxRef.click()
         preferredCollectionPoint.set(addressID)
-        const resp = await fetch(`/api/webshop/set-preferred-collection-point/${addressID}`,{
+        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/set-preferred-collection-point/${addressID}`,{
             headers:httpRequestHeader(false,'client',true)
         })
         await sessionLost(resp.status)

@@ -8,6 +8,7 @@ import { useStore } from '@nanostores/solid';
 import { guestDeliveryCost, guestTotalToPay, memberDeliveryCost, memberTotalToPay, signedIn } from '@stores';
 import TextInput from '@components/input-fields/text-input';
 import VoucherDiscountRow from '@components/cart/voucher-discount-row';
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client';
 
 const OrderSummary = (
     {
@@ -76,7 +77,7 @@ const OrderSummary = (
         if (!discountCodeElem) return
         const discountCode = discountCodeElem.value.trim().toUpperCase()
         
-        const resp = await fetch(`/api/webshop/voucher-code-on-input/${encodeURIComponent(discountCode)}`,{
+        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/voucher-code-on-input/${encodeURIComponent(discountCode)}`,{
             headers:httpRequestHeader(false,'client',true)
         })
 

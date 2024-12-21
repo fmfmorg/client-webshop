@@ -3,6 +3,7 @@ import TextInput from "@components/input-fields/text-input";
 import { dispatchInternalEvent, httpRequestHeader, sessionLost, type ICountry, type IDeliveryMethodMap, type INoServiceCountryMap } from "@misc";
 import CountrySelect from '@components/account-addresses/country-select';
 import { COUNTRY_CHANGED } from '@misc/event-keys';
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client';
 
 const AddressForm = (
     p:{
@@ -29,7 +30,7 @@ const AddressForm = (
         const postcode = (ev.target as HTMLInputElement).value.toUpperCase().replaceAll(" ", '')
         const country = (document.getElementById('shipping-country') as HTMLSelectElement).value
 
-        const resp = await fetch('/api/webshop/guest-shipping-country-on-change',{
+        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/guest-shipping-country-on-change`,{
             headers:httpRequestHeader(false,'client',true),
             method:"POST",
             body:JSON.stringify({country,postcode})

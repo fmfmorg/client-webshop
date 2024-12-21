@@ -1,6 +1,7 @@
 import { For, onMount } from 'solid-js'
 import { dispatchInternalEvent, httpRequestHeader, sessionLost, type ICountry, type IDeliveryMethodMap, type INoServiceCountryMap } from "@misc";
 import { COUNTRY_CHANGED } from '@misc/event-keys';
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
 
 const CountrySelect = (
     p:{
@@ -24,7 +25,7 @@ const CountrySelect = (
 
         if (p.idPrefix === 'shipping') {
             const postcode = (document.getElementById('shipping-postcode') as HTMLInputElement).value.trim()
-            const resp = await fetch('/api/webshop/guest-shipping-country-on-change',{
+            const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/guest-shipping-country-on-change`,{
                 headers:httpRequestHeader(false,'client',true),
                 method:"POST",
                 body:JSON.stringify({country:countryID,postcode})
