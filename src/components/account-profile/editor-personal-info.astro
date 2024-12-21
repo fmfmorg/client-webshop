@@ -53,7 +53,7 @@ import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client"
         const lastName = (form.elements.namedItem('last-name') as HTMLInputElement).value.trim()
         const dob = (form.elements.namedItem('dob') as HTMLInputElement).value.trim()
 
-        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/account-profile-update-personal-info`,{
+        const resp = await fetch(`/api/webshop/account-profile-update-personal-info`,{
             method:"POST",
             headers:httpRequestHeader(false,'client',false),
             body:JSON.stringify({firstName,lastName,dob})

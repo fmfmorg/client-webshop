@@ -121,7 +121,7 @@ import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client";
 
                 if (qtyInCart < qtyAvailable){
                     setLoading(true)
-                    const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/product-add-qty`,{
+                    const resp = await fetch(`/api/webshop/product-add-qty`,{
                         method:"POST",
                         headers:httpRequestHeader(false,'client',true),
                         body:JSON.stringify({id,changeInQuantity:1,dateAdded:Date.now()})

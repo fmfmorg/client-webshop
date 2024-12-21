@@ -114,7 +114,7 @@ const OnlineStockIssue = (
         checkboxRef.checked = false
         setLoading(true)
 
-        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/select-collection-point/1`,{
+        const resp = await fetch(`/api/webshop/select-collection-point/1`,{
             headers:httpRequestHeader(false,'client',true)
         })
         if (!resp.ok) {

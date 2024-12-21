@@ -26,7 +26,7 @@ import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
 let cartID = '', wsUrl = '', isCheckoutPage = false, ws:WebSocket = null
 
 const fetchKey = async() => {
-    const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/get-key`,{
+    const resp = await fetch(`/api/webshop/get-key`,{
         headers:{
             "X-Request-Source":"WS",
         },
@@ -90,7 +90,7 @@ const backOnline = async () => {
     if (!!ws && ws.readyState === 1) return
     else if (isCheckoutPage){
         if (signedIn.get()){
-            const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/internet-back-checkout-page-member`,{
+            const resp = await fetch(`/api/webshop/internet-back-checkout-page-member`,{
                 headers:httpRequestHeader(true,'client',true)
             })
             if (!resp.ok) {
@@ -138,7 +138,7 @@ const backOnline = async () => {
         } else {
             const shippingPostcode = (document.getElementById('shipping-postcode') as HTMLInputElement).value 
             const shippingCountry = (document.getElementById('shipping-country') as HTMLSelectElement).value
-            const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/internet-back-checkout-page-guest`,{
+            const resp = await fetch(`/api/webshop/internet-back-checkout-page-guest`,{
                 headers:httpRequestHeader(true,'client',true),
                 method:"POST",
                 body:JSON.stringify({country:shippingCountry,postcode:shippingPostcode})
@@ -175,7 +175,7 @@ const backOnline = async () => {
             dispatchInternalEvent(COUNTRY_CHANGED,{deliveryMethodMap,selectedDeliveryID})
         }
     } else {
-        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/internet-back-non-checkout-page`,{
+        const resp = await fetch(`/api/webshop/internet-back-non-checkout-page`,{
             headers:httpRequestHeader(true,'client',true)
         })
         if (!resp.ok) {
