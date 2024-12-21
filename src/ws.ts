@@ -29,7 +29,8 @@ const fetchKey = async() => {
     const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/get-key`,{
         headers:{
             "X-Request-Source":"WS",
-        }
+        },
+        credentials: 'include'
     })
     if (!resp.ok) return false
     const {key, url} = await resp.json() as {key:string; url:string}
