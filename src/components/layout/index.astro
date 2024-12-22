@@ -328,16 +328,16 @@ const collapseSidebarsBeforeUnload = () => {
     "menu-sidebar-checkbox"
   ].forEach(e=>{
     const checkbox = document.getElementById(e) as HTMLInputElement
-    if (!!checkbox) checkbox.checked = false
+    if (!!checkbox && checkbox.checked) checkbox.click()
   })
 
-  const overlays = document.getElementsByClassName('overlay')
-  const len = overlays.length
-  for (let i=0; i<len; i++) overlays.item(i).classList.add('hidden')
+  // const overlays = document.getElementsByClassName('overlay')
+  // const len = overlays.length
+  // for (let i=0; i<len; i++) overlays.item(i).classList.add('hidden')
 
-  document.getElementById("shopping-bag-sidebar-overlay")?.classList.add('hidden')
-  document.getElementById("user-sidebar-overlay")?.classList.add('hidden')
-  document.getElementById("menu-overlay")?.classList.add('hidden')
+  // document.getElementById("shopping-bag-sidebar-overlay")?.classList.add('hidden')
+  // document.getElementById("user-sidebar-overlay")?.classList.add('hidden')
+  // document.getElementById("menu-overlay")?.classList.add('hidden')
 }
 
 memberTotalToPay.set(+document.body.dataset.memberTotal)

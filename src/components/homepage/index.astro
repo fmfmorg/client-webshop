@@ -105,6 +105,7 @@ const { productIDs = [], productObj, cartItemObj } = Astro.props as Props
     // image itself is 3361 x 2188
     // image w bg is 6500 x 2188
 
+    import { catalogueItemsOnResize } from '@misc';
     import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
 
     interface IImageSize {
@@ -137,6 +138,8 @@ const { productIDs = [], productObj, cartItemObj } = Astro.props as Props
     }
 
     const resizeBanner = () => {
+        catalogueItemsOnResize()
+
         const { innerHeight, innerWidth } = window
         const headerHeight = header.getBoundingClientRect().height
         const bannerMaxHeight = 
