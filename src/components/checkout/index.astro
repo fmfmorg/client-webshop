@@ -136,6 +136,11 @@ const hasPOS = !!Object.keys(shopAddressMap).length
                     <p class='font-light text-xs tracking-wider pl-6'>Stay in the loop! Subscribe to our newsletter and receive exclusive offers, just for you &hearts;</p>
                 </Checkbox>
             </div>
+            <div class="bg-white rounded-md p-3">
+                <Checkbox id="checkout-confirm-accurate-info" name="confirm-accurate-info" required client:only="solid-js">
+                    <p class='text-xs font-semibold tracking-wider pl-6'>I confirm that all the billing, shipping, and contact information I have provided is accurate.</p>
+                </Checkbox>
+            </div>
             <PayButton client:only="solid-js" />
         </div>
     </form>
