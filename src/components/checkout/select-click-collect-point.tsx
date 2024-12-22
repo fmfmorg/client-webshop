@@ -69,7 +69,7 @@ const ShopAddressListItem = (
         const modalCheckbox = document.getElementById("select-click-collect-point-modal-checkbox") as HTMLInputElement
         const clickCollectCheckbox = document.getElementById('collect') as HTMLInputElement
 
-        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/select-collection-point/${p.address.id}`,{
+        const resp = await fetch(`/api/webshop/select-collection-point/${p.address.id}`,{
             headers:httpRequestHeader(false,'client',true)
         })
         if (!resp.ok){

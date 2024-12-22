@@ -43,7 +43,7 @@ import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client";
             return
         }
 
-        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/product-add-qty-deselect-collection-point`,{
+        const resp = await fetch(`/api/webshop/product-add-qty-deselect-collection-point`,{
             method:"POST",
             headers:httpRequestHeader(false,'client',true),
             body:JSON.stringify({id:productID,changeInQuantity,dateAdded:isNaN(dt) ? 0 : dt})

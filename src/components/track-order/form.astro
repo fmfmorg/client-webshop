@@ -74,7 +74,7 @@ import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client"
             }
             const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
 
-            const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/track-order`,{
+            const resp = await fetch(`/api/webshop/track-order`,{
                 method:"POST",
                 headers:httpRequestHeader(false,'client',true),
                 body:JSON.stringify({email,orderID})

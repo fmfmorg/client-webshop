@@ -91,7 +91,7 @@ import Textarea from '@components/input-fields/textarea';
         setLoading(true)
         errorMsg.classList.add('hidden')
 
-        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/contact-form-enquiry`,{
+        const resp = await fetch(`/api/webshop/contact-form-enquiry`,{
             method:"POST",
             headers:httpRequestHeader(false,'client',true),
             body:JSON.stringify({

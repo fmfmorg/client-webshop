@@ -65,7 +65,7 @@ import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client"
         passwordElem.value = ''
         dispatchInternalEvent(TEXT_INPUT_SET_NEW_VALUE,{id:passwordElem.id,value:''})
 
-        const resp = await fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/sign-in`,{
+        const resp = await fetch(`/api/webshop/sign-in`,{
             method:'POST',
             headers:httpRequestHeader(false,'client',false),
             body:JSON.stringify({email,password,privateDevice})
