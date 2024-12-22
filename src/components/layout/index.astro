@@ -330,6 +330,10 @@ const collapseSidebarsBeforeUnload = () => {
     const checkbox = document.getElementById(e) as HTMLInputElement
     if (!!checkbox) checkbox.checked = false
   })
+
+  const overlays = document.getElementsByClassName('overlay')
+  const len = overlays.length
+  for (let i=0; i<len; i++) overlays.item(i).classList.add('hidden')
 }
 
 memberTotalToPay.set(+document.body.dataset.memberTotal)
