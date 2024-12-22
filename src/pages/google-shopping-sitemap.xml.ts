@@ -55,6 +55,8 @@ export async function GET({url}:{url:URL}) {
                         <g:availability>${p.inStock ? 'in_stock' : 'out_of_stock'}</g:availability>
                         <g:price>${(p.price * 0.01).toFixed(2)} GBP</g:price>
                         <g:brand>${PUBLIC_FM_COMPANY_NAME_SHORT}</g:brand>
+                        <g:gender>female</g:gender>
+                        <g:age_group>adult</g:age_group>
                     </item>
                 `).join('')}
             </channel>
