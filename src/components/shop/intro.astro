@@ -34,7 +34,6 @@ const itemPerGroup = 24
 import type { IProduct } from "@components/catalogue-item/interfaces"
 import { catalogueItemsOnResize, dispatchInternalEvent, httpRequestHeader } from "@misc"
 import { PRODUCT_UPDATE } from "@misc/event-keys"
-import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client"
 
     const container = document.getElementById('shop-container') as HTMLDivElement
     const productIDs = JSON.parse(container.dataset.productIds) as string[]
@@ -46,7 +45,7 @@ import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client"
     
     const onOnline = async () => {
         try {
-            const responses = await Promise.all(chunks.map(chunk => fetch(`${FM_CLIENT_WEBSHOP_API_URL}/webshop/shop-page`,{
+            const responses = await Promise.all(chunks.map(chunk => fetch(`/api/webshop/shop-page`,{
                 method:"POST",
                 headers:httpRequestHeader(false,'client',false),
                 body:JSON.stringify({ids:chunk})

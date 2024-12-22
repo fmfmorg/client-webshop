@@ -1,7 +1,6 @@
 import { dispatchInternalEvent, httpRequestHeader } from "@misc";
 import type { IAddToBagResponse } from "./interfaces";
 import { CART_UPDATE } from "@misc/event-keys";
-import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
 
 const VoucherDiscountRow = (p:{
     text:string;

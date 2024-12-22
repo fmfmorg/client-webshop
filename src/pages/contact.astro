@@ -1,8 +1,8 @@
 ---
 import Layout from '@components/layout/index.astro';
 import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
-import { FM_IS_ONLINE } from 'astro:env/server'
-import { PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY, FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
+import { FM_IS_ONLINE, FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
+import { PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import ContactForm from '@components/contact/index.astro'
 
 const isOnline = FM_IS_ONLINE === 'true'

@@ -41,7 +41,6 @@ const { firstName, lastName, dob } = Astro.props as Props
 
 <script>
 import { httpRequestHeader, sessionLost } from "@misc"
-import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client"
 
     const form = document.getElementById('form-personal-info') as HTMLFormElement
     const errorMsgElem = form.getElementsByClassName('error-msg')[0]

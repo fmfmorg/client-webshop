@@ -11,7 +11,7 @@ import RevolutCheckout, { type RevolutCheckoutCardField } from '@revolut/checkou
 import type { Address, CountryCode, Mode } from '@revolut/checkout/types/types'
 import { cardFieldComplete, checkoutOrderID, deliveryAvailable, guestTotalToPay, memberBillingAddress, memberEmail, memberFullName, memberTotalToPay, selectedCollectionPoint, signedIn, thisClientPaymentInProcess } from '@stores'
 import { wsSendMessage } from 'src/ws'
-import { PUBLIC_FM_CLIENT_WEBSHOP_REVOLUT_MODE, FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
+import { PUBLIC_FM_CLIENT_WEBSHOP_REVOLUT_MODE } from 'astro:env/client'
 
 let cardField:RevolutCheckoutCardField
 

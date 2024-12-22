@@ -5,7 +5,6 @@ import DeliveryMethod from "./delivery-method";
 import { cartSubtotal, guestDeliveryCost, signedIn, memberTotalToPay, deliveryAvailable, selectedCollectionPoint, memberDeliveryCost } from "@stores";
 import { useStore } from "@nanostores/solid";
 import { COUNTRY_CHANGED, MEMBER_DELIVERY_METHOD_UPDATE } from "@misc/event-keys";
-import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client";
 const DeliveryMethods = (
     p:{
         shippingMethodsMap:IDeliveryMethodMap;

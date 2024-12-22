@@ -40,7 +40,6 @@ const { fetchedOrder, orderID } = Astro.props as Props
 
 <script>
 import { httpRequestHeader, sessionLost } from "@misc"
-import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client"
 
     const form = document.getElementById('track-order-form') as HTMLFormElement
     const fetchedOrder = !!(+form.dataset.fetchedorder)

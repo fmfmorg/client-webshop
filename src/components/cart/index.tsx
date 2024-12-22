@@ -28,7 +28,6 @@ import {
 } from '@misc/event-keys';
 import { CartContext } from './context';
 import DiscountRow from './discount-row';
-import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client';
 
 type ICartApiResponse = {success?:boolean} & IAddToBagResponse
 

@@ -3,7 +3,6 @@ import TextInput from "@components/input-fields/text-input";
 import { dispatchInternalEvent, httpRequestHeader, sessionLost, type ICountry, type IDeliveryMethodMap, type INoServiceCountryMap } from "@misc";
 import CountrySelect from '@components/account-addresses/country-select';
 import { COUNTRY_CHANGED } from '@misc/event-keys';
-import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client';
 
 const AddressForm = (
     p:{

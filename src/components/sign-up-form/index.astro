@@ -51,7 +51,6 @@ const isSignUpPage = Astro.url.pathname === '/sign-up'
 import { dispatchInternalEvent, httpRequestHeader, sessionLost } from "@misc"
 import { TEXT_INPUT_SET_NEW_VALUE } from "@misc/event-keys"
 import { pageToken } from "@stores"
-import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client"
 
 class SignUpForm extends HTMLElement {
     constructor(){

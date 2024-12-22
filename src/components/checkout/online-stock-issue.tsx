@@ -6,7 +6,6 @@ import type { IProduct, IProductImages } from '@components/catalogue-item/interf
 import Image from "@components/cart/image";
 import { selectedCollectionPoint } from '@stores';
 import { ADD_TO_BAG_FROM_CATALOGUE, CART_UPDATE, PRODUCT_UPDATE, UPDATE_CART_ITEM_MAP } from '@misc/event-keys';
-import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client';
 
 interface IProductWithIssue {
     id:string;

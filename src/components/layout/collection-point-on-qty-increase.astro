@@ -24,7 +24,6 @@ import type { IAddToBagResponse } from "@components/cart/interfaces"
 import { dispatchInternalEvent, httpRequestHeader, sessionLost, setLoading, showErrorModal } from "@misc"
 import { ADD_TO_BAG_FROM_CATALOGUE, CART_ITEM_QTY_BACK_TO_ORIGINAL, CART_QTY_UPDATE } from "@misc/event-keys"
 import { selectedCollectionPoint } from "@stores"
-import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client";
 
     const isDesktop = window.matchMedia && matchMedia("(pointer:fine)").matches;
     const checkbox = document.getElementById("collection-point-on-qty-increase") as HTMLInputElement

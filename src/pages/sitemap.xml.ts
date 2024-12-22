@@ -1,4 +1,5 @@
-import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client'
+import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { httpRequestHeader } from '@misc';
 import type { IProduct } from '@components/catalogue-item/interfaces';
 

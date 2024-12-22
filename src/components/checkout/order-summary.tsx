@@ -8,7 +8,6 @@ import { useStore } from '@nanostores/solid';
 import { guestDeliveryCost, guestTotalToPay, memberDeliveryCost, memberTotalToPay, signedIn } from '@stores';
 import TextInput from '@components/input-fields/text-input';
 import VoucherDiscountRow from '@components/cart/voucher-discount-row';
-import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/client';
 
 const OrderSummary = (
     {

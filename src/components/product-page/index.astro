@@ -63,7 +63,6 @@ import type { IProduct, IStockQuantity } from "@components/catalogue-item/interf
 import { catalogueItemsOnResize, dispatchInternalEvent, formatPrice, httpRequestHeader, sessionLost, showErrorModal } from "@misc"
 import { ADD_TO_BAG_FROM_CATALOGUE, CART_QTY_UPDATE, CART_UPDATE, PRODUCT_UPDATE } from "@misc/event-keys"
 import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } from "@stores"
-import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client"
 
     const container = document.getElementById('product-container')
     const header = document.getElementsByTagName('header')[0]

@@ -125,7 +125,6 @@ const idPrefix = 'edit-address'
 <script>
 import { dispatchInternalEvent, httpRequestHeader, sessionLost, type IMemberEditAddressUpdateResponse, type IUserAddress } from "@misc";
 import { MEMBER_EDIT_ADDRESS_UPDATE, OPEN_EDIT_ADDRESS_MODAL, TEXT_INPUT_SET_NEW_VALUE } from "@misc/event-keys";
-import { FM_CLIENT_WEBSHOP_API_URL } from "astro:env/client";
 
 class CheckoutEditAddressForm extends HTMLElement {
     constructor(){
