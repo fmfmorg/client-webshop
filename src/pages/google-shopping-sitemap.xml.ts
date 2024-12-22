@@ -16,32 +16,15 @@ interface IProductDetails {
 	images:string[];
 }
 
-interface IShippingCost {
-    country:string;
-    threshold:number;
-    cost:number;
-}
-
 export async function GET({url}:{url:URL}) {
     const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/sitemap/shopping`,{
       headers:httpRequestHeader(false,'SSR',false)
     })
     if (!resp.ok) return new Response(null, {status:500})
-    const { products, shippingCosts } = await resp.json() as { products: IProductDetails[]; shippingCosts: IShippingCost[] }
+    const { products } = await resp.json() as { products: IProductDetails[]; }
 
     let { origin } = url
     origin = origin.replaceAll('http://','https://')
-
-    const shippingCostStr = shippingCosts.map(({country,threshold,cost})=>`
-        <g:free_shipping_threshold>
-            <g:country>${country}</g:country>
-            <g:price_threshold>${(threshold * 0.01).toFixed(2)} GBP</g:price_threshold>
-        </g:free_shipping_threshold>
-        <g:shipping>
-            <g:country>${country}</g:country>
-            <g:price>${(cost * 0.01).toFixed(2)} GBP</g:price>
-        </g:shipping>
-    `).join('')
 
     const sitemap = `
         <?xml version="1.0"?>
@@ -71,7 +54,6 @@ export async function GET({url}:{url:URL}) {
                         <g:color>${p.metalColor}</g:color>
                         <g:availability>${p.inStock ? 'in_stock' : 'out_of_stock'}</g:availability>
                         <g:price>${(p.price * 0.01).toFixed(2)} GBP</g:price>
-                        ${shippingCostStr}
                         <g:brand>${PUBLIC_FM_COMPANY_NAME_SHORT}</g:brand>
                     </item>
                 `).join('')}
