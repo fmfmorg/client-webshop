@@ -289,6 +289,8 @@ declare global {
   }
 }
 
+if (performance.getEntriesByType('navigation')[0]['type'] === "back_forward") window.location.reload()
+
 const reloadBC = new BroadcastChannel('reload')
 const barcodes = document.getElementsByClassName('font-barcode')
 const barcodeLen = barcodes.length
@@ -330,14 +332,6 @@ const collapseSidebarsBeforeUnload = () => {
     const checkbox = document.getElementById(e) as HTMLInputElement
     if (!!checkbox && checkbox.checked) checkbox.click()
   })
-
-  // const overlays = document.getElementsByClassName('overlay')
-  // const len = overlays.length
-  // for (let i=0; i<len; i++) overlays.item(i).classList.add('hidden')
-
-  // document.getElementById("shopping-bag-sidebar-overlay")?.classList.add('hidden')
-  // document.getElementById("user-sidebar-overlay")?.classList.add('hidden')
-  // document.getElementById("menu-overlay")?.classList.add('hidden')
 }
 
 memberTotalToPay.set(+document.body.dataset.memberTotal)
