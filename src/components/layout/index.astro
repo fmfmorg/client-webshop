@@ -28,6 +28,7 @@ interface Props {
   images?:IProductImages[];
   price?:number;
   productID?:string;
+  inStock?:boolean;
 }
 
 const { 
@@ -50,6 +51,7 @@ const {
   images = [],
   price = 0,
   productID = '',
+  inStock = false,
 } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
 
@@ -79,7 +81,7 @@ const productSchema = isProductPage ? {
     "@type": "Offer",
     "priceCurrency": "GBP",
     "price": (price * 0.01).toFixed(2),
-    "availability": "https://schema.org/InStock",
+    "availability": `https://schema.org/${inStock ? 'InStock' : 'OutOfStock'}`,
     "url": Astro.url.href
   }
 } : {}
@@ -108,9 +110,19 @@ const productSchema = isProductPage ? {
     <meta property={`${e}:title`} content={isProductPage ? title.trim() : fullTitle}>
   ))}
 
-  <meta name="og:type" content="website">
+  <meta name="og:type" content={isProductPage ? 'product' : 'website'}>
   <meta name="og:url" content={Astro.url.href}>
   <meta name="og:site_name" content={PUBLIC_FM_COMPANY_NAME_SHORT}>
+  <meta name="og:brand" content={PUBLIC_FM_COMPANY_NAME_SHORT}>
+  {isProductPage && <>
+    <meta property="og:title" content={title} />
+    <meta property="og:availability" content={inStock ? "instock" : "out of stock"} />
+    <meta property="product:gender" content="female" />
+  </>}
+  {price && <>
+    <meta property="product:price:amount" content={(price * 0.01).toFixed(2)} />
+    <meta property="product:price:currency" content="GBP" />
+  </>}
   
   <meta name="twitter:card" content="summary_large_image">
 

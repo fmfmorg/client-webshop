@@ -19,7 +19,6 @@ export interface IProduct {
     discountedPrice:number;
     url:string;
     images:IProductImages[];
-    stockQuantity:number;
     stockQuantities:IStockQuantity[];
     relatedProducts:IProduct[];
     totalSales:number;
