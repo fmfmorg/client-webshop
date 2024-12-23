@@ -36,7 +36,7 @@ export async function GET({url}:{url:URL}) {
                 ${products.map(p=>`
                     <item>
                         <g:id>${p.productID}</g:id>
-                        <g:title>${p.name} for Her</g:title>
+                        <g:title>${p.name}</g:title>
                         <g:description>${p.description}</g:description>
                         <g:link>${origin + '/product/' + p.slug + '/' + p.productID}</g:link>
                         ${
