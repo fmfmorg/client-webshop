@@ -30,8 +30,8 @@ export async function GET({url}:{url:URL}) {
         <?xml version="1.0"?>
         <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
             <channel>
-                <title>Fairy Made</title>
-                <link>https://fairymade.co</link>
+                <title>${PUBLIC_FM_COMPANY_NAME_SHORT}</title>
+                <link>${origin}</link>
                 <description>Fashion Jewellery for Her</description>
                 ${products.map(p=>`
                     <item>
