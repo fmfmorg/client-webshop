@@ -120,7 +120,7 @@ const productSchema = isProductPage ? {
     <meta property="og:availability" content={inStock ? "instock" : "out of stock"} />
     <meta property="product:gender" content="female" />
   </>}
-  {price && <>
+  {!!price && <>
     <meta property="product:price:amount" content={(price * 0.01).toFixed(2)} />
     <meta property="product:price:currency" content="GBP" />
   </>}
