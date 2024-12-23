@@ -56,7 +56,6 @@ export async function GET({url}:{url:URL}) {
                         <g:brand>${PUBLIC_FM_COMPANY_NAME_SHORT}</g:brand>
                         <g:gender>female</g:gender>
                         <g:age_group>adult</g:age_group>
-                        <g:google_product_category>Apparel &amp; Accessories &gt; Jewelry &gt; Earrings</g:google_product_category>
                     </item>
                 `).join('')}
             </channel>
