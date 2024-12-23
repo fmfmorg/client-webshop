@@ -30,9 +30,9 @@ export async function GET({url}:{url:URL}) {
         <?xml version="1.0"?>
         <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
             <channel>
-                <title>Fairy Made Accessories</title>
-                <link>https://store.google.com</link>
-                <description>Fairy Made Accessories</description>
+                <title>Fairy Made</title>
+                <link>https://fairymade.co</link>
+                <description>Fashion Jewellery for Her</description>
                 ${products.map(p=>`
                     <item>
                         <g:id>${p.productID}</g:id>
@@ -50,13 +50,13 @@ export async function GET({url}:{url:URL}) {
                         }
                         <g:condition>new</g:condition>
                         <g:google_product_category>194</g:google_product_category>
-                        <g:identifier_exists>no</g:identifier_exists>
                         <g:color>${p.metalColor}</g:color>
                         <g:availability>${p.inStock ? 'in_stock' : 'out_of_stock'}</g:availability>
                         <g:price>${(p.price * 0.01).toFixed(2)} GBP</g:price>
                         <g:brand>${PUBLIC_FM_COMPANY_NAME_SHORT}</g:brand>
                         <g:gender>female</g:gender>
                         <g:age_group>adult</g:age_group>
+                        <g:google_product_category>Apparel &amp; Accessories &gt; Jewelry &gt; Earrings</g:google_product_category>
                     </item>
                 `).join('')}
             </channel>
