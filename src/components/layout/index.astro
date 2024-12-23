@@ -108,13 +108,13 @@ const productSchema = isProductPage ? {
   <link rel="canonical" href={Astro.url.href} />
 
   {['og','twitter'].map(e=>(
-    <meta property={`${e}:title`} content={isProductPage ? title.trim() : fullTitle}>
+    <meta property={`${e}:title`} content={isProductPage ? title.trim() : fullTitle} />
   ))}
 
-  <meta name="og:type" content={isProductPage ? 'product' : 'website'}>
-  <meta name="og:url" content={Astro.url.href}>
-  <meta name="og:site_name" content={PUBLIC_FM_COMPANY_NAME_SHORT}>
-  <meta name="og:brand" content={PUBLIC_FM_COMPANY_NAME_SHORT}>
+  <meta name="og:type" content={isProductPage ? 'product' : 'website'} />
+  <meta name="og:url" content={Astro.url.href} />
+  <meta name="og:site_name" content={PUBLIC_FM_COMPANY_NAME_SHORT} />
+  <meta name="og:brand" content={PUBLIC_FM_COMPANY_NAME_SHORT} />
   {isProductPage && <>
     <meta property="og:title" content={title} />
     <meta property="og:availability" content={inStock ? "instock" : "out of stock"} />
@@ -125,7 +125,7 @@ const productSchema = isProductPage ? {
     <meta property="product:price:currency" content="GBP" />
   </>}
   
-  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:card" content="summary_large_image" />
 
   {!!description && <>
     <meta name="description" content={description} />
