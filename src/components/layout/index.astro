@@ -81,6 +81,7 @@ const productSchema = isProductPage ? {
     "@type": "Offer",
     "priceCurrency": "GBP",
     "price": (price * 0.01).toFixed(2),
+    "itemCondition": "https://schema.org/NewCondition",
     "availability": `https://schema.org/${inStock ? 'InStock' : 'OutOfStock'}`,
     "url": Astro.url.href
   }

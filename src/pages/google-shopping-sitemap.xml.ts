@@ -46,7 +46,7 @@ export async function GET({url}:{url:URL}) {
                                     ? `<g:additional_image_link>${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX + img}</g:additional_image_link>`
                                     : ''
                                 : `<g:image_link>${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX + img}</g:image_link>`
-                            )
+                            ).join('')
                         }
                         <g:condition>new</g:condition>
                         <g:google_product_category>194</g:google_product_category>
