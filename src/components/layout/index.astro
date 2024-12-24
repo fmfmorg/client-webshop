@@ -316,8 +316,6 @@ const showBarcodesOnLoad = () => {
 
 const header = document.getElementsByTagName('header')[0] as HTMLDivElement
 const main = document.getElementsByTagName('main')[0] as HTMLDivElement
-const nav = document.getElementsByTagName('nav')[0] as HTMLDivElement
-const navContainer = nav.parentElement
 const footer = document.getElementsByTagName('footer')[0] as HTMLDivElement
 
 pageToken.set('crypto' in window ? crypto.randomUUID() : Math.random().toString())
@@ -326,15 +324,17 @@ let resizeTimeout
 const resize = () => {
   const { innerHeight } = window
   const { height: headerHeight } = header.getBoundingClientRect()
-  const { height: navContainerHeight } = navContainer.getBoundingClientRect()
   const { height: footerHeight } = footer.getBoundingClientRect()
   main.style.minHeight = `${ innerHeight - headerHeight - footerHeight }px`
-  main.style.marginTop = `${ navContainerHeight }px`
+  main.style.marginTop = `${ headerHeight }px`
 }
 const onResize = () => {
   clearTimeout(resizeTimeout)
   resizeTimeout = setTimeout(resize,200)
 }
+
+const headerResizeObserver = new ResizeObserver(resize)
+headerResizeObserver.observe(header)
 
 const collapseSidebarsBeforeUnload = () => {
   [
