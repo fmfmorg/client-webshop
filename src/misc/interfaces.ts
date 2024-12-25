@@ -146,3 +146,23 @@ export interface IShopAddress {
 export interface IShopAddressMap {
     [k:string]:IShopAddress;
 }
+
+export interface ISitemapProductDetails {
+    productID:string;
+    name:string;
+    description:string;
+    price:number;
+    discountedPrice:number;
+    slug:string;
+    metalColor:string;
+    productMainType:string;
+    productSubType:string;
+    inStock:boolean;
+    images:string[];
+}
+
+export interface ISitemapShippingDetails {
+    country:string;
+    cost:number;
+    threshold:number;
+}

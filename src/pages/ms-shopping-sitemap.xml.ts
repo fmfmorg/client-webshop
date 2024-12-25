@@ -1,19 +1,32 @@
 import { httpRequestHeader } from '@misc'
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client'
-import type { ISitemapProductDetails } from '@misc/interfaces'
-
-
+import type { ISitemapProductDetails, ISitemapShippingDetails } from '@misc/interfaces'
 
 export async function GET({url}:{url:URL}) {
-    const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/sitemap/google-shopping`,{
+    const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/sitemap/ms-shopping`,{
       headers:httpRequestHeader(false,'SSR',false)
     })
     if (!resp.ok) return new Response(null, {status:500})
-    const { products } = await resp.json() as { products: ISitemapProductDetails[]; }
+    const { products, shipping } = await resp.json() as { 
+        products: ISitemapProductDetails[]; 
+        shipping: ISitemapShippingDetails[];
+    }
 
     let { origin } = url
     origin = origin.replaceAll('http://','https://')
+
+    const shippingStr = shipping.map(({country,cost,threshold})=>`
+        <g:shipping>
+            <g:country>${country}</g:country>
+            <g:service>Standard</g:service>
+            <g:price>${(cost * 0.01).toFixed(2)} GBP</g:price>
+        </g:shipping>
+        <g:free_shipping_threshold>
+            <g:country>${country}</g:country>
+            <g:price_threshold>${(threshold * 0.01).toFixed(2)} GBP</g:price_threshold>
+        </g:free_shipping_threshold>
+    `.trim()).join('')
 
     const sitemap = `
         <?xml version="1.0"?>
@@ -45,6 +58,7 @@ export async function GET({url}:{url:URL}) {
                         <g:brand>${PUBLIC_FM_COMPANY_NAME_SHORT}</g:brand>
                         <g:gender>female</g:gender>
                         <g:age_group>adult</g:age_group>
+                        ${shippingStr}
                     </item>
                 `).join('')}
             </channel>
