@@ -1,0 +1,48 @@
+---
+import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
+
+interface Props {
+    text:string;
+}
+
+const { text } = Astro.props as Props
+
+const imageFilename = `${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}about-us-banner_20241225`
+---
+<div
+    class="flex flex-col justify-center py-14 2xs:py-20 xs:py-32 bg-cover bg-center"
+    style={`background-image:image-set(${['avif','webp','jpg'].map(e=>`url(${imageFilename}.${e}) type('image/${e === 'jpg' ? 'jpeg' : e}')`)});`}
+>
+    <h1 class="text-center font-display text-2xl 2xs:text-3xl xs:text-4xl uppercase [word-spacing:0.4rem] text-white">About Us</h1>
+</div>
+<div 
+    set:html={text} 
+    class={`
+        font-light
+        max-w-3xl
+        mx-auto
+        px-4
+        pt-4
+        pb-10
+        text-sm
+        xs:text-base
+        [&>h1]:font-display
+        [&>h1]:text-xl
+        [&>h1]:xs:text-2xl
+        [&>h1]:tracking-tighter
+        [&>h1]:[word-spacing:0.2rem]
+        [&>ol>li]:list-decimal
+        [&>ol>li]:ml-4
+        [&>ol>li]:xs:ml-5
+        [&>*>li]:first-line:font-semibold
+        [&>ol>li]:marker:font-semibold
+        [&>*>li>a]:font-semibold
+        [&>*>li>a]:underline
+        [&>p>a]:font-semibold
+        [&>p>a]:underline
+        [&>*>li]:mt-4
+        [&>ul>li>ul>li]:list-disc
+        [&>ul>li>ul>li]:list-inside
+        [&>p]:mt-4
+    `.replaceAll('        ', ' ').replaceAll('\n','').trim()}
+/>

@@ -4,6 +4,10 @@
         "path":"/shop"
     },
     {
+        "name":"About",
+        "path":"/about-us"
+    },
+    {
         "name":"Contact",
         "path":"/contact"
     }

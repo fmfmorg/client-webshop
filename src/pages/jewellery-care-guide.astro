@@ -9,7 +9,7 @@ const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
 
-const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/terms-text/jewellery-care-guide`,{
+const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/static-text/jewellery-care-guide`,{
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })
 
@@ -54,7 +54,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     shopAddressMap,
     signedIn,
     firstName,
-    title:'',
+    title:'Jewellery Care Guide',
     headerCarouselTexts,
 }}>
     <Terms {...{text}} />
