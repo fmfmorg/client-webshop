@@ -25,7 +25,9 @@ export async function GET({url}:{url:URL}) {
                     <title>${PUBLIC_FM_COMPANY_NAME_SHORT}</title>
                     <link>${origin}</link>
                     <description>Fashion Jewellery for Her</description>
-                    ${campaigns}
+                    <promotions>
+                        ${campaigns}
+                    </promotions>
                 </channel>
             </rss>
         `.trim();
