@@ -6,7 +6,7 @@ export async function GET({url}:{url:URL}) {
 User-agent: *
 Allow: /
 
-Sitemap: ${origin}/sitemap.xml
+Sitemap: ${origin}/sitemaps/sitemap.xml
   `.trim();
 
   return new Response(robotsTxt, {
