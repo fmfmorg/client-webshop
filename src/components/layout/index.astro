@@ -65,6 +65,8 @@ if (!!shoppingBagProp){
 
 const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : title.trim()} | ${PUBLIC_FM_COMPANY_NAME_SHORT}` : `${PUBLIC_FM_COMPANY_NAME_SHORT} | Fashion Jewellery For Her`
 
+const href = Astro.url.href.replaceAll('http://','https://')
+
 const productSchema = isProductPage ? {
   "@context": "https://schema.org",
   "@type": "Product",
@@ -83,7 +85,7 @@ const productSchema = isProductPage ? {
     "price": (price * 0.01).toFixed(2),
     "itemCondition": "https://schema.org/NewCondition",
     "availability": `https://schema.org/${inStock ? 'InStock' : 'OutOfStock'}`,
-    "url": Astro.url.href
+    "url": href
   }
 } : {}
 
@@ -105,14 +107,14 @@ const productSchema = isProductPage ? {
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-  <link rel="canonical" href={Astro.url.href} />
+  <link rel="canonical" href={href} />
 
   {['og','twitter'].map(e=>(
     <meta property={`${e}:title`} content={isProductPage ? title.trim() : fullTitle} />
   ))}
 
   <meta name="og:type" content={isProductPage ? 'product' : 'website'} />
-  <meta name="og:url" content={Astro.url.href} />
+  <meta name="og:url" content={href} />
   <meta name="og:site_name" content={PUBLIC_FM_COMPANY_NAME_SHORT} />
   <meta name="og:brand" content={PUBLIC_FM_COMPANY_NAME_SHORT} />
   {isProductPage && <>
