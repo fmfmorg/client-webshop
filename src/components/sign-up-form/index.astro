@@ -10,7 +10,7 @@ const isSignUpPage = Astro.url.pathname === '/sign-up'
 
 <astro-sign-up-form data-id={idPrefix}>
     {isSignUpPage && <h2 class="font-display text-3xl tracking-[-0.1em] [word-spacing:0.3em] mb-6">Create an Account</h2>}
-    <p class="font-extralight tracking-wider text-sm mb-4">
+    <p class="font-light tracking-wider text-sm mb-4">
         Become a member to unlock exclusive perks, discounted pricing, and special birthday gifts. 
         <br />
         <a class="font-semibold mouse:hover:underline" href="/perks" target="_blank" rel="noopener noreferrer">Discover all the benefits here.</a>

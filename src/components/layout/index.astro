@@ -54,6 +54,7 @@ const {
   inStock = false,
 } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
+const isTrackOrderPage = Astro.url.pathname === '/track-order'
 
 const shopNameMap = Object.values(shopAddressMap).map(e=>({[e.id]:e.name})).reduce((a,b)=>({...a,...b}),{})
 
@@ -130,7 +131,7 @@ const productSchema = isProductPage ? {
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Yuji+Syuku&display=swap" rel="stylesheet">
+  <link href={`https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300..700&family=Noto+Serif+JP:wght@300..900&family=Yuji+Syuku&${isTrackOrderPage ? 'family=Libre+Barcode+128&' : ''}display=swap`} rel="stylesheet">
 
   <link rel="shortcut icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg">
