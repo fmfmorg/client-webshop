@@ -17,11 +17,7 @@ const headerCarouselOff = Astro.cookies.has(PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/shop-page-init${Astro.url.search}`,{
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)
 })
-if (!resp.ok) {
-    console.log(resp.status)
-    console.log(await resp.text())
-    return new Response(null,{status:500})
-}
+if (!resp.ok) return new Response(null,{status:500})
 
 const json = await resp.json()
 let {
