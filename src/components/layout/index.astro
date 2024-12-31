@@ -63,7 +63,7 @@ if (!!shoppingBagProp){
   if (!!cartItemMap) cartHasItems = !!Object.values(cartItemMap).map(e=>e.quantity).filter(e=>!!e).length
 } else cartHasItems = hasItemsInCart
 
-const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : title.trim()} | ${PUBLIC_FM_COMPANY_NAME_SHORT}` : `${PUBLIC_FM_COMPANY_NAME_SHORT} | Fashion Jewellery For Her`
+const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : title.trim()} | ${PUBLIC_FM_COMPANY_NAME_SHORT}` : `Affordable Fashion Jewellery UK | Buy 3 For £20 | ${PUBLIC_FM_COMPANY_NAME_SHORT}`
 
 const href = Astro.url.href.replaceAll('http://','https://')
 

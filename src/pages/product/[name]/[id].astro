@@ -79,7 +79,7 @@ const productName = productMap[id].name
     isProductPage:true,
     headerCarouselTexts,
     titleAddForHer:true,
-    description:productMap[id].description.replaceAll('<p>','').replaceAll('</p>','').trim(),
+    description:!!productMap[id].metaDescription ? `${productMap[id].metaDescription} Buy 3 for £20! Free UK delivery on orders £20+. Shop now!` : productMap[id].description.replaceAll('<p>','').replaceAll('</p>','').trim(),
     imageURL:PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX+productMap[id].images[0].name+productMap[id].images[0].ext,
     images:productMap[id].images,
     price:productMap[id].discountedPrice,
