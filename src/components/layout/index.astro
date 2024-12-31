@@ -67,26 +67,55 @@ const fullTitle = !!title ? `${titleAddForHer ? `${title.trim()} for Her` : titl
 
 const href = Astro.url.href.replaceAll('http://','https://')
 
+const origin = Astro.url.origin.replaceAll('http://','https://')
+
 const productSchema = isProductPage ? {
   "@context": "https://schema.org",
-  "@type": "Product",
-  "name": title,
-  "description": description,
-  "brand": {
-    "@type": "Brand",
-    "name": PUBLIC_FM_COMPANY_NAME_SHORT
-  },
-  "image": images.map(({name,ext})=>PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX+name+ext),
-  "size": "Standard",
-  "sku": productID,
-  "offers": {
-    "@type": "Offer",
-    "priceCurrency": "GBP",
-    "price": (price * 0.01).toFixed(2),
-    "itemCondition": "https://schema.org/NewCondition",
-    "availability": `https://schema.org/${inStock ? 'InStock' : 'OutOfStock'}`,
-    "url": href
-  }
+  "@graph":[
+    {
+      "@type": "Product",
+      "name": fullTitle,
+      "description": description,
+      "brand": {
+        "@type": "Brand",
+        "name": PUBLIC_FM_COMPANY_NAME_SHORT
+      },
+      "image": images.map(({name,ext})=>PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX+name+ext),
+      "size": "Standard",
+      "sku": productID,
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "GBP",
+        "price": (price * 0.01).toFixed(2),
+        "itemCondition": "https://schema.org/NewCondition",
+        "availability": `https://schema.org/${inStock ? 'InStock' : 'OutOfStock'}`,
+        "url": href
+      }
+    },{
+      "@type": "BreadcrumbList",
+      "@context": "https://schema.org",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": origin
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Shop",
+          "item": `${origin}/shop`
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": title,
+          "item": href
+        }
+      ]
+    }
+  ]
 } : {}
 
 ---
@@ -110,7 +139,7 @@ const productSchema = isProductPage ? {
   <link rel="canonical" href={href} />
 
   {['og','twitter'].map(e=>(
-    <meta property={`${e}:title`} content={isProductPage ? title.trim() : fullTitle} />
+    <meta property={`${e}:title`} content={fullTitle} />
   ))}
 
   <meta name="og:type" content={isProductPage ? 'product' : 'website'} />
@@ -118,7 +147,6 @@ const productSchema = isProductPage ? {
   <meta name="og:site_name" content={PUBLIC_FM_COMPANY_NAME_SHORT} />
   <meta name="og:brand" content={PUBLIC_FM_COMPANY_NAME_SHORT} />
   {isProductPage && <>
-    <meta property="og:title" content={title} />
     <meta property="og:availability" content={inStock ? "instock" : "out of stock"} />
     <meta property="product:gender" content="female" />
   </>}
