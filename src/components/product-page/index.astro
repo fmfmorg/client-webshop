@@ -5,6 +5,7 @@ import CatalogueItem from '@components/catalogue-item/index.astro'
 import Text from './text.astro'
 import type { ICartItemMap } from "@components/cart/interfaces";
 import type { ICatalogueMap } from "@misc";
+import type { ILink } from "@components/layout/footer/interfaces";
 
 interface Props {
     id:string;
@@ -14,8 +15,14 @@ interface Props {
 }
 
 const { id, productObj, cartItemObj, relatedProductIDs } = Astro.props
-const { images, stockQuantities, name } = productObj[id]
+const { images, stockQuantities, name, url } = productObj[id]
 const qtyInCart = cartItemObj[id]?.quantity || 0
+
+const breadcrumbItems:ILink[] = [
+    {name:"Home",url:"/"},
+    {name:"Shop",url:"/shop"},
+    {name:name,url:`/product/${url}/${id}`}
+]
 ---
 
 <astro-main-product 
@@ -55,6 +62,16 @@ const qtyInCart = cartItemObj[id]?.quantity || 0
             }
         </div>
     </div>
+    <ul id="breadcrumb" class="flex justify-center text-2xs 2xs:text-xs my-4 md:mt-8">
+        {
+            breadcrumbItems.map(({name,url},i)=>(
+                <>
+                {!!i && <li class={`mx-1 ${i === 1 ? 'hidden xs:list-item' : ''}`.trim()}>•</li>}
+                <li class={`${i === breadcrumbItems.length - 1 ? 'font-semibold ' : ''}${!!i ? '' : 'hidden xs:list-item '}hover:underline`}><a href={url}>{name}</a></li>
+                </>
+            ))
+        }
+    </ul>
 </astro-main-product>
 
 <script>

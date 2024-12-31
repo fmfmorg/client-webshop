@@ -140,6 +140,8 @@ const productSchema = isProductPage ? {
 
   {isProductPage && <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />}
 
+  <meta name="theme-color" content="#ffffff">
+
   <style is:global>
     .hide-scrollbar {
       scrollbar-width: none;
