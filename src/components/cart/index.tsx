@@ -23,7 +23,6 @@ import {
     CART_QTY_UPDATE, 
     CART_UPDATE,
     PRODUCT_UPDATE,
-    SHOPPING_BAG_LOADED,
     UPDATE_CART_ITEM_MAP, 
 } from '@misc/event-keys';
 import { CartContext } from './context';
@@ -324,9 +323,6 @@ const CartList = (
         } else if (!!shoppingBagCheckbox) shoppingBagCheckbox.addEventListener('change',sidebarCheckboxOnChange,true)
 
         cartSubtotal.set(cartCalculation.subtotalBeforeDelivery)
-
-        dispatchInternalEvent(SHOPPING_BAG_LOADED)
-        console.log('shopping cart loaded')
         
         onCleanup(()=>{
             document.removeEventListener(ADD_TO_BAG_FROM_CATALOGUE, addToBagFromCatalogue,true);

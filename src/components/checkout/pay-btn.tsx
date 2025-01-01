@@ -1,5 +1,5 @@
 import { createEffect, Show } from 'solid-js'
-import { guestTotalToPay, memberTotalToPay, signedIn, canShowPayBtn, cardFieldComplete, cartHasItems, selectedCollectionPoint, deliveryAvailable, shoppingBagLoaded, userAlreadyHasAddress, turnstilePassed } from "@stores"
+import { guestTotalToPay, memberTotalToPay, signedIn, canShowPayBtn, cardFieldComplete, cartHasItems, selectedCollectionPoint, deliveryAvailable, turnstilePassed } from "@stores"
 import { useStore } from '@nanostores/solid'
 import { formatPrice } from '@misc'
 
@@ -51,10 +51,9 @@ const PayButton = () => {
     const $cartHasItems = useStore(cartHasItems)
     const $selectedCollectionPoint = useStore(selectedCollectionPoint)
     const $deliveryAvailable = useStore(deliveryAvailable)
-    const $shoppingBagLoaded = useStore(shoppingBagLoaded)
     const $turnstilePassed = useStore(turnstilePassed)
     createEffect(() => {
-        console.log('cartHasItems: ', $cartHasItems(), ', selectedCollectionPoint: ', $selectedCollectionPoint(), ', deliveryAvailable: ', $deliveryAvailable(), ', shoppingBagLoaded: ', $shoppingBagLoaded(), ', turnstilePassed: ', $turnstilePassed())
+        console.log('cartHasItems: ', $cartHasItems(), ', selectedCollectionPoint: ', $selectedCollectionPoint(), ', deliveryAvailable: ', $deliveryAvailable(), ', turnstilePassed: ', $turnstilePassed())
     })
     return (
         <Show

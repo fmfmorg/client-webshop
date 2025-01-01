@@ -313,7 +313,6 @@ const productSchema = isProductPage ? {
 <script>
 import { 
   HEADER_TEXT_CAROUSEL_LOADED, 
-  SHOPPING_BAG_LOADED, 
 } from "@misc/event-keys"
 import { PUBLIC_FM_TURNSTILE_SITEKEY } from 'astro:env/client'
 import { 
@@ -325,7 +324,6 @@ import {
   pageToken,
 cartHasItems,
 memberTotalToPay,
-shoppingBagLoaded,
 turnstilePassed,
 } from "@stores"
 
@@ -389,7 +387,6 @@ preferredCollectionPoint.set(!!Object.keys(shopNameMap.get()).length ? +document
 otherClientPaymentInProcess.set(!!(+document.body.dataset.pip))
 reloadBC.onmessage = (ev:MessageEvent<string>) => ev.data !== pageToken.get() && window.location.reload()
 document.addEventListener('DOMContentLoaded',showBarcodesOnLoad,true)
-document.addEventListener(SHOPPING_BAG_LOADED,()=>shoppingBagLoaded.set(true))
 document.addEventListener(HEADER_TEXT_CAROUSEL_LOADED,resize,true)
 window.addEventListener('resize',onResize,true)
 window.addEventListener('load',resize,{once:true})

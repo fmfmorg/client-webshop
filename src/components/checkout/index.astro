@@ -73,10 +73,6 @@ const hasPOS = !!Object.keys(shopAddressMap).length
 
 <div id="checkout-form-container" style="display:none;" class="max-w-96 lg:max-w-fit lg:flex lg:space-x-4 mx-auto py-4 space-y-4 lg:space-y-0" data-shop-count={Object.keys(shopAddressMap).length}>
     <div class="bg-white max-h-fit rounded-md px-3 lg:w-80 xl:w-96  w-full">
-        <!-- <div id="shopping-bag-loading" class="px-2 py-10">
-            <LoadingSmall className="animate-spin h-20 w-20 fill-gray-400 mx-auto mb-2" />
-            <p class="text-center text-xs uppercase tracking-widest">Loading your shopping bag...</p>
-        </div> -->
         <CartList {...{itemsMap, productDetailsMap, isSignedIn, freeShippingLimit, cartCalculation, isCheckoutPage}} client:only="solid-js" />
     </div>
     <form id="checkout-form" class="space-y-4 lg:space-y-0 lg:flex lg:space-x-4">
@@ -162,7 +158,6 @@ const hasPOS = !!Object.keys(shopAddressMap).length
 }
 
 <script>
-import { SHOPPING_BAG_LOADED } from "@misc/event-keys"
 import { cartHasItems, checkoutGuestSignUp, selectedCollectionPoint, otherClientPaymentInProcess } from "@stores"
 
 // show or hide checkout form
@@ -198,9 +193,4 @@ if (_selectedCollectionPoint === 1){
 } else if (_selectedCollectionPoint > 1){
     if (!!clickCollectCheckbox) clickCollectCheckbox.checked = true
 }
-
-// cart loading spinner
-const spinnerContainer = document.getElementById('shopping-bag-loading') as HTMLDivElement
-const onShoppingBagLoaded = () => spinnerContainer.classList.add('hidden')
-document.addEventListener(SHOPPING_BAG_LOADED,onShoppingBagLoaded)
 </script>
