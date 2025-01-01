@@ -18,9 +18,9 @@ const Image = (
                 ext
             ].map(e=>(
                 e === ext ?
-                <img src={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${name}_256x256${e}`} alt={alt} />
+                <img src={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${name}_256x256${e}`} alt={alt} loading='lazy' />
                 :
-                <source srcset={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${name}_256x256${e}`} />
+                <source srcset={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${name}_256x256${e}`} type="image/avif" />
             ))
         }
     </picture>
