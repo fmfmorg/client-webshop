@@ -1,5 +1,5 @@
 import { onMount, Show } from 'solid-js'
-import { guestTotalToPay, memberTotalToPay, signedIn, canShowPayBtn, cardFieldComplete } from "@stores"
+import { guestTotalToPay, memberTotalToPay, signedIn, canShowPayBtn, cardFieldComplete, cartHasItems, selectedCollectionPoint, deliveryAvailable, shoppingBagLoaded, userAlreadyHasAddress, turnstilePassed } from "@stores"
 import { useStore } from '@nanostores/solid'
 import { formatPrice } from '@misc'
 
@@ -48,7 +48,14 @@ const Button = () => {
 
 const PayButton = () => {
     const $canShowPayBtn = useStore(canShowPayBtn)
-    onMount(() => console.log("can show pay button: ", $canShowPayBtn()))
+    const $cartHasItems = useStore(cartHasItems)
+    const $selectedCollectionPoint = useStore(selectedCollectionPoint)
+    const $deliveryAvailable = useStore(deliveryAvailable)
+    const $shoppingBagLoaded = useStore(shoppingBagLoaded)
+    const $turnstilePassed = useStore(turnstilePassed)
+    onMount(() => {
+        console.log('cartHasItems: ', $cartHasItems(), ', selectedCollectionPoint: ', $selectedCollectionPoint(), ', deliveryAvailable: ', $deliveryAvailable(), ', shoppingBagLoaded: ', $shoppingBagLoaded(), ', turnstilePassed: ', $turnstilePassed())
+    })
     return (
         <Show
             when={$canShowPayBtn()} 
