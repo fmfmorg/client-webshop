@@ -25,10 +25,11 @@ const style = productPageProduct || render ? getImageStyle(name,ext,imageSize) :
     data-ext={ext}
 >
     <div class="absolute top-0 bottom-0 left-0 right-0">
-        <input type="radio" name={id} checked={checked} class={`peer appearance-none border border-gray-400 rounded-full checked:bg-gray-400 absolute ${productPageProduct ? '-bottom-5 w-1.5 h-1.5 2xs:-bottom-8 2xs:w-2 2xs:h-2' : 'z-10 bottom-2 w-1 h-1 xs:w-1.5 xs:h-1.5 mouse:hidden'} ${showRadio ? '' : 'hidden'}`.trim()} />
+        <input type="radio" name={id} id={'product-carousel-' + id + '-' + index} checked={checked} class={`peer appearance-none border border-gray-400 rounded-full checked:bg-gray-400 absolute ${productPageProduct ? '-bottom-5 w-1.5 h-1.5 2xs:-bottom-8 2xs:w-2 2xs:h-2' : 'z-10 bottom-2 w-1 h-1 xs:w-1.5 xs:h-1.5 mouse:hidden'} ${showRadio ? '' : 'hidden'}`.trim()} />
         <div 
             class="img-holder absolute top-0 bg-cover bg-no-repeat bg-center w-full h-full opacity-0 duration-500 peer-checked:opacity-100"
             style={!!style ? `background-image: ${style}` : ''}
         />
+        <label for={'product-carousel-' + id + '-' + index} class="hidden" />
     </div>
 </astro-carousel-image>
