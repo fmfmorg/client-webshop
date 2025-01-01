@@ -399,6 +399,7 @@ window.onloadTurnstileCallback = () => {
   window.turnstile.render("#turnstile-tag", {
     sitekey: PUBLIC_FM_TURNSTILE_SITEKEY,
     callback: () => {
+      console.log("Turnstile success")
       const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
       const len = btnToCheck.length
       for (let i=0; i<len; i++) btnToCheck.item(i).disabled = false
