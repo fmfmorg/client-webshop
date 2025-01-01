@@ -9,7 +9,7 @@ module.exports = {
       fontFamily: {
         'sans': ['"Noto Sans JP"', ...defaultTheme.fontFamily.sans],
         'serif': ['"Noto Serif JP"', ...defaultTheme.fontFamily.serif],
-        'display': ['"Yuji Syuku"', ...defaultTheme.fontFamily.display],
+        'display': ['"Yuji Syuku"', 'serif'],
         'barcode': ['"Libre Barcode 128"']
       }
     },
