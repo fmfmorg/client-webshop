@@ -15,7 +15,6 @@ const Image = (
         {
             [
                 '.avif',
-                '.webp',
                 ext
             ].map(e=>(
                 e === ext ?

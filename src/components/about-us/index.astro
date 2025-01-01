@@ -11,7 +11,7 @@ const imageFilename = `${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}about-us-banner_20241
 ---
 <div
     class="flex flex-col justify-center py-14 2xs:py-20 xs:py-26 sm:py-32 bg-cover bg-center"
-    style={`background-image:image-set(${['avif','webp','jpg'].map(e=>`url(${imageFilename}.${e}) type('image/${e === 'jpg' ? 'jpeg' : e}')`)});`}
+    style={`background-image:image-set(${['avif','jpg'].map(e=>`url(${imageFilename}.${e}) type('image/${e === 'jpg' ? 'jpeg' : e}')`)});`}
 >
     <h1 class="text-center font-display text-2xl 2xs:text-3xl xs:text-4xl uppercase [word-spacing:0.4rem] text-white">About Us</h1>
 </div>
