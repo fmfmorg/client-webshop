@@ -1,5 +1,5 @@
-import { createEffect, Show } from 'solid-js'
-import { guestTotalToPay, memberTotalToPay, signedIn, canShowPayBtn, cardFieldComplete, cartHasItems, selectedCollectionPoint, deliveryAvailable, turnstilePassed } from "@stores"
+import { Show } from 'solid-js'
+import { guestTotalToPay, memberTotalToPay, signedIn, canShowPayBtn, cardFieldComplete } from "@stores"
 import { useStore } from '@nanostores/solid'
 import { formatPrice } from '@misc'
 
@@ -48,13 +48,6 @@ const Button = () => {
 
 const PayButton = () => {
     const $canShowPayBtn = useStore(canShowPayBtn)
-    const $cartHasItems = useStore(cartHasItems)
-    const $selectedCollectionPoint = useStore(selectedCollectionPoint)
-    const $deliveryAvailable = useStore(deliveryAvailable)
-    const $turnstilePassed = useStore(turnstilePassed)
-    createEffect(() => {
-        console.log('cartHasItems: ', $cartHasItems(), ', selectedCollectionPoint: ', $selectedCollectionPoint(), ', deliveryAvailable: ', $deliveryAvailable(), ', turnstilePassed: ', $turnstilePassed())
-    })
     return (
         <Show
             when={$canShowPayBtn()} 
