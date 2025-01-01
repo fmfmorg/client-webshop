@@ -326,6 +326,7 @@ const CartList = (
         cartSubtotal.set(cartCalculation.subtotalBeforeDelivery)
 
         dispatchInternalEvent(SHOPPING_BAG_LOADED)
+        console.log('shopping cart loaded')
         
         onCleanup(()=>{
             document.removeEventListener(ADD_TO_BAG_FROM_CATALOGUE, addToBagFromCatalogue,true);
