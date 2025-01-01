@@ -3,6 +3,7 @@ import ShopNowButton from "./shop-now-button.astro";
 import CatalogueItem from '@components/catalogue-item/index.astro'
 import type { ICartItemMap } from '@components/cart/interfaces';
 import type { ICatalogueMap } from '@misc';
+import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
 
 interface Props {
     productIDs?:string[];
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const { productIDs = [], productObj, cartItemObj } = Astro.props as Props
+const tempImageFilename = `${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}banner-2000x673`
 ---
 <a href="/shop">
     <div 
@@ -20,7 +22,12 @@ const { productIDs = [], productObj, cartItemObj } = Astro.props as Props
             height:2188px;
             background-size:cover;
             background-position-y: center;
-        `.replaceAll('        ', '').replaceAll('\n',' ').trim()}
+            background-image: image-set(
+                url(${tempImageFilename}.avif) type('image/avif'),
+                url(${tempImageFilename}.webp) type('image/webp'),
+                url(${tempImageFilename}.jpg) type('image/jpeg')
+            );
+        `.replaceAll('                ', '').replaceAll('        ', '').replaceAll('\n',' ').trim()}
     >
         <div 
             id="banner-text-wide" class="ml-auto hidden flex-col justify-center h-full [&>p>span]:align-middle"
