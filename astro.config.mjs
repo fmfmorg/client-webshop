@@ -45,8 +45,8 @@ export default defineConfig({
                 access:'secret'
             }),
             FM_IS_ONLINE:envField.string({
-                context:'server',
-                access:'secret'
+                context:'client',
+                access:'public'
             }),
             PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX:envField.string({
                 context:'client',

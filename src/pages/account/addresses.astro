@@ -3,8 +3,8 @@ import NoAddress from '@components/account-addresses/no-address.astro';
 import Layout from '@components/layout/index.astro'
 import AddressList from '@components/account-addresses/address-list.astro';
 import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp, type IUserAddress } from '@misc'
-import { FM_IS_ONLINE, FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
-import { PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY, PUBLIC_FM_ACCEPT_MEMBERSHIP } from 'astro:env/client'
+import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
+import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY, PUBLIC_FM_ACCEPT_MEMBERSHIP } from 'astro:env/client'
 
 interface IApiResponse {
     addresses:IUserAddress[];

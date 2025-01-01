@@ -21,7 +21,7 @@ import {
 } from "@stores";
 import type { IWsMessage } from "./misc/ws-interfaces";
 import { BACK_ONLINE_ADDRESS_LIST, COUNTRY_CHANGED, UPDATE_CART_ITEM_MAP } from "@misc/event-keys";
-import { FM_IS_ONLINE } from 'astro:env/server'
+import { FM_IS_ONLINE } from 'astro:env/client'
 
 let cartID = '', wsUrl = '', isCheckoutPage = false, ws:WebSocket = null
 
