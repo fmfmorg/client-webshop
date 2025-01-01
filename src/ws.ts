@@ -21,6 +21,7 @@ import {
 } from "@stores";
 import type { IWsMessage } from "./misc/ws-interfaces";
 import { BACK_ONLINE_ADDRESS_LIST, COUNTRY_CHANGED, UPDATE_CART_ITEM_MAP } from "@misc/event-keys";
+import { FM_IS_ONLINE } from 'astro:env/server'
 
 let cartID = '', wsUrl = '', isCheckoutPage = false, ws:WebSocket = null
 
@@ -63,7 +64,7 @@ const launchWs = () => {
 
     ws = new WebSocket(`${ wsUrl }/ws?key=${cartID}`)
     ws.onmessage = (e) => wsMsgHandler(JSON.parse(e.data) as IWsMessage)
-    ws.onerror = (e) => console.log("err: ", e)
+    if (FM_IS_ONLINE !== 'true') ws.onerror = (e) => console.log("err: ", e)
     ws.onclose = () => closeWs()
 }
 
