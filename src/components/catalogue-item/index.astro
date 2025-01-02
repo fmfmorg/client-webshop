@@ -7,7 +7,7 @@ import LoadingSmall from '@components/layout/header/icons/loading-small.astro';
 
 interface Props {
     id:string;
-    productPageProduct?:boolean;
+    productPageRelatedProduct?:boolean;
     productDetails:IProduct;
     productCartDetails:ICartItem;
     group:number;
@@ -15,7 +15,7 @@ interface Props {
     homepageBestseller?:boolean;
 }
 
-const { id, productPageProduct = false, productDetails, productCartDetails, group, observe, homepageBestseller = false } = Astro.props
+const { id, productPageRelatedProduct = false, productDetails, productCartDetails, group, observe, homepageBestseller = false } = Astro.props
 const {
     url,
     images,
@@ -33,7 +33,7 @@ const imageLen = images.filter(e=>e.catalogue).length
     data-obs={observe ? '1' : '0'}
     data-qty-in-cart={productCartDetails?.quantity || 0}
     data-stock-quantities={JSON.stringify(stockQuantities)}
-    class={`${!!group ? "relative hidden" : "relative"}${productPageProduct ? ' related-product' : ''}${homepageBestseller ? ' homepage-bestseller' : ''}`.trim()}
+    class={`${!!group ? "relative hidden" : "relative"}${productPageRelatedProduct ? ' related-product' : ''}${homepageBestseller ? ' homepage-bestseller' : ''}`.trim()}
 >
     <a href=`/product/${url}/${id}`>
         <Product id={id} productDetails={productDetails} renderImages={!group} />

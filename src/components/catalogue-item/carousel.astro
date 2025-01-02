@@ -5,12 +5,11 @@ import Image from './image.astro';
 interface IProps {
     images:IProductImages[];
     id:string;
-    productPageProduct?:boolean;
+    productPageKeyProduct:boolean;
     renderImages:boolean;
-    imageSize?:number;
 }
 
-const { images, id, productPageProduct = false, renderImages, imageSize } = Astro.props as IProps
+const { images, id, productPageKeyProduct, renderImages } = Astro.props as IProps
 
 ---
 
@@ -23,10 +22,8 @@ const { images, id, productPageProduct = false, renderImages, imageSize } = Astr
                 id,
                 checked:i===0,
                 index:i,
-                len:images.length,
-                productPageProduct,
+                productPageKeyProduct,
                 render:renderImages,
-                imageSize,
                 showRadio:images.length > 1
             }} />
         ))
