@@ -10,7 +10,7 @@ interface Props {
 const { id, images } = Astro.props as Props
 ---
 <astro-main-carousel data-id={id} data-len={images.length}>
-    <div id=`main-carousel-${id}` class="w-full relative width-1/2 pb-[100%] group mb-8 2xs:mb-12">
+    <div id=`main-carousel-${id}` class="w-full relative aspect-square group mb-8 2xs:mb-12">
         <Carousel images={images} id={id} productPageProduct renderImages />
         <div class="touchscreen:hidden">
             <button aria-label="Previous Image" id="main-carousel-leftward" class="leftward absolute top-0 h-full left-0 w-2/12 peer/left">

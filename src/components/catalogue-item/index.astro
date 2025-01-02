@@ -48,7 +48,7 @@ const imageLen = images.filter(e=>e.catalogue).length
 
 <script>
 import type { IAddToBagResponse } from "@components/cart/interfaces";
-import { dispatchInternalEvent, formatPrice, httpRequestHeader } from "@misc";
+import { dispatchInternalEvent, formatPrice, httpRequestHeader, sessionLost, showErrorModal } from "@misc";
 import type { IProduct, IStockQuantity } from "./interfaces";
 import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } from "@stores";
 import { ADD_TO_BAG_FROM_CATALOGUE, CART_QTY_UPDATE, CART_UPDATE, PRODUCT_UPDATE } from "@misc/event-keys";
@@ -127,12 +127,10 @@ import { observer } from "./observer";
                     })
 
                     if (!resp.ok) {
-                        console.log(resp.status)
+                        if (await sessionLost(resp.status)) return
+                        setLoading(false)
+                        showErrorModal('Failed to update your shopping bag. Please try again later.')
                         return
-                        // if (await sessionLost(resp.status)) return
-                        // setLoading(false)
-                        // showErrorModal('Failed to update your shopping bag. Please try again later.')
-                        // return
                     }
 
                     const json = await resp.json()

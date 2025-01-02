@@ -14,13 +14,12 @@ const { images, id, productPageProduct = false, renderImages, imageSize } = Astr
 
 ---
 
-<div class="absolute top-0 bottom-0 left-0 right-0">
+<>
     {
         images.map(({name,ext},i)=>(
             <Image {...{
                 name,
                 ext,
-                catalogue:false,
                 id,
                 checked:i===0,
                 index:i,
@@ -32,4 +31,4 @@ const { images, id, productPageProduct = false, renderImages, imageSize } = Astr
             }} />
         ))
     }
-</div>
+</>

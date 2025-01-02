@@ -3,7 +3,8 @@
     "dev": "astro dev",
     "start": "node ./dist/server/entry.mjs",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@astrojs/node": "^9.0.0",

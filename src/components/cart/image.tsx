@@ -21,6 +21,7 @@ const Image = (
                     loading='lazy' 
                     width={p.imageSize}
                     height={p.imageSize}
+                    class="object-cover object-center"
                 />
                 :
                 <source srcset={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${p.name}_256x256${e}`} type="image/avif" />

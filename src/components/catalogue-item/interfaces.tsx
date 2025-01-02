@@ -1,7 +1,7 @@
 export interface IProductImages {
     name:string;
     ext:string;
-    catalogue:boolean;
+    catalogue?:boolean;
 }
 
 export interface IStockQuantity {
