@@ -1,13 +1,4 @@
 ---
-// import '@fontsource/noto-sans-jp/300.css';
-// import '@fontsource/noto-sans-jp/400.css';
-// import '@fontsource/noto-sans-jp/600.css';
-// import '@fontsource/noto-serif-jp/300.css';
-// import '@fontsource/noto-serif-jp/400.css';
-// import '@fontsource/noto-serif-jp/600.css';
-// import '@fontsource/noto-serif-jp/900.css';
-// import '@fontsource/yuji-syuku';
-
 import notoSans300Woff2 from '@fontsource/noto-sans-jp/files/noto-sans-jp-latin-300-normal.woff2?url';
 import notoSans400Woff2 from '@fontsource/noto-sans-jp/files/noto-sans-jp-latin-400-normal.woff2?url';
 import notoSans600Woff2 from '@fontsource/noto-sans-jp/files/noto-sans-jp-latin-600-normal.woff2?url';
@@ -224,9 +215,11 @@ const fontCss = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{fullTitle}</title>
 
+  <link rel="preconnect" href="https://challenges.cloudflare.com">
+
   {!!preloadImageFilename && !!preloadImageExt && (
     <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768.avif`} as="image" type='image/avif' />
-    <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768${preloadImageExt}`} as="image" type={`image/${preloadImageExt === '.jpg' ? 'jpeg' : preloadImageExt.replaceAll('.','')}`} />
+    // <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768${preloadImageExt}`} as="image" type={`image/${preloadImageExt === '.jpg' ? 'jpeg' : preloadImageExt.replaceAll('.','')}`} />
   )}
 
   <link rel="preload" as="font" type="font/woff2" href={notoSans300Woff2} crossorigin="anonymous" />
