@@ -67,7 +67,6 @@ const {
   preloadImageExt = '',
 } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
-const isHomePage = Astro.url.pathname === '/'
 // const isTrackOrderPage = Astro.url.pathname === '/track-order'
 
 const shopNameMap = Object.values(shopAddressMap).map(e=>({[e.id]:e.name})).reduce((a,b)=>({...a,...b}),{})
@@ -332,10 +331,7 @@ const fontCss = `
       }
     }
   </style>
-  <script
-    src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback"
-    defer
-  ></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" defer></script>
   <script src="/cdn-cgi/zaraz/i.js" referrerpolicy="origin" async></script>
 </head>
 <body 
@@ -347,7 +343,6 @@ const fontCss = `
   data-has-items={cartHasItems ? '1' : '0'}
   class={`${isCheckoutPage ? 'bg-gray-100' : 'bg-white'} text-gray-900 flex flex-col min-h-screen overflow-x-hidden`}
   data-member-total={total}
-  data-resize-at-launch={(isHomePage || isProductPage) ? '0' : '1'}
 >
   <svg style="display: none;">
     <symbol id="loading-small" viewBox="0 -960 960 960">
@@ -382,7 +377,7 @@ const fontCss = `
     </symbol>
   </svg>
   <Header {...{showUserIcon,shoppingBagProp,firstName,signedIn,headerCarouselTexts}} />
-  <main class={`${isCheckoutPage ? 'bg-gray-100' : 'bg-white'} w-full`}>
+  <main class={`${isCheckoutPage ? 'bg-gray-100' : 'bg-white'} w-full ${!!headerCarouselTexts.length ? 'mt-[72px] md:mt-[88px]' : 'mt-[48px] md:mt-[64px]'}`}>
     <slot />
   </main>
   <Footer />
@@ -475,8 +470,7 @@ document.addEventListener('DOMContentLoaded',showBarcodesOnLoad,true)
 document.addEventListener(HEADER_TEXT_CAROUSEL_LOADED,resize,true)
 window.addEventListener('resize',onResize,true)
 
-const resizeAtLaunch = document.body.dataset.resizeAtLaunch === '1'
-if (resizeAtLaunch) window.addEventListener('load',resize,{once:true});
+window.addEventListener('load',resize,{once:true});
 window.addEventListener('beforeunload',collapseSidebarsBeforeUnload)
 
 window.onloadTurnstileCallback = () => {
