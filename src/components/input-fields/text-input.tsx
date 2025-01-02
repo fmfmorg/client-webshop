@@ -88,7 +88,7 @@ const Input = (
         }
         <label
           for={!!p.idPrefix ? `${p.idPrefix}-${p.id}` : p.id}
-          class={`absolute left-0 transition-all tracking-wider ${isFocused() || !!value().length ? `-top-3.5 text-xs text-black cursor-pointer ${p.highlightLabel ? 'bg-white px-1 -left-1 font-bold' : 'font-light'}` : `top-2 cursor-text text-gray-600 ${p.highlightLabel ? 'font-normal' : 'font-light'}`}`.trim()}
+          class={`absolute left-0 transition-all tracking-wider ${isFocused() || !!value().length ? `-top-3.5 text-xs text-black cursor-pointer ${p.highlightLabel ? 'bg-white px-1 -left-1 font-semibold' : 'font-light'}` : `top-2 cursor-text text-gray-600 ${p.highlightLabel ? 'font-normal' : 'font-light'}`}`.trim()}
         >
           {`${p.placeholder}${p.required ? ' *' : ''}`}
         </label>
