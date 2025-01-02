@@ -133,7 +133,7 @@ const productSchema = isProductPage ? {
 
   {!!preloadImageFilename && !!preloadImageExt && (
     <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768.avif`} as="image" type='image/avif' />
-    <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768${preloadImageExt}`} as="image" type={`image/${preloadImageExt === '.jpg' ? 'jpg' : preloadImageExt.replaceAll('.','')}`} />
+    <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768${preloadImageExt}`} as="image" type={`image/${preloadImageExt === '.jpg' ? 'jpeg' : preloadImageExt.replaceAll('.','')}`} />
   )}
 
   <script src="../../ws.ts"></script>
