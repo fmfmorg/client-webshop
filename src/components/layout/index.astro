@@ -29,6 +29,8 @@ interface Props {
   price?:number;
   productID?:string;
   inStock?:boolean;
+  preloadImageFilename?:string;
+  preloadImageExt?:string;
 }
 
 const { 
@@ -52,6 +54,8 @@ const {
   price = 0,
   productID = '',
   inStock = false,
+  preloadImageFilename = '',
+  preloadImageExt = '',
 } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
 const isTrackOrderPage = Astro.url.pathname === '/track-order'
@@ -126,6 +130,11 @@ const productSchema = isProductPage ? {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{fullTitle}</title>
+
+  {!!preloadImageFilename && !!preloadImageExt && (
+    <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768.avif`} as="image" type='image/avif' />
+    <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768${preloadImageExt}`} as="image" type={`image/${preloadImageExt === '.jpg' ? 'jpg' : preloadImageExt.replaceAll('.','')}`} />
+  )}
 
   <script src="../../ws.ts"></script>
 

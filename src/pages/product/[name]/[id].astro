@@ -65,6 +65,12 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 
 Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 const productName = productMap[id].name
+
+let preloadImageFilename = '', preloadImageExt = ''
+if (!!productMap[id].images && !!productMap[id].images.length) {
+    preloadImageFilename = productMap[id].images[0].name
+    preloadImageExt = productMap[id].images[0].ext
+}
 ---
 
 <Layout {...{
@@ -84,7 +90,9 @@ const productName = productMap[id].name
     images:productMap[id].images,
     price:productMap[id].discountedPrice,
     productID:id,
-    inStock:(!!productMap[id].stockQuantities && !!productMap[id].stockQuantities.length) ? !!productMap[id].stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false
+    inStock:(!!productMap[id].stockQuantities && !!productMap[id].stockQuantities.length) ? !!productMap[id].stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false,
+    preloadImageFilename,
+    preloadImageExt,
 }}>
     <Product 
         id={id} 
