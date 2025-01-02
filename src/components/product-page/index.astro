@@ -37,7 +37,7 @@ const breadcrumbItems:ILink[] = [
             <div class="md:hidden">
                 <ImagesHorizontal id={id} images={images} />
             </div>
-            <div class="hidden md:block">
+            <div class="vertical-image-container hidden md:block">
                 <ImagesVertical images={images} alt={name} />
             </div>
         </div>
@@ -350,6 +350,22 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
             const addToBagBtnsContainerResizeObserver = new ResizeObserver(addToBagBtnsContainerResizeCallback)
 
             addToBagBtnsContainerResizeObserver.observe(addToBagBtnsContainer)
+
+            // image handling
+            const verticalImageContainer = this.getElementsByClassName('vertical-image-container')[0] as HTMLDivElement
+            const verticalImages = verticalImageContainer.getElementsByTagName('img')
+            const verticalImagesLen = verticalImages.length
+            const verticalImageContainerResizeCallback = (entries:ResizeObserverEntry[]) => {
+                const entry = entries[0]
+                const { width } = entry.contentRect
+                for (let i=0; i<verticalImagesLen; i++){
+                    const img = verticalImages.item(i)
+                    img.width = width
+                    img.height = width
+                }
+            }
+            const verticalImageContainerResizeObserver = new ResizeObserver(verticalImageContainerResizeCallback)
+            verticalImageContainerResizeObserver.observe(verticalImageContainer)
         }
     }
 

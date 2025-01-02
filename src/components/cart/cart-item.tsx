@@ -1,4 +1,4 @@
-import { createMemo, Show, useContext } from 'solid-js'
+import { createMemo, createSignal, onCleanup, onMount, Show, useContext } from 'solid-js'
 import Image from "@components/cart/image";
 import { formatPrice } from '@misc';
 import { CartContext } from './context';
@@ -30,15 +30,17 @@ const CartItem = (
         deleteOnClick:()=>void;
     }
 ) => {
-    let ref
+    let inputRef, imageContainerRef
 
     const { cartItemMap, prodDetailsMap } = useContext(CartContext)
 
+    const [imageSize, setImageSize] = createSignal(256)
+
     const onSubmit = (e:SubmitEvent) => {
         e.preventDefault();
-        ref.blur()
+        inputRef.blur()
     }
-    const onBlur = () => p.onInputChange(+ref.value)
+    const onBlur = () => p.onInputChange(+inputRef.value)
 
     const productDetail = createMemo(()=>prodDetailsMap[p.id])
     const qtyInCart = createMemo(()=>cartItemMap[p.id]?.quantity || 0)
@@ -57,11 +59,31 @@ const CartItem = (
             return stockInWH - _qtyInCart <= 3
         }
     })
+
+    const imageContainerResizeCallback = (entries: ResizeObserverEntry[]) => {
+        const entry = entries[0]
+        const { width } = entry.contentRect
+        setImageSize(width)
+    }
+
+    onMount(()=>{
+        const imageContainerResizeObserver = new ResizeObserver(imageContainerResizeCallback)
+        imageContainerResizeObserver.observe(imageContainerRef)
+
+        onCleanup(()=>{
+            imageContainerResizeObserver.disconnect()
+        })
+    })
     
     return (
         <div class="grid grid-cols-3 grid-flow-dense relative" data-id={p.id}>
-            <a href={`/product/${productDetail().url}/${p.id}`} class="col-span-1 p-2">
-                <Image name={productDetail().images[0].name} ext={productDetail().images[0].ext} alt={productDetail().name} />
+            <a ref={imageContainerRef} href={`/product/${productDetail().url}/${p.id}`} class="col-span-1 p-2">
+                <Image 
+                    name={productDetail().images[0].name} 
+                    ext={productDetail().images[0].ext} 
+                    alt={productDetail().name} 
+                    imageSize={imageSize()}
+                />
             </a>
             <div class="col-span-2 py-2 pr-1">
                 <div class='flex w-full justify-between'>
@@ -90,7 +112,7 @@ const CartItem = (
                                 <line x1="5" y1="50" x2="95" y2="50" />
                             </svg>
                         </div>
-                        <input id={`cart-item-${p.id}`} ref={ref} onBlur={onBlur} type="number" step="1" min="0" max={maxStockQty()} value={qtyInCart()} class="text-center w-12 border-y rounded-none border-black outline-none" />
+                        <input id={`cart-item-${p.id}`} ref={inputRef} onBlur={onBlur} type="number" step="1" min="0" max={maxStockQty()} value={qtyInCart()} class="text-center w-12 border-y rounded-none border-black outline-none" />
                         <div onClick={p.onPlus} class="cursor-pointer p-3 w-9 h-9 flex-none text-3xl font-light bg-white border border-gray-600">
                             <svg viewBox="0 0 100 100" class="w-full h-full" stroke="black" stroke-width="0.4em">
                                 <line x1="5" y1="50" x2="95" y2="50" />

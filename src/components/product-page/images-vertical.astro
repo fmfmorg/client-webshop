@@ -11,8 +11,8 @@ const { images, alt } = Astro.props as Props
 ---
 <div>
     {
-        images.map(({name,ext})=>(
-            <ImageVertical name={name} ext={ext} alt={alt} catalogue />
+        images.map(({name,ext},i)=>(
+            <ImageVertical name={name} ext={ext} alt={alt} index={i} catalogue />
         ))
     }
 </div>

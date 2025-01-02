@@ -1,26 +1,29 @@
 import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
 
 const Image = (
-    {
-        name,
-        ext,
-        alt
-    }:{
+    p:{
         name:string;
         ext:string;
         alt:string;
+        imageSize:number;
     }
 ) => (
     <picture>
         {
             [
                 '.avif',
-                ext
+                p.ext
             ].map(e=>(
-                e === ext ?
-                <img src={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${name}_256x256${e}`} alt={alt} loading='lazy' />
+                e === p.ext ?
+                <img 
+                    src={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${p.name}_256x256${e}`} 
+                    alt={p.alt} 
+                    loading='lazy' 
+                    width={p.imageSize}
+                    height={p.imageSize}
+                />
                 :
-                <source srcset={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${name}_256x256${e}`} type="image/avif" />
+                <source srcset={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${p.name}_256x256${e}`} type="image/avif" />
             ))
         }
     </picture>
