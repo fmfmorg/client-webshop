@@ -30,7 +30,7 @@ const isProductPage = Astro.url.pathname.startsWith('/product/')
         checked={checked} 
         class={`peer appearance-none border border-gray-400 rounded-full checked:bg-gray-400 absolute ${productPageKeyProduct ? '-bottom-5 w-1.5 h-1.5 2xs:-bottom-8 2xs:w-2 2xs:h-2' : 'z-10 bottom-2 w-1 h-1 xs:w-1.5 xs:h-1.5 mouse:hidden'} ${showRadio ? '' : 'hidden'}`.trim()} 
     />
-    <div class="carousel-image-container w-full h-full object-center object-cover absolute top-0 left-0 opacity-0 duration-500 peer-checked:opacity-100">
+    <div class={`carousel-image-container w-full h-full object-center object-cover absolute top-0 left-0 opacity-0 duration-500 peer-checked:opacity-100 ${!!index ? '[content-visibility: auto]' : ''}`.trim()}>
         <picture>
             {['.avif',ext].map(e=>(
                 <source 
@@ -48,6 +48,7 @@ const isProductPage = Astro.url.pathname.startsWith('/product/')
                 height={768}
                 class="object-cover object-center"
                 loading={((productPageKeyProduct || (render && !isProductPage)) && !index) ? 'eager' : 'lazy'}
+                fetchpriority={productPageKeyProduct && !index ? 'high' : 'auto'}
             />
         </picture>
     </div>
