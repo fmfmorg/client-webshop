@@ -25,6 +25,26 @@ const breadcrumbItems:ILink[] = [
 ]
 ---
 
+<style>
+    @media screen and (max-width: 474px) {
+      .related-product:nth-of-type(n+5) {
+        display:none;
+      }
+    }
+
+    @media screen and (min-width: 475px) and (max-width: 1023px) {
+      .related-product:nth-of-type(n+4) {
+        display:none;
+      }
+    }
+
+    @media screen and (min-width: 1024px) {
+      .related-product:nth-of-type(n+5) {
+        display:none;
+      }
+    }
+</style>
+
 <astro-main-product 
     id=`catalogue-${id}` 
     data-id={id} 
