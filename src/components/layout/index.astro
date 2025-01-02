@@ -215,7 +215,7 @@ const fontCss = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{fullTitle}</title>
 
-  <link rel="preconnect" href="https://challenges.cloudflare.com">
+  <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin>
 
   {!!preloadImageFilename && !!preloadImageExt && (
     <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768.avif`} as="image" type='image/avif' />
