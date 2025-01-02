@@ -52,10 +52,10 @@ const breadcrumbItems:ILink[] = [
                 relatedProductIDs.map(e=>(
                     <CatalogueItem 
                         id={e} 
-                        productPageProduct 
+                        productPageProduct={false}
                         productDetails={productObj[e]} 
                         productCartDetails={cartItemObj[e]} 
-                        group={0}
+                        group={1}
                         observe={false}
                     />
                 ))
