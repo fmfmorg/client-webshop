@@ -13,7 +13,7 @@ import type { IShopAddressMap, IShoppingBagSidebarProp } from '@misc';
 import LoadingOverlay from './loading-overlay.astro';
 import ErrorMsgModal from './error-msg-modal.astro';
 import CollectionPointOnQtyIncrease from './collection-point-on-qty-increase.astro'
-import { PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
+import { PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, FM_IS_ONLINE } from 'astro:env/client'
 import type { IProductImages } from '@components/catalogue-item/interfaces';
 
 interface Props {
@@ -131,6 +131,82 @@ const productSchema = isProductPage ? {
   ]
 } : {}
 
+const fontSrcPrefix = FM_IS_ONLINE === 'true' ? '/_astro' : '/node_modules/@fontsource'
+
+const fontCss = `
+    @font-face {
+      font-family: 'Noto Sans JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 300;
+      src: url(${fontSrcPrefix}/noto-sans-jp/files/latin-300-normal.woff2) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Sans JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 400;
+      src: url(${fontSrcPrefix}/noto-sans-jp/files/latin-400-normal.woff2) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Sans JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 600;
+      src: url(${fontSrcPrefix}/noto-sans-jp/files/latin-600-normal.woff2) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Serif JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 300;
+      src: url(${fontSrcPrefix}/noto-serif-jp/files/latin-300-normal.woff2) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Serif JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 400;
+      src: url(${fontSrcPrefix}/noto-serif-jp/files/latin-400-normal.woff2) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Serif JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 600;
+      src: url(${fontSrcPrefix}/noto-serif-jp/files/latin-600-normal.woff2) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Serif JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 900;
+      src: url(${fontSrcPrefix}/noto-serif-jp/files/latin-900-normal.woff2) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Yuji Syuku';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 400;
+      src: url(${fontSrcPrefix}/yuji-syuku/files/latin-400-normal.woff2) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+`
+
 ---
 
 <html lang="en-GB">
@@ -188,7 +264,19 @@ const productSchema = isProductPage ? {
 
   <meta name="theme-color" content="#ffffff">
 
+  <style set:html={fontCss} />
+
   <style is:global>
+    /* noto-sans-jp-latin-300-normal */
+    @font-face {
+      font-family: 'Noto Sans JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 300;
+      src: url(/_astro/@fontsource/noto-sans-jp/files/latin-300-normal.woff2) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
     .hide-scrollbar {
       scrollbar-width: none;
     }
