@@ -377,7 +377,7 @@ const fontCss = `
     </symbol>
   </svg>
   <Header {...{showUserIcon,shoppingBagProp,firstName,signedIn,headerCarouselTexts}} />
-  <main class={`${isCheckoutPage ? 'bg-gray-100' : 'bg-white'} w-full ${!!headerCarouselTexts.length ? 'mt-[72px] md:mt-[88px]' : 'mt-[48px] md:mt-[64px]'}`}>
+  <main class={`${isCheckoutPage ? 'bg-gray-100' : 'bg-white'} w-full ${!!headerCarouselTexts.length ? 'mt-[64px] xs:mt-[72px] md:mt-[88px]' : 'mt-[40px] xs:mt-[48px] md:mt-[64px]'}`}>
     <slot />
   </main>
   <Footer />
