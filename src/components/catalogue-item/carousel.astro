@@ -22,6 +22,7 @@ const { images, id, productPageKeyProduct, renderImages } = Astro.props as IProp
                 id,
                 checked:i===0,
                 index:i,
+                len:images.length,
                 productPageKeyProduct,
                 render:renderImages,
                 showRadio:images.length > 1

@@ -7,7 +7,7 @@ export const catalogueItemsOnResize = () => {
     
     for (let i=0; i<elemsLen; i++){
         const elem = elems.item(i) as HTMLElement
-        const isProductPageCarousel = !!(+elem.dataset.productPage)
+        const isProductPageCarousel = !!(+elem.dataset.productPageKeyProduct)
         if (!isProductPageCarousel && !isTouchScreen) continue
 
         const index = +(elem.dataset.index)

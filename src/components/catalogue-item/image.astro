@@ -9,15 +9,20 @@ interface Props extends IProductImages {
     productPageKeyProduct:boolean;
     render:boolean;
     showRadio:boolean;
+    len:number;
 }
 
-const { name, ext, id, checked, index, productPageKeyProduct, render, showRadio } = Astro.props as Props
+const { name, ext, id, checked, index, len, productPageKeyProduct, render, showRadio } = Astro.props as Props
 const filename = PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX + name
 const sizes = productPageKeyProduct ? '100vw' : '(min-width: 1536px) 25vw, (min-width: 640px) 33vw, 50vw'
 const isProductPage = Astro.url.pathname.startsWith('/product/')
 ---
 
-<astro-carousel-image>
+<astro-carousel-image 
+    data-product-page-key-product={productPageKeyProduct ? '1' : '0'}
+    data-index={index}
+    data-len={len}
+>
     <input 
         type="radio" 
         name={id} 
