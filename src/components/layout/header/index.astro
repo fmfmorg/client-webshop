@@ -26,7 +26,7 @@ const isCheckoutPage = Astro.url.pathname === '/checkout'
 
 <div id="menu-overlay" class="fixed top-0 left-0 w-full h-full bg-white hidden opacity-50 transition-opacity duration-300 z-40"></div>
 <header class="bg-white shadow z-30 top-0 left-0 w-full fixed transition-transform duration-300">
-    {!!headerCarouselTexts.length && <TextCarousel texts={headerCarouselTexts} client:only="solid-js" />}
+    {!!headerCarouselTexts.length && <TextCarousel texts={headerCarouselTexts} client:load />}
     <div class={isCheckoutPage ? 'flex justify-center' : 'px-4 flex justify-between items-center'}>
         <div class={isCheckoutPage ? 'hidden' : 'flex md:hidden'}>
             <label for="menu-sidebar-checkbox" id="menu-icon-button" class="cursor-pointer focus:outline-none h-full px-1 py-2 -ml-3 md:px-2 md:py-4 md:-ml-2">
