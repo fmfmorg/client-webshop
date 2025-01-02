@@ -14,7 +14,7 @@ interface Props {
 const { productIDs = [], productObj, cartItemObj } = Astro.props as Props
 const tempImageFilename = `${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}banner-2000x673`
 ---
-<style>
+<style is:global>
     @media screen and (min-width: 475px) and (max-width: 1023px) {
       .homepage-bestseller:nth-of-type(n+4) {
         display:none;
