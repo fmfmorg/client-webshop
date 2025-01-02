@@ -45,7 +45,6 @@ const sizes = productPageProduct ? '100vw' : '(min-width: 1536px) 25vw, (min-wid
                 srcset={`${filename}_768x768${ext} 768w, ${filename}${ext} 2048w`} 
                 sizes={sizes}
                 alt={name} 
-                loading={!!index ? 'lazy' : 'eager'} 
                 width={768}
                 height={768}
                 class="object-cover object-center"
