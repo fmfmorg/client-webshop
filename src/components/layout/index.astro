@@ -196,7 +196,6 @@ const fontCss = `
       unicode-range: U+0021-007E, U+00A3;
     }
 
-    /* yuji-syuku-latin-400-normal */
     @font-face {
       font-family: 'Yuji Syuku';
       font-style: normal;
@@ -217,6 +216,8 @@ const fontCss = `
 
   <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin>
 
+  <link rel="preload" href="/cdn-cgi/zaraz/i.js" as="script">
+
   {!!preloadImageFilename && !!preloadImageExt && <>
     {FM_IS_ONLINE === 'true' && <>
       <link rel="preconnect" href={PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}>
@@ -234,6 +235,8 @@ const fontCss = `
   <link rel="preload" as="font" type="font/woff2" href={notoSerif600Woff2} crossorigin="anonymous" />
   <link rel="preload" as="font" type="font/woff2" href={notoSerif900Woff2} crossorigin="anonymous" />
   <link rel="preload" as="font" type="font/woff2" href={yujiSyuku400Woff2} crossorigin="anonymous" />
+
+  <script src="/cdn-cgi/zaraz/i.js" referrerpolicy="origin" async></script>
 
   <script src="../../ws.ts"></script>
   
@@ -336,7 +339,6 @@ const fontCss = `
     }
   </style>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" defer></script>
-  <script src="/cdn-cgi/zaraz/i.js" referrerpolicy="origin" async></script>
 </head>
 <body 
   data-pip={paymentInProcess ? 1 : 0} 
