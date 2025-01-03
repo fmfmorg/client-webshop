@@ -14,7 +14,7 @@ import type { IShopAddressMap, IShoppingBagSidebarProp } from '@misc';
 import LoadingOverlay from './loading-overlay.astro';
 import ErrorMsgModal from './error-msg-modal.astro';
 import CollectionPointOnQtyIncrease from './collection-point-on-qty-increase.astro'
-import { PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
+import { PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, FM_IS_ONLINE } from 'astro:env/client'
 import type { IProductImages } from '@components/catalogue-item/interfaces';
 
 interface Props {
@@ -217,10 +217,14 @@ const fontCss = `
 
   <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin>
 
-  {!!preloadImageFilename && !!preloadImageExt && (
+  {!!preloadImageFilename && !!preloadImageExt && <>
+    {FM_IS_ONLINE === 'true' && <>
+      <link rel="preconnect" href={PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}>
+      <link rel="dns-prefetch" href={PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}>
+    </>}
     <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768.avif`} as="image" type='image/avif' />
     // <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768${preloadImageExt}`} as="image" type={`image/${preloadImageExt === '.jpg' ? 'jpeg' : preloadImageExt.replaceAll('.','')}`} />
-  )}
+  </>}
 
   <link rel="preload" as="font" type="font/woff2" href={notoSans300Woff2} crossorigin="anonymous" />
   <link rel="preload" as="font" type="font/woff2" href={notoSans400Woff2} crossorigin="anonymous" />
@@ -232,7 +236,7 @@ const fontCss = `
   <link rel="preload" as="font" type="font/woff2" href={yujiSyuku400Woff2} crossorigin="anonymous" />
 
   <script src="../../ws.ts"></script>
-
+  
   <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href={`https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;600&family=Noto+Serif+JP:wght@300;400;600;900&family=Yuji+Syuku&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789£!@#$%^%26*()|,.<>?/:;'”&${isTrackOrderPage ? 'family=Libre+Barcode+128&' : ''}display=swap`} rel="stylesheet" media="screen"> -->
@@ -391,105 +395,105 @@ const fontCss = `
 </html>
 
 <script>
-import { 
-  HEADER_TEXT_CAROUSEL_LOADED, 
-} from "@misc/event-keys"
-import { PUBLIC_FM_TURNSTILE_SITEKEY } from 'astro:env/client'
-import { 
-  selectedCollectionPoint, 
-  otherClientPaymentInProcess, 
-  shopNameMap, 
-  preferredCollectionPoint, 
-  signedIn, 
-  pageToken,
-cartHasItems,
-memberTotalToPay,
-turnstilePassed,
-} from "@stores"
-
-declare global {
-  interface Window {
-    onloadTurnstileCallback: ()=>void;
+  import { 
+    HEADER_TEXT_CAROUSEL_LOADED, 
+  } from "@misc/event-keys"
+  import { PUBLIC_FM_TURNSTILE_SITEKEY } from 'astro:env/client'
+  import { 
+    selectedCollectionPoint, 
+    otherClientPaymentInProcess, 
+    shopNameMap, 
+    preferredCollectionPoint, 
+    signedIn, 
+    pageToken,
+  cartHasItems,
+  memberTotalToPay,
+  turnstilePassed,
+  } from "@stores"
+  
+  declare global {
+    interface Window {
+      onloadTurnstileCallback: ()=>void;
+    }
   }
-}
-
-if (performance.getEntriesByType('navigation')[0]['type'] === "back_forward") window.location.reload()
-
-const reloadBC = new BroadcastChannel('reload')
-const barcodes = document.getElementsByClassName('font-barcode')
-const barcodeLen = barcodes.length
-
-const showBarcodesOnLoad = () => {
-  for (let i=0; i<barcodeLen; i++){
-    barcodes.item(i).classList.remove('hidden');
+  
+  if (performance.getEntriesByType('navigation')[0]['type'] === "back_forward") window.location.reload()
+  
+  const reloadBC = new BroadcastChannel('reload')
+  const barcodes = document.getElementsByClassName('font-barcode')
+  const barcodeLen = barcodes.length
+  
+  const showBarcodesOnLoad = () => {
+    for (let i=0; i<barcodeLen; i++){
+      barcodes.item(i).classList.remove('hidden');
+    }
   }
-}
-
-const header = document.getElementsByTagName('header')[0] as HTMLDivElement
-const main = document.getElementsByTagName('main')[0] as HTMLDivElement
-const footer = document.getElementsByTagName('footer')[0] as HTMLDivElement
-
-pageToken.set('crypto' in window ? crypto.randomUUID() : Math.random().toString())
-
-let resizeTimeout
-const resize = () => {
-  const { innerHeight } = window
-  const { height: headerHeight } = header.getBoundingClientRect()
-  const { height: footerHeight } = footer.getBoundingClientRect()
-  main.style.minHeight = `${ innerHeight - headerHeight - footerHeight }px`
-  main.style.marginTop = `${ headerHeight }px`
-}
-const onResize = () => {
-  clearTimeout(resizeTimeout)
-  resizeTimeout = setTimeout(resize,200)
-}
-
-const headerResizeObserver = new ResizeObserver(resize)
-headerResizeObserver.observe(header)
-
-const collapseSidebarsBeforeUnload = () => {
-  [
-    'shopping-bag-sidebar-checkbox',
-    'user-sidebar-checkbox',
-    "menu-sidebar-checkbox"
-  ].forEach(e=>{
-    const checkbox = document.getElementById(e) as HTMLInputElement
-    if (!!checkbox && checkbox.checked) checkbox.click()
+  
+  const header = document.getElementsByTagName('header')[0] as HTMLDivElement
+  const main = document.getElementsByTagName('main')[0] as HTMLDivElement
+  const footer = document.getElementsByTagName('footer')[0] as HTMLDivElement
+  
+  pageToken.set('crypto' in window ? crypto.randomUUID() : Math.random().toString())
+  
+  let resizeTimeout
+  const resize = () => {
+    const { innerHeight } = window
+    const { height: headerHeight } = header.getBoundingClientRect()
+    const { height: footerHeight } = footer.getBoundingClientRect()
+    main.style.minHeight = `${ innerHeight - headerHeight - footerHeight }px`
+    main.style.marginTop = `${ headerHeight }px`
+  }
+  const onResize = () => {
+    clearTimeout(resizeTimeout)
+    resizeTimeout = setTimeout(resize,200)
+  }
+  
+  const headerResizeObserver = new ResizeObserver(resize)
+  headerResizeObserver.observe(header)
+  
+  const collapseSidebarsBeforeUnload = () => {
+    [
+      'shopping-bag-sidebar-checkbox',
+      'user-sidebar-checkbox',
+      "menu-sidebar-checkbox"
+    ].forEach(e=>{
+      const checkbox = document.getElementById(e) as HTMLInputElement
+      if (!!checkbox && checkbox.checked) checkbox.click()
+    })
+  }
+  
+  memberTotalToPay.set(+document.body.dataset.memberTotal)
+  cartHasItems.set(!!(+document.body.dataset.hasItems))
+  signedIn.set(!!(+document.body.dataset.signedIn))
+  shopNameMap.set(JSON.parse(document.body.dataset.shopNameMap))
+  selectedCollectionPoint.set(!!Object.keys(shopNameMap.get()).length ? +document.body.dataset.selectedCollectionPoint : 1)
+  preferredCollectionPoint.set(!!Object.keys(shopNameMap.get()).length ? +document.body.dataset.preferredCollectionPoint : 1)
+  otherClientPaymentInProcess.set(!!(+document.body.dataset.pip))
+  reloadBC.onmessage = (ev:MessageEvent<string>) => ev.data !== pageToken.get() && window.location.reload()
+  document.addEventListener('DOMContentLoaded',showBarcodesOnLoad,true)
+  document.addEventListener(HEADER_TEXT_CAROUSEL_LOADED,resize,true)
+  window.addEventListener('resize',onResize,true)
+  
+  window.addEventListener('load',resize,{once:true});
+  window.addEventListener('beforeunload',collapseSidebarsBeforeUnload)
+  
+  window.onloadTurnstileCallback = () => {
+    window.turnstile.render("#turnstile-tag", {
+      sitekey: PUBLIC_FM_TURNSTILE_SITEKEY,
+      callback: () => {
+        // console.log("Turnstile success")
+        const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
+        const len = btnToCheck.length
+        for (let i=0; i<len; i++) btnToCheck.item(i).disabled = false
+        turnstilePassed.set(true)
+      },
+      "error-callback":()=>{}
+    });
+  }
+  
+  // favicon svg
+  const faviconSvg = document.getElementById('favicon-svg') as HTMLLinkElement
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',(e)=>{
+    if (!!faviconSvg) faviconSvg.href = `/favicon-${e.matches ? 'dark' : 'light'}.svg`
   })
-}
-
-memberTotalToPay.set(+document.body.dataset.memberTotal)
-cartHasItems.set(!!(+document.body.dataset.hasItems))
-signedIn.set(!!(+document.body.dataset.signedIn))
-shopNameMap.set(JSON.parse(document.body.dataset.shopNameMap))
-selectedCollectionPoint.set(!!Object.keys(shopNameMap.get()).length ? +document.body.dataset.selectedCollectionPoint : 1)
-preferredCollectionPoint.set(!!Object.keys(shopNameMap.get()).length ? +document.body.dataset.preferredCollectionPoint : 1)
-otherClientPaymentInProcess.set(!!(+document.body.dataset.pip))
-reloadBC.onmessage = (ev:MessageEvent<string>) => ev.data !== pageToken.get() && window.location.reload()
-document.addEventListener('DOMContentLoaded',showBarcodesOnLoad,true)
-document.addEventListener(HEADER_TEXT_CAROUSEL_LOADED,resize,true)
-window.addEventListener('resize',onResize,true)
-
-window.addEventListener('load',resize,{once:true});
-window.addEventListener('beforeunload',collapseSidebarsBeforeUnload)
-
-window.onloadTurnstileCallback = () => {
-  window.turnstile.render("#turnstile-tag", {
-    sitekey: PUBLIC_FM_TURNSTILE_SITEKEY,
-    callback: () => {
-      // console.log("Turnstile success")
-      const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
-      const len = btnToCheck.length
-      for (let i=0; i<len; i++) btnToCheck.item(i).disabled = false
-      turnstilePassed.set(true)
-    },
-    "error-callback":()=>{}
-  });
-}
-
-// favicon svg
-const faviconSvg = document.getElementById('favicon-svg') as HTMLLinkElement
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',(e)=>{
-  if (!!faviconSvg) faviconSvg.href = `/favicon-${e.matches ? 'dark' : 'light'}.svg`
-})
 </script>
