@@ -14,7 +14,7 @@ import type { IShopAddressMap, IShoppingBagSidebarProp } from '@misc';
 import LoadingOverlay from './loading-overlay.astro';
 import ErrorMsgModal from './error-msg-modal.astro';
 import CollectionPointOnQtyIncrease from './collection-point-on-qty-increase.astro'
-import { PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, FM_IS_ONLINE } from 'astro:env/client'
+import { PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, FM_IS_ONLINE, PUBLIC_FM_ACCEPT_MEMBERSHIP } from 'astro:env/client'
 import type { IProductImages } from '@components/catalogue-item/interfaces';
 
 interface Props {
@@ -67,6 +67,7 @@ const {
   preloadImageExt = '',
 } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
+const isContactPage = Astro.url.pathname === '/contact'
 // const isTrackOrderPage = Astro.url.pathname === '/track-order'
 
 const shopNameMap = Object.values(shopAddressMap).map(e=>({[e.id]:e.name})).reduce((a,b)=>({...a,...b}),{})
@@ -236,10 +237,6 @@ const fontCss = `
 
   <script src="../../ws.ts"></script>
   
-  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href={`https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;600&family=Noto+Serif+JP:wght@300;400;600;900&family=Yuji+Syuku&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789£!@#$%^%26*()|,.<>?/:;'”&${isTrackOrderPage ? 'family=Libre+Barcode+128&' : ''}display=swap`} rel="stylesheet" media="screen"> -->
-
   <link rel="shortcut icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -334,7 +331,7 @@ const fontCss = `
       }
     }
   </style>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" defer></script>
+  {(isContactPage || isCheckoutPage || PUBLIC_FM_ACCEPT_MEMBERSHIP === 'true') && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" defer></script>}
 </head>
 <body 
   data-pip={paymentInProcess ? 1 : 0} 
@@ -388,7 +385,7 @@ const fontCss = `
   <ErrorMsgModal />
   <CollectionPointOnQtyIncrease />
   <slot name="body-end" />
-  <div id="turnstile-tag" />
+  {(isContactPage || isCheckoutPage || PUBLIC_FM_ACCEPT_MEMBERSHIP === 'true') && <div id="turnstile-tag" />}
 </body>
 </html>
 
@@ -396,7 +393,7 @@ const fontCss = `
   import { 
     HEADER_TEXT_CAROUSEL_LOADED, 
   } from "@misc/event-keys"
-  import { PUBLIC_FM_TURNSTILE_SITEKEY } from 'astro:env/client'
+  import { PUBLIC_FM_TURNSTILE_SITEKEY, PUBLIC_FM_ACCEPT_MEMBERSHIP } from 'astro:env/client'
   import { 
     selectedCollectionPoint, 
     otherClientPaymentInProcess, 
@@ -418,14 +415,6 @@ const fontCss = `
   if (performance.getEntriesByType('navigation')[0]['type'] === "back_forward") window.location.reload()
   
   const reloadBC = new BroadcastChannel('reload')
-  const barcodes = document.getElementsByClassName('font-barcode')
-  const barcodeLen = barcodes.length
-  
-  const showBarcodesOnLoad = () => {
-    for (let i=0; i<barcodeLen; i++){
-      barcodes.item(i).classList.remove('hidden');
-    }
-  }
   
   const header = document.getElementsByTagName('header')[0] as HTMLDivElement
   const main = document.getElementsByTagName('main')[0] as HTMLDivElement
@@ -469,25 +458,26 @@ const fontCss = `
   preferredCollectionPoint.set(!!Object.keys(shopNameMap.get()).length ? +document.body.dataset.preferredCollectionPoint : 1)
   otherClientPaymentInProcess.set(!!(+document.body.dataset.pip))
   reloadBC.onmessage = (ev:MessageEvent<string>) => ev.data !== pageToken.get() && window.location.reload()
-  document.addEventListener('DOMContentLoaded',showBarcodesOnLoad,true)
   document.addEventListener(HEADER_TEXT_CAROUSEL_LOADED,resize,true)
   window.addEventListener('resize',onResize,true)
   
   window.addEventListener('load',resize,{once:true});
   window.addEventListener('beforeunload',beforeUnload)
   
-  window.onloadTurnstileCallback = () => {
-    window.turnstile.render("#turnstile-tag", {
-      sitekey: PUBLIC_FM_TURNSTILE_SITEKEY,
-      callback: () => {
-        // console.log("Turnstile success")
-        const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
-        const len = btnToCheck.length
-        for (let i=0; i<len; i++) btnToCheck.item(i).disabled = false
-        turnstilePassed.set(true)
-      },
-      "error-callback":()=>{}
-    });
+  if (['/contact','/checkout'].indexOf(window.location.pathname) !== -1 || PUBLIC_FM_ACCEPT_MEMBERSHIP === 'true') {
+    window.onloadTurnstileCallback = () => {
+      window.turnstile.render("#turnstile-tag", {
+        sitekey: PUBLIC_FM_TURNSTILE_SITEKEY,
+        callback: () => {
+          // console.log("Turnstile success")
+          const btnToCheck = document.getElementsByClassName('turnstile-check') as HTMLCollectionOf<HTMLInputElement>
+          const len = btnToCheck.length
+          for (let i=0; i<len; i++) btnToCheck.item(i).disabled = false
+          turnstilePassed.set(true)
+        },
+        "error-callback":()=>{}
+      });
+    }
   }
   
   // favicon svg
