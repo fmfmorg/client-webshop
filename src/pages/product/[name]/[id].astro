@@ -68,7 +68,7 @@ const productName = productMap[id].name
 
 let preloadImageFilename = '', preloadImageExt = ''
 if (!!productMap[id].images && !!productMap[id].images.length) {
-    preloadImageFilename = productMap[id].images[0].name
+    preloadImageFilename = productMap[id].images[0].name + '_768x768'
     preloadImageExt = productMap[id].images[0].ext
 }
 ---

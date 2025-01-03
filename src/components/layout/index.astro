@@ -222,8 +222,8 @@ const fontCss = `
       <link rel="preconnect" href={PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}>
       <link rel="dns-prefetch" href={PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}>
     </>}
-    <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768.avif`} as="image" type='image/avif' />
-    {/* <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}_768x768${preloadImageExt}`} as="image" type={`image/${preloadImageExt === '.jpg' ? 'jpeg' : preloadImageExt.replaceAll('.','')}`} /> */}
+    <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}.avif`} as="image" type='image/avif' />
+    {/* <link rel="preload" href={`${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}${preloadImageFilename}${preloadImageExt}`} as="image" type={`image/${preloadImageExt === '.jpg' ? 'jpeg' : preloadImageExt.replaceAll('.','')}`} /> */}
   </>}
 
   <link rel="preload" as="font" type="font/woff2" href={notoSans300Woff2} crossorigin="anonymous" />
