@@ -216,9 +216,6 @@ const fontCss = `
 
   <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin>
 
-  <!-- <link rel="preload" href="/cdn-cgi/zaraz/i.js" as="script"> 
-  <script src="/cdn-cgi/zaraz/i.js" referrerpolicy="origin" async></script> -->
-
   {!!preloadImageFilename && !!preloadImageExt && <>
     {FM_IS_ONLINE === 'true' && <>
       <link rel="preconnect" href={PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}>
@@ -452,7 +449,8 @@ const fontCss = `
   const headerResizeObserver = new ResizeObserver(resize)
   headerResizeObserver.observe(header)
   
-  const collapseSidebarsBeforeUnload = () => {
+  const beforeUnload = () => {
+    reloadBC.close();
     [
       'shopping-bag-sidebar-checkbox',
       'user-sidebar-checkbox',
@@ -476,7 +474,7 @@ const fontCss = `
   window.addEventListener('resize',onResize,true)
   
   window.addEventListener('load',resize,{once:true});
-  window.addEventListener('beforeunload',collapseSidebarsBeforeUnload)
+  window.addEventListener('beforeunload',beforeUnload)
   
   window.onloadTurnstileCallback = () => {
     window.turnstile.render("#turnstile-tag", {

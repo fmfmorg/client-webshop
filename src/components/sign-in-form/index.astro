@@ -72,6 +72,7 @@ import { pageToken } from "@stores"
         const { status, ok } = resp
         if (ok) {
             bc.postMessage(pageToken.get())
+            bc.close()
             const searchParams = new URLSearchParams(window.location.search)
             if (searchParams.has('rd')) window.location.assign(decodeURIComponent(searchParams.get('rd')));
             else window.location.assign('/');

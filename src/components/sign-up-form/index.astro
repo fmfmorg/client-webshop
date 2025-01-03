@@ -84,6 +84,7 @@ class SignUpForm extends HTMLElement {
             const { status, ok } = resp
             if (ok) {
                 bc.postMessage(pageToken.get())
+                bc.close()
                 window.location.assign('/')
             } else {
                 if (await sessionLost(resp.status)) return

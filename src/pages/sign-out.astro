@@ -20,6 +20,7 @@ Astro.cookies.delete('sessionID')
 const bc = new BroadcastChannel('reload')
 const onLoad = () => {
     bc.postMessage('')
+    bc.close()
     const searchParams = new URLSearchParams(window.location.search)
     if (searchParams.has('rd')) window.location.replace(decodeURIComponent(searchParams.get('rd')))
     else window.location.replace('/')
