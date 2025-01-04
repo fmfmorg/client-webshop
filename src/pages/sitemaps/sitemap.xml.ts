@@ -25,7 +25,7 @@ export async function GET({url}:{url:URL}) {
             ${products.map(({id,url:_url,images})=>`<url>
               <loc>${origin + '/product/' + _url + '/' + id }</loc>
               <lastmod>${currentDT}</lastmod>
-              <changefreq>monthly</changefreq>
+              <changefreq>weekly</changefreq>
               <image:image>
               ${images.map(({name,ext})=>`
                 <image:loc>${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX + name + ext}</image:loc>
