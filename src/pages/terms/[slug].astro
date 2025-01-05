@@ -55,17 +55,20 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 
 Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 
-let title = ''
+let title = '', description = ''
 
 switch (slug) {
     case 'terms-and-conditions':
         title = 'Terms and Conditions'
+        description = 'Read our terms and conditions for purchasing jewellery from our online store. Clear information about your rights, our policies, and service agreements.'
         break
     case 'delivery':
         title = 'Delivery'
+        description = 'Find out about our delivery options and shipping costs. Free UK shipping available on orders over £20.'
         break
     case 'returns-refunds':
         title = 'Returns and Refunds'
+        description = 'Information about our returns and refunds policy for fashion jewellery. View our guidelines and procedures.'
         break
 }
 ---
@@ -80,6 +83,7 @@ switch (slug) {
     firstName,
     title,
     headerCarouselTexts,
+    description,
 }}>
     <Terms {...{text}} />
 </Layout>
