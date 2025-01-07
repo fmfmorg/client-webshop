@@ -55,6 +55,8 @@ const breadcrumbItems:ILink[] = [
     data-related-products={JSON.stringify(relatedProductIDs)} 
     data-stock-quantities={JSON.stringify(stockQuantities)} 
     data-qty-in-cart={qtyInCart}
+    data-name={productObj[id].name}
+    data-price={productObj[id].discountedPrice}
 >
     <div id="product-container" class="space-y-2 md:space-y-0 md:w-screen md:-ml-4 md:grid md:grid-cols-5 md:gap-4 md:overflow-y-hidden lg:grid-cols-9">
         <div class="md:col-span-3 lg:col-span-5 md:overflow-y-auto hide-scrollbar">
@@ -99,6 +101,7 @@ const breadcrumbItems:ILink[] = [
 </astro-main-product>
 
 <script>
+import { zaraz }  from 'zaraz-ts'
 import type { IAddToBagResponse } from "@components/cart/interfaces"
 import type { IProduct, IStockQuantity } from "@components/catalogue-item/interfaces"
 import { catalogueItemsOnResize, dispatchInternalEvent, formatPrice, httpRequestHeader, sessionLost, showErrorModal } from "@misc"
@@ -115,6 +118,8 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
             super();
 
             const id = this.dataset.id
+            const productName = this.dataset.name
+            const discountedPrice = +this.dataset.price * 0.01
             const relatedProductIDs = JSON.parse(this.dataset.relatedProducts) as string[]
 
             const stockQuantityMap = new Map((JSON.parse(this.dataset.stockQuantities) as IStockQuantity[]).map(e=>([e.address,e.quantity])))
@@ -317,6 +322,13 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
             const resizeEverything = () => {
                 resizeContainer()
                 catalogueItemsOnResize()
+                zaraz.ecommerce('Product Viewed',{
+                    product_id:id,
+                    name:productName,
+                    price: discountedPrice,
+                    currency:'gbp',
+                    value: discountedPrice
+                })
             }
 
             const subtextCheckboxesOnChange = (e:Event) => {
