@@ -241,6 +241,15 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
 
                     dispatchInternalEvent(ADD_TO_BAG_FROM_CATALOGUE,apiResponse)
                     qtyInCart = apiResponse.cartItemMap[id].quantity
+
+                    zaraz.ecommerce('Product Added',{
+                        product_id:id,
+                        name:productName,
+                        price: discountedPrice,
+                        currency:'gbp',
+                        quantity:addQty,
+                    })
+
                     addQty = 1
                     updateAddToBagQty()
                     setLoading(false)
