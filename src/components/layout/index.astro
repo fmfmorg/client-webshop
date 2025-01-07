@@ -98,7 +98,10 @@ const organizationalSchema = {
     "contactType": "Customer Service",
     "url": `${origin}/contact`, 
     "availableLanguage": ["English"]
-  }
+  },
+  "sameAs": [
+    "https://pinterest.com/fairymade_edi/"
+  ]
 }
 
 const productSchema = isProductPage ? {
@@ -121,7 +124,65 @@ const productSchema = isProductPage ? {
         "price": (price * 0.01).toFixed(2),
         "itemCondition": "https://schema.org/NewCondition",
         "availability": `https://schema.org/${inStock ? 'InStock' : 'OutOfStock'}`,
-        "url": href
+        "url": href,
+        "shippingDetails": [
+          {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "4.00",
+              "currency": "GBP"
+            },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "GB"
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "businessDays": {
+                "@type": "OpeningHoursSpecification",
+                "minValue": 2,
+                "maxValue": 3
+              }
+            },
+            "name": "Royal Mail Tracked 48",
+            "freeShippingThreshold": {
+              "@type": "MonetaryAmount",
+              "value": "20.00",
+              "currency": "GBP"
+            }
+          },
+          {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "5.00",
+              "currency": "GBP"
+            },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "GB"
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "businessDays": {
+                "@type": "OpeningHoursSpecification",
+                "minValue": 1,
+                "maxValue": 1
+              }
+            },
+            "name": "Royal Mail Tracked 24"
+          }
+        ],
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "GB",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays": 2,
+          "returnMethod": "https://schema.org/ReturnByMail",
+          "returnFees": "https://schema.org/FreeReturn",
+          "returnPolicyLink": `${origin}/terms/returns-refunds`
+        }
       }
     },{
       "@type": "BreadcrumbList",
