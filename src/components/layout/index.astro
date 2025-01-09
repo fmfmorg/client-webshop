@@ -143,20 +143,20 @@ const productSchema = isProductPage ? {
                 "@type": "OpeningHoursSpecification",
                 "minValue": 2,
                 "maxValue": 3
+              },
+              "transitTime": {
+                "@type": "ShippingDeliveryTime",
+                "businessDays": {
+                  "@type": "OpeningHoursSpecification",
+                  "minValue": 2,
+                  "maxValue": 3
+                }
+              },
+              "handlingTime": {
+                "@type": "QuantitativeValue",
+                "value": 1,
+                "unitCode": "DAY"
               }
-            },
-            "transitTime": {
-              "@type": "ShippingDeliveryTime",
-              "businessDays": {
-                "@type": "OpeningHoursSpecification",
-                "minValue": 2,
-                "maxValue": 3
-              }
-            },
-            "handlingTime": {
-              "@type": "QuantitativeValue",
-              "value": 1,
-              "unitCode": "DAY"
             },
             "name": "Royal Mail Tracked 48",
             "freeShippingThreshold": {
@@ -182,20 +182,20 @@ const productSchema = isProductPage ? {
                 "@type": "OpeningHoursSpecification",
                 "minValue": 1,
                 "maxValue": 1
+              },
+              "transitTime": {
+                "@type": "ShippingDeliveryTime",
+                "businessDays": {
+                  "@type":"OpeningHoursSpecification", 
+                  "minValue": 1, 
+                  "maxValue": 1
+                }
+              },
+              "handlingTime": {
+                "@type":"QuantitativeValue", 
+                "value": 1, 
+                "unitCode": "DAY"
               }
-            },
-            "transitTime": {
-              "@type": "ShippingDeliveryTime",
-              "businessDays": {
-                "@type":"OpeningHoursSpecification", 
-                "minValue": 1, 
-                "maxValue": 1
-              }
-            },
-            "handlingTime": {
-              "@type":"QuantitativeValue", 
-              "value": 1, 
-              "unitCode": "DAY"
             },
             "name": "Royal Mail Tracked 24"
           }
