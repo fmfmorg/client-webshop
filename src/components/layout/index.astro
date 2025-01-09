@@ -145,16 +145,15 @@ const productSchema = isProductPage ? {
                 "maxValue": 3
               },
               "transitTime": {
-                "@type": "ShippingDeliveryTime",
-                "businessDays": {
-                  "@type": "OpeningHoursSpecification",
-                  "minValue": 2,
-                  "maxValue": 3
-                }
+                "@type": "QuantitativeValue",
+                "minValue": 2,
+                "maxValue": 3,
+                "unitCode": "DAY"
               },
               "handlingTime": {
                 "@type": "QuantitativeValue",
-                "value": 1,
+                "minValue": 0,
+                "maxValue": 1,
                 "unitCode": "DAY"
               }
             },
@@ -184,16 +183,15 @@ const productSchema = isProductPage ? {
                 "maxValue": 1
               },
               "transitTime": {
-                "@type": "ShippingDeliveryTime",
-                "businessDays": {
-                  "@type":"OpeningHoursSpecification", 
-                  "minValue": 1, 
-                  "maxValue": 1
-                }
+                "@type": "QuantitativeValue",
+                "minValue": 1,
+                "maxValue": 1,
+                "unitCode": "DAY"
               },
               "handlingTime": {
-                "@type":"QuantitativeValue", 
-                "value": 1, 
+                "@type": "QuantitativeValue",
+                "minValue": 0,
+                "maxValue": 1,
                 "unitCode": "DAY"
               }
             },
