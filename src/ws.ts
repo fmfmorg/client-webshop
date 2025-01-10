@@ -1,3 +1,4 @@
+import { zaraz }  from 'zaraz-ts'
 import type { IAddToBagResponse } from "@components/cart/interfaces";
 import { 
     dispatchInternalEvent,
@@ -12,6 +13,7 @@ import {
     cartSubtotal,
     checkoutOrderID, 
     guestDeliveryCost, 
+    guestTotalToPay, 
     memberTotalToPay, 
     otherClientPaymentInProcess, 
     preferredCollectionPoint, 
@@ -231,8 +233,23 @@ const wsPaymentUpdate = async (e:'start'|'fail'|'success') => {
             if (otherClientPaymentInProcess.get()) otherClientPaymentInProcess.set(false)
             break
         case 'success':
-            if (thisClientPaymentInProcess.get() && !!orderID) window.location.assign(`/track-order?order=${orderID}`)
-            else if (otherClientPaymentInProcess.get()) otherClientPaymentInProcess.set(false)
+            if (thisClientPaymentInProcess.get() && !!orderID) {
+                const cartItemDivs = document.getElementsByClassName('cart-item') as HTMLCollectionOf<HTMLDivElement>;
+                const len = cartItemDivs.length
+                let productIDs:string[] = []
+    
+                for (let i=0; i<len; i++){
+                    productIDs = [...productIDs, cartItemDivs.item(i).dataset.id]
+                }
+    
+                await zaraz.track('Purchase',{
+                    content_ids: productIDs,
+                    value: memberTotalToPay.get() || guestTotalToPay.get(),
+                    currency: 'GBP',
+                    content_type: 'product',
+                })
+                window.location.assign(`/track-order?order=${orderID}`)
+            } else if (otherClientPaymentInProcess.get()) otherClientPaymentInProcess.set(false)
             break
         default: break
     }

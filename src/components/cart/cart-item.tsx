@@ -76,7 +76,7 @@ const CartItem = (
     })
     
     return (
-        <div class="grid grid-cols-3 grid-flow-dense relative" data-id={p.id}>
+        <div class="grid grid-cols-3 grid-flow-dense relative cart-item" data-id={p.id}>
             <a ref={imageContainerRef} href={`/product/${productDetail().url}/${p.id}`} class="col-span-1 p-2">
                 <Image 
                     name={productDetail().images[0].name} 
