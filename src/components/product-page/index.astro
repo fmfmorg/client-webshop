@@ -362,12 +362,16 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
 
             const zarazProductViewed = async () => {
                 try {
-                    await zaraz.ecommerce('Product Viewed',{
-                        product_id:id,
-                        name:productName,
-                        price: discountedPrice,
-                        currency:'gbp',
-                        value: discountedPrice
+                    // await zaraz.ecommerce('Product Viewed',{
+                    //     product_id:id,
+                    //     name:productName,
+                    //     price: discountedPrice,
+                    //     currency:'gbp',
+                    //     value: discountedPrice
+                    // })
+                    await zaraz.track('ProductViewed',{
+                        content_ids: [id],
+                        content_type: 'product',
                     })
                     console.log('Zaraz ecommerce event called successfully')
                 } catch (e){
@@ -378,7 +382,8 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
             const onLoad = () => {
                 updateAddToBagQty()
                 resizeEverything()
-                setTimeout(zarazProductViewed,1000)
+                // setTimeout(zarazProductViewed,1000)
+                zarazProductViewed()
             }
 
             window.addEventListener('online',onOnline,true)
