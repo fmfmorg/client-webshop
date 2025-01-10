@@ -360,9 +360,9 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
                 resizeTimeout = setTimeout(resizeEverything, 200);
             }
 
-            const zarazProductViewed = () => {
+            const zarazProductViewed = async () => {
                 try {
-                    zaraz.ecommerce('Product Viewed',{
+                    await zaraz.ecommerce('Product Viewed',{
                         product_id:id,
                         name:productName,
                         price: discountedPrice,
