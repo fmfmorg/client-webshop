@@ -55,7 +55,7 @@ import { zaraz }  from 'zaraz-ts'
 import type { IAddToBagResponse } from "@components/cart/interfaces";
 import { dispatchInternalEvent, formatPrice, httpRequestHeader, sessionLost, showErrorModal } from "@misc";
 import type { IProduct, IStockQuantity } from "./interfaces";
-import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } from "@stores";
+import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap, cartID } from "@stores";
 import { ADD_TO_BAG_FROM_CATALOGUE, CART_QTY_UPDATE, CART_UPDATE, PRODUCT_UPDATE } from "@misc/event-keys";
 import { observer } from "./observer";
 
@@ -151,11 +151,15 @@ import { observer } from "./observer";
                     updateAddToBagBtn()
                     setLoading(false)
 
+                    // facebook pixel
                     await zaraz.track('AddToCart',{
                         content_ids: [id],
                         content_type: 'product',
                     })
+
+                    // pinterest conversion api
                     await zaraz.track('addtocart',{
+                        event_id: cartID.get(),
                         line_items: [
                             {
                                 product_id: id,

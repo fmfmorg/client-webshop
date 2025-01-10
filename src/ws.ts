@@ -20,12 +20,13 @@ import {
     selectedCollectionPoint, 
     signedIn, 
     thisClientPaymentInProcess,
+    cartID,
 } from "@stores";
 import type { IWsMessage } from "./misc/ws-interfaces";
 import { BACK_ONLINE_ADDRESS_LIST, COUNTRY_CHANGED, UPDATE_CART_ITEM_MAP } from "@misc/event-keys";
 import { FM_IS_ONLINE } from 'astro:env/client'
 
-let cartID = '', wsUrl = '', isCheckoutPage = false, ws:WebSocket = null
+let wsUrl = '', isCheckoutPage = false, ws:WebSocket = null
 
 const fetchKey = async() => {
     const resp = await fetch(`/api/webshop/get-key`,{
@@ -39,7 +40,7 @@ const fetchKey = async() => {
         return false
     }
     const {key, url} = await resp.json() as {key:string; url:string}
-    cartID = key
+    cartID.set(key)
     wsUrl = url
     return true
 }
@@ -62,9 +63,9 @@ const wsMsgHandler = (msg:IWsMessage) => {
 }
 
 const launchWs = () => {
-    if (cartID === '' || wsUrl === '') return
+    if (!cartID.get() || wsUrl === '') return
 
-    ws = new WebSocket(`${ wsUrl }/ws?key=${cartID}`)
+    ws = new WebSocket(`${ wsUrl }/ws?key=${cartID.get()}`)
     ws.onmessage = (e) => wsMsgHandler(JSON.parse(e.data) as IWsMessage)
     if (FM_IS_ONLINE !== 'true') ws.onerror = (e) => console.log("err: ", e)
     ws.onclose = () => closeWs()

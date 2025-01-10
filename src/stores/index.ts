@@ -53,3 +53,4 @@ export const canShowPayBtn = computed(
         && (_selectedCollectionPoint > 1 || (_selectedCollectionPoint === 1 && _deliveryAvailable))
         && (_signedIn ? _userAlreadyHasAddress : true)
 )
+export const cartID = atom('')

@@ -106,7 +106,7 @@ import type { IAddToBagResponse } from "@components/cart/interfaces"
 import type { IProduct, IStockQuantity } from "@components/catalogue-item/interfaces"
 import { catalogueItemsOnResize, dispatchInternalEvent, formatPrice, httpRequestHeader, sessionLost, showErrorModal } from "@misc"
 import { ADD_TO_BAG_FROM_CATALOGUE, CART_QTY_UPDATE, CART_UPDATE, PRODUCT_UPDATE } from "@misc/event-keys"
-import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } from "@stores"
+import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap, cartID } from "@stores"
 
     const container = document.getElementById('product-container')
     const header = document.getElementsByTagName('header')[0]
@@ -246,11 +246,15 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
                     updateAddToBagQty()
                     setLoading(false)
 
+                    // facebook pixel
                     await zaraz.track('AddToCart',{
                         content_ids: [id],
                         content_type: 'product',
                     })
+
+                    // pinterest conversion api
                     await zaraz.track('addtocart',{
+                        event_id: cartID.get(),
                         line_items: [
                             {
                                 product_id: id,
@@ -364,14 +368,19 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
                 resizeTimeout = setTimeout(resizeEverything, 200);
             }
 
-            const zarazProductViewed = async () => {
+            const zarazProductViewed = async (cartid:string) => {
+                if (!cartid) return
                 try {
+                    // facebook pixel
                     await zaraz.track('ViewContent',{
                         content_ids: [id],
                         content_type: 'product',
                     })
+
+                    // pinterest conversion api
                     await zaraz.track('pagevisit',{
                         content_type: 'product',
+                        event_id: cartid,
                         line_items: [
                             {
                                 product_id: id
@@ -386,7 +395,7 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
             const onLoad = () => {
                 updateAddToBagQty()
                 resizeEverything()
-                zarazProductViewed()
+                cartID.subscribe(zarazProductViewed)
             }
 
             window.addEventListener('online',onOnline,true)
