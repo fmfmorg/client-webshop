@@ -360,21 +360,20 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
                 resizeTimeout = setTimeout(resizeEverything, 200);
             }
 
-            // const zarazProductViewed = () => {
-            //     zaraz.ecommerce('Product Viewed',{
-            //         product_id:id,
-            //         name:productName,
-            //         price: discountedPrice,
-            //         currency:'gbp',
-            //         value: discountedPrice
-            //     })
-            // }
+            const zarazProductViewed = () => {
+                zaraz.ecommerce('Product Viewed',{
+                    product_id:id,
+                    name:productName,
+                    price: discountedPrice,
+                    currency:'gbp',
+                    value: discountedPrice
+                })
+            }
 
             const onLoad = () => {
                 updateAddToBagQty()
                 resizeEverything()
-                console.log(zaraz)
-                console.log(!!zaraz)
+                zarazProductViewed()
             }
 
             window.addEventListener('online',onOnline,true)
