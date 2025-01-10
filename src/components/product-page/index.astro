@@ -362,21 +362,17 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
 
             const zarazProductViewed = async () => {
                 try {
-                    await zaraz.ecommerce('Product Viewed',{
-                        product_id:id,
-                        name:productName,
-                        price: discountedPrice,
-                        currency:'gbp',
-                        value: discountedPrice
+                    // await zaraz.ecommerce('Product Viewed',{
+                    //     product_id:id,
+                    //     name:productName,
+                    //     price: discountedPrice,
+                    //     currency:'gbp',
+                    //     value: discountedPrice
+                    // })
+                    await zaraz.track('ProductViewed',{
+                        content_ids: [id],
+                        content_type: 'product',
                     })
-                    // await zaraz.track('ProductViewed',{
-                    //     content_ids: [id],
-                    //     content_type: 'product',
-                    // })
-                    // await zaraz.track('ProductViewed',{
-                    //     content_ids: [id],
-                    //     content_type: 'product',
-                    // })
                     console.log('Zaraz ecommerce event called successfully')
                 } catch (e){
                     console.error('Zaraz ecommerce event failed to be called: ',e)
