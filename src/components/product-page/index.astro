@@ -331,13 +331,6 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
             const resizeEverything = () => {
                 resizeContainer()
                 catalogueItemsOnResize()
-                zaraz.ecommerce('Product Viewed',{
-                    product_id:id,
-                    name:productName,
-                    price: discountedPrice,
-                    currency:'gbp',
-                    value: discountedPrice
-                })
             }
 
             const subtextCheckboxesOnChange = (e:Event) => {
@@ -370,6 +363,13 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
             const onLoad = () => {
                 updateAddToBagQty()
                 resizeEverything()
+                zaraz.ecommerce('Product Viewed',{
+                    product_id:id,
+                    name:productName,
+                    price: discountedPrice,
+                    currency:'gbp',
+                    value: discountedPrice
+                })
             }
 
             window.addEventListener('online',onOnline,true)
