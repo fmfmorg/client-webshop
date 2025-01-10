@@ -378,7 +378,7 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
             const onLoad = () => {
                 updateAddToBagQty()
                 resizeEverything()
-                zarazProductViewed()
+                setTimeout(zarazProductViewed,1000)
             }
 
             window.addEventListener('online',onOnline,true)
