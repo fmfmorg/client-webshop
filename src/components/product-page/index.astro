@@ -361,13 +361,18 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
             }
 
             const zarazProductViewed = () => {
-                zaraz.ecommerce('Product Viewed',{
-                    product_id:id,
-                    name:productName,
-                    price: discountedPrice,
-                    currency:'gbp',
-                    value: discountedPrice
-                })
+                try {
+                    zaraz.ecommerce('Product Viewed',{
+                        product_id:id,
+                        name:productName,
+                        price: discountedPrice,
+                        currency:'gbp',
+                        value: discountedPrice
+                    })
+                    console.log('Zaraz ecommerce event called successfully')
+                } catch (e){
+                    console.error('Zaraz ecommerce event failed to be called: ',e)
+                }
             }
 
             const onLoad = () => {
