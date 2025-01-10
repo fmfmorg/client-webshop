@@ -395,7 +395,6 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap, cart
             const onLoad = () => {
                 updateAddToBagQty()
                 resizeEverything()
-                cartID.subscribe(zarazProductViewed)
             }
 
             window.addEventListener('online',onOnline,true)
@@ -408,6 +407,8 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap, cart
             document.addEventListener('change',subtextCheckboxesOnChange,true)
 
             window.addEventListener('resize', onResize,true);
+
+            cartID.subscribe(zarazProductViewed)
 
             if (isDesktop) document.addEventListener('click',qtyBtnsOnClick,true)
             else document.addEventListener('touchend',qtyBtnsOnTouch,{passive:false})
