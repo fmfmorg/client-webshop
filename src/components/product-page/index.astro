@@ -250,6 +250,13 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
                         content_ids: [id],
                         content_type: 'product',
                     })
+                    await zaraz.track('addtocart',{
+                        line_items: [
+                            {
+                                product_id: id,
+                            }
+                        ]
+                    })
                 } else if (!!currentCollectionPoint){
                     const collectionPontOnQtyIncreaseCheckbox = document.getElementById("collection-point-on-qty-increase") as HTMLInputElement
                     const collectionPointNameElem = document.getElementById('current-collection-point-name') as HTMLSpanElement
@@ -362,6 +369,14 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap } fro
                     await zaraz.track('ViewContent',{
                         content_ids: [id],
                         content_type: 'product',
+                    })
+                    await zaraz.track('pagevisit',{
+                        content_type: 'product',
+                        line_items: [
+                            {
+                                product_id: id
+                            }
+                        ]
                     })
                 } catch (e){
                     console.error('Zaraz ecommerce event failed to be called: ',e)
