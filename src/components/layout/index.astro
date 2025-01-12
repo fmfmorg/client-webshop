@@ -139,11 +139,6 @@ const productSchema = isProductPage ? {
             },
             "deliveryTime": {
               "@type": "ShippingDeliveryTime",
-              "businessDays": {
-                "@type": "OpeningHoursSpecification",
-                "minValue": 2,
-                "maxValue": 3
-              },
               "transitTime": {
                 "@type": "QuantitativeValue",
                 "minValue": 2,
@@ -177,11 +172,6 @@ const productSchema = isProductPage ? {
             },
             "deliveryTime": {
               "@type": "ShippingDeliveryTime",
-              "businessDays": {
-                "@type": "OpeningHoursSpecification",
-                "minValue": 1,
-                "maxValue": 1
-              },
               "transitTime": {
                 "@type": "QuantitativeValue",
                 "minValue": 1,
@@ -205,7 +195,7 @@ const productSchema = isProductPage ? {
           "merchantReturnDays": 2,
           "returnMethod": "https://schema.org/ReturnByMail",
           "returnFees": "https://schema.org/FreeReturn",
-          "returnPolicyLink": `${origin}/terms/returns-refunds`
+          "merchantReturnLink": `${origin}/terms/returns-refunds`
         }
       }
     },{
