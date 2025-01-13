@@ -85,6 +85,8 @@ const href = Astro.url.href.replaceAll('http://','https://')
 
 const origin = Astro.url.origin.replaceAll('http://','https://')
 
+const shippingInfoPagePathname = '/terms/delivery'
+
 const organizationalSchema = {
   "@context": "https://schema.org",
   "@type": "OnlineStore",
@@ -101,6 +103,45 @@ const organizationalSchema = {
   },
   "sameAs": [
     "https://pinterest.com/fairymade_edi/"
+  ]
+}
+
+const shippingSchema = {
+  "@context": "https://schema.org",
+  "@graph":[
+    {
+      "@type": "ShippingRateSettings",
+      "name": "Royal Mail Tracked 48",
+      "shippingLabel": "Royal Mail Tracked 48",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "4.00",
+        "currency": "GBP"
+      },
+      "freeShippingThreshold": {
+        "@type": "MonetaryAmount",
+        "value": "20.00",
+        "currency": "GBP"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "GB"
+      }
+    },
+    {
+      "@type": "ShippingRateSettings",
+      "name": "Royal Mail Tracked 24",
+      "shippingLabel": "Royal Mail Tracked 24",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "5.00",
+        "currency": "GBP"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "GB"
+      }
+    }
   ]
 }
 
@@ -153,11 +194,8 @@ const productSchema = isProductPage ? {
               }
             },
             "name": "Royal Mail Tracked 48",
-            "freeShippingThreshold": {
-              "@type": "MonetaryAmount",
-              "value": "20.00",
-              "currency": "GBP"
-            }
+            "shippingLabel": "Royal Mail Tracked 48",
+            "shippingSettingsLink": origin + shippingInfoPagePathname
           },
           {
             "@type": "OfferShippingDetails",
@@ -185,7 +223,9 @@ const productSchema = isProductPage ? {
                 "unitCode": "DAY"
               }
             },
-            "name": "Royal Mail Tracked 24"
+            "name": "Royal Mail Tracked 24",
+            "shippingLabel": "Royal Mail Tracked 24",
+            "shippingSettingsLink": origin + shippingInfoPagePathname
           }
         ],
         "hasMerchantReturnPolicy": {
@@ -365,6 +405,7 @@ const fontCss = `
 
   {isProductPage && <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />}
   {isHomePage && <script type="application/ld+json" set:html={JSON.stringify(organizationalSchema)} />}
+  {Astro.url.pathname === shippingInfoPagePathname && <script type="application/ld+json" set:html={JSON.stringify(shippingSchema)} />}
 
   <meta name="theme-color" content="#ffffff">
 
