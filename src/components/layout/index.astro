@@ -79,7 +79,7 @@ if (!!shoppingBagProp){
   if (!!cartItemMap) cartHasItems = !!Object.values(cartItemMap).map(e=>e.quantity).filter(e=>!!e).length
 } else cartHasItems = hasItemsInCart
 
-const fullTitle = !!title ? `${(titleAddForHer && title.trim().length < 50) ? `${title.trim()} for Her` : title.trim()} | ${PUBLIC_FM_COMPANY_NAME_SHORT}` : `${PUBLIC_FM_COMPANY_NAME_SHORT} | Affordable Fashion Jewellery UK | Buy 3 For £20`
+const fullTitle = !!title ? `${(titleAddForHer && title.trim().length < 35) ? `${title.trim()} for Her` : title.trim()} | ${PUBLIC_FM_COMPANY_NAME_SHORT}` : `${PUBLIC_FM_COMPANY_NAME_SHORT} | Affordable Fashion Jewellery UK | Buy 3 For £20`
 
 const href = Astro.url.href.replaceAll('http://','https://')
 
@@ -382,7 +382,6 @@ const fontCss = `
   <meta property="og:type" content={isProductPage ? 'product' : 'website'} />
   <meta property="og:url" content={href} />
   <meta property="og:site_name" content={PUBLIC_FM_COMPANY_NAME_SHORT} />
-  <meta property="og:brand" content={PUBLIC_FM_COMPANY_NAME_SHORT} />
   {isProductPage && <>
     <meta property="og:availability" content={inStock ? "instock" : "out of stock"} />
     <meta property="product:gender" content="female" />
