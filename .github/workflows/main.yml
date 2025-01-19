@@ -24,7 +24,8 @@ jobs:
     - name: Install dependencies
       if: steps.cache-restore.outputs.cache-hit != 'true'
       run: npm ci
-    - run: npm run build --if-present
+    - name: Build website
+      run: npm run build --if-present
       env: 
         FM_CLIENT_WEBSHOP_API_URL: ${{ vars.FM_CLIENT_WEBSHOP_API_URL }}
         FM_WEBSOCKET_URL: ${{ vars.FM_WEBSOCKET_URL }}
@@ -38,3 +39,5 @@ jobs:
         PUBLIC_FM_CLIENT_WEBSHOP_REVOLUT_MODE: ${{ vars.PUBLIC_FM_CLIENT_WEBSHOP_REVOLUT_MODE }}
         PUBLIC_FM_ACCEPT_MEMBERSHIP: ${{ vars.PUBLIC_FM_ACCEPT_MEMBERSHIP }}
         FM_IS_ONLINE: ${{ vars.FM_IS_ONLINE }}
+    - name: Reload PM2 process
+      run: pm2 reload client-webshop

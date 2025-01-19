@@ -31,7 +31,6 @@ interface Props {
   title:string;
   isProductPage?:boolean;
   headerCarouselTexts:string[];
-  titleAddForHer?:boolean;
   description?:string;
   imageURL?:string;
   images?:IProductImages[];
@@ -56,7 +55,6 @@ const {
   title,
   isProductPage = false,
   headerCarouselTexts,
-  titleAddForHer = false,
   description = '',
   imageURL = '',
   images = [],
@@ -79,7 +77,7 @@ if (!!shoppingBagProp){
   if (!!cartItemMap) cartHasItems = !!Object.values(cartItemMap).map(e=>e.quantity).filter(e=>!!e).length
 } else cartHasItems = hasItemsInCart
 
-const fullTitle = !!title ? `${(titleAddForHer && title.trim().length < 35) ? `${title.trim()} for Her` : title.trim()} | ${PUBLIC_FM_COMPANY_NAME_SHORT}` : `${PUBLIC_FM_COMPANY_NAME_SHORT} | Affordable Fashion Jewellery UK | Buy 3 For £20`
+const fullTitle = !!title ? title.trim() : `${PUBLIC_FM_COMPANY_NAME_SHORT} | Affordable Fashion Jewellery UK | Buy 3 For £20`
 
 const href = Astro.url.href.replaceAll('http://','https://')
 
