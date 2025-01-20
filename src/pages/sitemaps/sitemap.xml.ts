@@ -1,6 +1,6 @@
 import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
-import { httpRequestHeader } from '@misc';
+import { httpRequestHeader, httpToHttps } from '@misc';
 import type { IProduct } from '@components/catalogue-item/interfaces';
 
 export async function GET({url}:{url:URL}) {
@@ -11,7 +11,7 @@ export async function GET({url}:{url:URL}) {
     const { products } = await resp.json() as { products: IProduct[] }
 
     let { origin } = url
-    origin = origin.replaceAll('http://','https://')
+    origin = httpToHttps(origin)
 
     const currentDT = new Date().toISOString()
 

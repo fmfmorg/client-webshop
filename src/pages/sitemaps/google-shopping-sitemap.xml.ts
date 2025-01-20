@@ -1,4 +1,4 @@
-import { httpRequestHeader } from '@misc'
+import { httpRequestHeader, httpToHttps } from '@misc'
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client'
 import type { ISitemapProductDetails } from '@misc/interfaces'
@@ -13,7 +13,7 @@ export async function GET({url}:{url:URL}) {
     const { products } = await resp.json() as { products: ISitemapProductDetails[]; }
 
     let { origin } = url
-    origin = origin.replaceAll('http://','https://')
+    origin = httpToHttps(origin)
 
     const sitemap = `
         <?xml version="1.0"?>

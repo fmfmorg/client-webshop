@@ -1,9 +1,10 @@
 import type { IProduct } from '@components/catalogue-item/interfaces'
+import { httpToHttps } from '@misc'
 import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client'
 
 export const productSchema = (p:IProduct, url:URL) => {
-    const href = url.href.replaceAll('http://','https://')
-    const origin = url.origin.replaceAll('http://','https://')
+    const href = httpToHttps(url.href)
+    const origin = httpToHttps(url.origin)
     const shippingInfoPagePathname = '/terms/delivery'
     const inStock = (!!p.stockQuantities && !!p.stockQuantities.length) ? !!p.stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false
 

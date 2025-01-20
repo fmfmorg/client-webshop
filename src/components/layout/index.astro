@@ -4,7 +4,7 @@ import Fonts from './styles/fonts.astro';
 
 import Header from './header/index.astro';
 import Footer from './footer/index.astro';
-import type { IShopAddressMap, IShoppingBagSidebarProp } from '@misc';
+import { httpToHttps, type IShopAddressMap, type IShoppingBagSidebarProp } from '@misc';
 import LoadingOverlay from './loading-overlay.astro';
 import ErrorMsgModal from './error-msg-modal.astro';
 import CollectionPointOnQtyIncrease from './collection-point-on-qty-increase.astro'
@@ -65,7 +65,7 @@ if (!!shoppingBagProp){
   if (!!cartItemMap) cartHasItems = !!Object.values(cartItemMap).map(e=>e.quantity).filter(e=>!!e).length
 } else cartHasItems = hasItemsInCart
 
-const href = Astro.url.href.replaceAll('http://','https://')
+const href = httpToHttps(Astro.url.href)
 
 ---
 

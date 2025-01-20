@@ -1,10 +1,10 @@
-import { httpRequestHeader } from '@misc'
+import { httpRequestHeader, httpToHttps } from '@misc'
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client'
 
 export async function GET({url}:{url:URL}) {
     let { origin } = url
-    origin = origin.replaceAll('http://','https://')
+    origin = httpToHttps(origin)
 
     const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/sitemap/google-shopping-promotion`,{
         headers:httpRequestHeader(false,'SSR',false)

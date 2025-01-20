@@ -1,6 +1,8 @@
+import { httpToHttps } from "@misc";
+
 export async function GET({url}:{url:URL}) {
     let { origin } = url
-    origin = origin.replaceAll('http://','https://')
+    origin = httpToHttps(origin)
 
     const robotsTxt = `
 User-agent: *

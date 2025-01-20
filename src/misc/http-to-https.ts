@@ -1,0 +1,1 @@
+export const httpToHttps = (s:string) => s.replaceAll('http://','https://')

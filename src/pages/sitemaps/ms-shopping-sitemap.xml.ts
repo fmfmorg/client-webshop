@@ -1,4 +1,4 @@
-import { httpRequestHeader } from '@misc'
+import { httpRequestHeader, httpToHttps } from '@misc'
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client'
 import type { ISitemapProductDetails, ISitemapShippingDetails } from '@misc/interfaces'
@@ -14,7 +14,7 @@ export async function GET({url}:{url:URL}) {
     }
 
     let { origin } = url
-    origin = origin.replaceAll('http://','https://')
+    origin = httpToHttps(origin)
 
     const shippingStr = shipping.map(({country,cost,threshold})=>`
         <g:shipping>
