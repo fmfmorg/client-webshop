@@ -2,7 +2,7 @@
 import Layout from '@components/layout/index.astro'
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc'
-import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+import { FM_IS_ONLINE, PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import Terms from '@components/terms/index.astro'
 
 let { slug } = Astro.params;
@@ -55,16 +55,16 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 
 Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 
-let title = '', description = '', schema = ''
+let title = '', metaDescription = '', schema = ''
 
 switch (slug) {
     case 'terms-and-conditions':
         title = 'Terms and Conditions'
-        description = 'Read our terms and conditions for purchasing jewellery from our online store. Clear information about your rights, our policies, and service agreements.'
+        metaDescription = 'Read our terms and conditions for purchasing jewellery from our online store. Clear information about your rights, our policies, and service agreements.'
         break
     case 'delivery':
         title = 'Delivery'
-        description = 'Find out about our delivery options and shipping costs. Free UK shipping available on orders over £20.'
+        metaDescription = 'Find out about our delivery options and shipping costs. Free UK shipping available on orders over £20.'
         schema = JSON.stringify({
             "@context": "https://schema.org",
             "@graph":[
@@ -106,7 +106,7 @@ switch (slug) {
         break
     case 'returns-refunds':
         title = 'Returns and Refunds'
-        description = 'Information about our returns and refunds policy for fashion jewellery. View our guidelines and procedures.'
+        metaDescription = 'Information about our returns and refunds policy for fashion jewellery. View our guidelines and procedures.'
         break
 }
 ---
@@ -119,9 +119,9 @@ switch (slug) {
     shopAddressMap,
     signedIn,
     firstName,
-    title,
+    title:`${title} | ${PUBLIC_FM_COMPANY_NAME_SHORT}`,
     headerCarouselTexts,
-    description,
+    metaDescription,
     schema,
 }}>
     <Terms {...{text}} />

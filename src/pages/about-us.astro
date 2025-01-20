@@ -1,7 +1,7 @@
 ---
 import Layout from '@components/layout/index.astro'
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
-import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+import { FM_IS_ONLINE, PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc'
 import About from '@components/about-us/index.astro'
 
@@ -54,7 +54,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     shopAddressMap,
     signedIn,
     firstName,
-    title:'About Us',
+    title:`About Us | ${PUBLIC_FM_COMPANY_NAME_SHORT}`,
     headerCarouselTexts,
     metaDescription:'Meet the Edinburgh couple bringing affordable, quality fashion jewellery to the UK. Hand-picked designs with fast local shipping. Family business with heart.'
 }}>

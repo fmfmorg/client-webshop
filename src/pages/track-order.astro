@@ -4,7 +4,7 @@ import Layout from '@components/layout/index.astro'
 import TrackOrderForm from '@components/track-order/form.astro'
 import OrderContainer from "@components/track-order/order-container.astro";
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
-import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+import { FM_IS_ONLINE, PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 
 interface IApiResponse {
     order?:ITrackOrderResponse;
@@ -59,7 +59,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     shopAddressMap,
     signedIn,
     firstName,
-    title:'Track My Order',
+    title:`Track My Order | ${PUBLIC_FM_COMPANY_NAME_SHORT}`,
     headerCarouselTexts,
     metaDescription:'Track your jewelry order in real-time. Enter your order number and email address to check delivery status for your purchase.'
 }}>

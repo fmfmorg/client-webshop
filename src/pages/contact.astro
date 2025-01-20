@@ -4,6 +4,7 @@ import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppi
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import ContactForm from '@components/contact/index.astro'
+import { PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client';
 
 const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
@@ -54,7 +55,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     shopAddressMap,
     signedIn,
     firstName,
-    title:'Contact Us',
+    title:`Contact Us | ${PUBLIC_FM_COMPANY_NAME_SHORT}`,
     headerCarouselTexts,
     metaDescription:'Need help with your order? Contact our UK-based customer service team for support with your purchase. Fast response guaranteed on all inquiries.'
 }}>
