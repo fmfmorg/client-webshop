@@ -208,19 +208,14 @@ const productSchema = {
     title:productName,
     isProductPage:true,
     headerCarouselTexts,
-    productDescription:productMap[id].description.replaceAll('<p>','').replaceAll('</p>','').trim(),
     metaDescription:!!productMap[id].metaDescription ? productMap[id].metaDescription : productMap[id].description.replaceAll('<p>','').replaceAll('</p>','').trim(),
     imageURL:PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX+productMap[id].images[0].name+productMap[id].images[0].ext,
-    images:productMap[id].images,
     price:productMap[id].discountedPrice,
-    productID:id,
     inStock:(!!productMap[id].stockQuantities && !!productMap[id].stockQuantities.length) ? !!productMap[id].stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false,
     preloadImageFilename,
     preloadImageExt,
+    schema:JSON.stringify(productSchema)
 }}>
-    <!-- <Fragment slot="head">
-      <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
-    </Fragment> -->
     <Product 
         id={id} 
         productObj={productMap} 

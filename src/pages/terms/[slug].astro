@@ -55,7 +55,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 
 Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 
-let title = '', description = ''
+let title = '', description = '', schema = ''
 
 switch (slug) {
     case 'terms-and-conditions':
@@ -65,6 +65,44 @@ switch (slug) {
     case 'delivery':
         title = 'Delivery'
         description = 'Find out about our delivery options and shipping costs. Free UK shipping available on orders over £20.'
+        schema = JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph":[
+                {
+                "@type": "ShippingRateSettings",
+                "name": "Royal Mail Tracked 48",
+                "shippingLabel": "Royal Mail Tracked 48",
+                "shippingRate": {
+                    "@type": "MonetaryAmount",
+                    "value": "4.00",
+                    "currency": "GBP"
+                },
+                "freeShippingThreshold": {
+                    "@type": "MonetaryAmount",
+                    "value": "20.00",
+                    "currency": "GBP"
+                },
+                "shippingDestination": {
+                    "@type": "DefinedRegion",
+                    "addressCountry": "GB"
+                }
+                },
+                {
+                "@type": "ShippingRateSettings",
+                "name": "Royal Mail Tracked 24",
+                "shippingLabel": "Royal Mail Tracked 24",
+                "shippingRate": {
+                    "@type": "MonetaryAmount",
+                    "value": "5.00",
+                    "currency": "GBP"
+                },
+                "shippingDestination": {
+                    "@type": "DefinedRegion",
+                    "addressCountry": "GB"
+                }
+                }
+            ]
+        })
         break
     case 'returns-refunds':
         title = 'Returns and Refunds'
@@ -84,6 +122,7 @@ switch (slug) {
     title,
     headerCarouselTexts,
     description,
+    schema,
 }}>
     <Terms {...{text}} />
 </Layout>

@@ -90,14 +90,12 @@ const organizationalSchema = {
     shopAddressMap,
     signedIn,
     firstName,
-    title:'',
+    title:`${PUBLIC_FM_COMPANY_NAME_SHORT} | Affordable Fashion Jewellery UK | Buy 3 For £20`,
     headerCarouselTexts,
     metaDescription:"Discover beautiful, distinctive fashion jewellery at affordable prices. Buy 3 for £20 & free UK delivery over £20. Explore our unique collection today!",
     preloadImageFilename:'banner-2000x673',
     preloadImageExt:'.jpg',
+    schema:JSON.stringify(organizationalSchema),
 }}>
-    <Fragment slot="head">
-        <!-- <script type="application/ld+json" set:html={JSON.stringify(organizationalSchema)} /> -->
-    </Fragment>
     <Homepage productIDs={productIDs || []} productObj={productMap} cartItemObj={cartItemMap}  />
 </Layout>
