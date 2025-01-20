@@ -22,6 +22,10 @@ export const productSchema = (p:IProduct, url:URL) => {
             "image": p.snippetImages.map(e=>PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX+e),
             "size": "Standard",
             "sku": p.id,
+            "audience":{
+              "@type": "PeopleAudience",
+              "suggestedGender": "female"
+            },
             "offers": {
               "@type": "Offer",
               "priceCurrency": "GBP",

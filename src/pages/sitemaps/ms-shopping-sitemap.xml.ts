@@ -55,12 +55,15 @@ export async function GET({url}:{url:URL}) {
                         }
                         <g:condition>new</g:condition>
                         <g:google_product_category>194</g:google_product_category>
+                        <g:product_type>Apparel &amp; Accessories &gt; Jewelry &gt; Earrings</g:product_type>
                         <g:color>${p.metalColor}</g:color>
                         <g:availability>${p.inStock ? 'in_stock' : 'out_of_stock'}</g:availability>
                         <g:price>${(p.price * 0.01).toFixed(2)} GBP</g:price>
                         <g:brand>${PUBLIC_FM_COMPANY_NAME_SHORT}</g:brand>
                         <g:gender>female</g:gender>
                         <g:age_group>adult</g:age_group>
+                        <g:adult>no</g:adult>
+                        <g:is_bundle>no</g:is_bundle>
                         ${shippingStr}
                     </item>
                 `).join('')}
