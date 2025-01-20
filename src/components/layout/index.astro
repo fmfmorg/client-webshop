@@ -68,7 +68,6 @@ const {
 } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
 const isContactPage = Astro.url.pathname === '/contact'
-const isHomePage = Astro.url.pathname === '/'
 
 const shopNameMap = Object.values(shopAddressMap).map(e=>({[e.id]:e.name})).reduce((a,b)=>({...a,...b}),{})
 
@@ -85,25 +84,6 @@ const href = Astro.url.href.replaceAll('http://','https://')
 const origin = Astro.url.origin.replaceAll('http://','https://')
 
 const shippingInfoPagePathname = '/terms/delivery'
-
-const organizationalSchema = {
-  "@context": "https://schema.org",
-  "@type": "OnlineStore",
-  "name": PUBLIC_FM_COMPANY_NAME_SHORT,
-  "legalName":PUBLIC_FM_COMPANY_NAME_FULL,
-  "url": origin,
-  "logo": `${origin}/logo.jpg`,
-  "description":"Based in Edinburgh, we offer beautiful, distinctive fashion jewellery at affordable prices.",
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "contactType": "Customer Service",
-    "url": `${origin}/contact`, 
-    "availableLanguage": ["English"]
-  },
-  "sameAs": [
-    "https://pinterest.com/fairymade_edi/"
-  ]
-}
 
 const shippingSchema = {
   "@context": "https://schema.org",
@@ -401,11 +381,11 @@ const fontCss = `
     <meta property="og:image" content={imageURL} />
   </>}
 
-  {isProductPage && <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />}
-  {isHomePage && <script type="application/ld+json" set:html={JSON.stringify(organizationalSchema)} />}
   {Astro.url.pathname === shippingInfoPagePathname && <script type="application/ld+json" set:html={JSON.stringify(shippingSchema)} />}
 
   <meta name="theme-color" content="#ffffff">
+
+  <slot name="head" />
 
   <style set:html={fontCss} />
 
