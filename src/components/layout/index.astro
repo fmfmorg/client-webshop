@@ -31,7 +31,8 @@ interface Props {
   title:string;
   isProductPage?:boolean;
   headerCarouselTexts:string[];
-  description?:string;
+  productDescription?:string;
+  metaDescription?:string;
   imageURL?:string;
   images?:IProductImages[];
   price?:number;
@@ -55,7 +56,8 @@ const {
   title,
   isProductPage = false,
   headerCarouselTexts,
-  description = '',
+  productDescription = '',
+  metaDescription = '',
   imageURL = '',
   images = [],
   price = 0,
@@ -148,7 +150,7 @@ const productSchema = isProductPage ? {
     {
       "@type": "Product",
       "name": fullTitle,
-      "description": description,
+      "description": productDescription,
       "brand": {
         "@type": "Brand",
         "name": PUBLIC_FM_COMPANY_NAME_SHORT
@@ -390,9 +392,9 @@ const fontCss = `
   
   <meta name="twitter:card" content="summary_large_image" />
 
-  {!!description && <>
-    <meta name="description" content={description} />
-    <meta property="og:description" content={description} />
+  {!!metaDescription && <>
+    <meta name="description" content={metaDescription} />
+    <meta property="og:description" content={metaDescription} />
   </>}
 
   {!!imageURL && <>

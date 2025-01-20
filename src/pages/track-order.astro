@@ -61,7 +61,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     firstName,
     title:'Track My Order',
     headerCarouselTexts,
-    description:'Track your jewelry order in real-time. Enter your order number and email address to check delivery status for your purchase.'
+    metaDescription:'Track your jewelry order in real-time. Enter your order number and email address to check delivery status for your purchase.'
 }}>
     <TrackOrderForm {...{fetchedOrder:!!order,orderID}} />
     <OrderContainer {...{order,orderID}} />
