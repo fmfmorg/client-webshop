@@ -1,5 +1,5 @@
 ---
-import './styles/base.css'
+// import './styles/base.css'
 import notoSans300Woff2 from '@fontsource/noto-sans-jp/files/noto-sans-jp-latin-300-normal.woff2?url';
 import notoSans400Woff2 from '@fontsource/noto-sans-jp/files/noto-sans-jp-latin-400-normal.woff2?url';
 import notoSans600Woff2 from '@fontsource/noto-sans-jp/files/noto-sans-jp-latin-600-normal.woff2?url';
@@ -217,6 +217,61 @@ const fontCss = `
   <meta name="theme-color" content="#ffffff">
 
   <style set:html={fontCss} />
+
+  <style is:global>
+    .hide-scrollbar {
+      scrollbar-width: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      width: 0;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield; /* Firefox */
+    }
+
+    #free-shipping-progress[value]::-webkit-progress-bar {
+      background-color: #ddd;
+      border-radius: 10px;
+    }
+
+    #free-shipping-progress[value]::-webkit-progress-value {
+      background-image: -webkit-linear-gradient(left, #ddd, #777, #000);
+      border-radius: 10px;
+      transition-property:width;
+      transition-duration: 300ms;
+    }
+
+    .header-carousel-span {
+      padding-left: clamp(30px, 5vw, 80px);
+    }
+
+    .header-carousel-p {
+      animation-iteration-count: infinite;
+      animation-name: header-carousel-anim;
+      animation-timing-function: linear;
+    }
+
+    .header-carousel-container:has(.header-carousel-p:hover) .header-carousel-p {
+      animation-play-state: paused;
+    }
+
+    @keyframes header-carousel-anim {
+      from {
+        transform: translateX(0%);
+      }
+      to {
+        transform: translateX(-100%);
+      }
+    }
+  </style>
 
   {(isContactPage || isCheckoutPage || PUBLIC_FM_ACCEPT_MEMBERSHIP === 'true') && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" defer></script>}
 </head>
