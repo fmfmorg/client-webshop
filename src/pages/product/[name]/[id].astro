@@ -76,6 +76,8 @@ const href = Astro.url.href.replaceAll('http://','https://')
 const shippingInfoPagePathname = '/terms/delivery'
 const inStock = (!!productMap[id].stockQuantities && !!productMap[id].stockQuantities.length) ? !!productMap[id].stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false
 
+const origin = Astro.url.origin.replaceAll('http://','https://')
+
 const productSchema = {
   "@context": "https://schema.org",
   "@graph":[

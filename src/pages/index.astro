@@ -61,6 +61,8 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 
 Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 
+const origin = Astro.url.origin.replaceAll('http://','https://')
+
 const organizationalSchema = {
   "@context": "https://schema.org",
   "@type": "OnlineStore",
