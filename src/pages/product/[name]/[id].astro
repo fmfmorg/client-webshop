@@ -214,7 +214,7 @@ const productSchema = {
     inStock:(!!productMap[id].stockQuantities && !!productMap[id].stockQuantities.length) ? !!productMap[id].stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false,
     preloadImageFilename,
     preloadImageExt,
-    schema:JSON.stringify(productSchema)
+    // schema:JSON.stringify(productSchema)
 }}>
     <Product 
         id={id} 
