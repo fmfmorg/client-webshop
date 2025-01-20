@@ -1,0 +1,95 @@
+---
+import notoSans300Woff2 from '@fontsource/noto-sans-jp/files/noto-sans-jp-latin-300-normal.woff2?url';
+import notoSans400Woff2 from '@fontsource/noto-sans-jp/files/noto-sans-jp-latin-400-normal.woff2?url';
+import notoSans600Woff2 from '@fontsource/noto-sans-jp/files/noto-sans-jp-latin-600-normal.woff2?url';
+import notoSerif300Woff2 from '@fontsource/noto-serif-jp/files/noto-serif-jp-latin-300-normal.woff2?url';
+import notoSerif400Woff2 from '@fontsource/noto-serif-jp/files/noto-serif-jp-latin-400-normal.woff2?url';
+import notoSerif600Woff2 from '@fontsource/noto-serif-jp/files/noto-serif-jp-latin-600-normal.woff2?url';
+import notoSerif900Woff2 from '@fontsource/noto-serif-jp/files/noto-serif-jp-latin-900-normal.woff2?url';
+import yujiSyuku400Woff2 from '@fontsource/yuji-syuku/files/yuji-syuku-latin-400-normal.woff2?url';
+
+const fontCss = `
+    @font-face {
+      font-family: 'Noto Sans JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 300;
+      src: url(${notoSans300Woff2}) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Sans JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 400;
+      src: url(${notoSans400Woff2}) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Sans JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 600;
+      src: url(${notoSans600Woff2}) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Serif JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 300;
+      src: url(${notoSerif300Woff2}) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Serif JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 400;
+      src: url(${notoSerif400Woff2}) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Serif JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 600;
+      src: url(${notoSerif600Woff2}) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Noto Serif JP';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 900;
+      src: url(${notoSerif900Woff2}) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+
+    @font-face {
+      font-family: 'Yuji Syuku';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 400;
+      src: url(${yujiSyuku400Woff2}) format('woff2');
+      unicode-range: U+0021-007E, U+00A3;
+    }
+`
+---
+
+<link rel="preload" as="font" type="font/woff2" href={notoSans300Woff2} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={notoSans400Woff2} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={notoSans600Woff2} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={notoSerif300Woff2} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={notoSerif400Woff2} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={notoSerif600Woff2} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={notoSerif900Woff2} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={yujiSyuku400Woff2} crossorigin="anonymous" />
+
+<style set:html={fontCss} />
