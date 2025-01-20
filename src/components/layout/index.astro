@@ -67,7 +67,6 @@ const {
 const isCheckoutPage = Astro.url.pathname === '/checkout'
 const isContactPage = Astro.url.pathname === '/contact'
 const isHomePage = Astro.url.pathname === '/'
-// const isTrackOrderPage = Astro.url.pathname === '/track-order'
 
 const shopNameMap = Object.values(shopAddressMap).map(e=>({[e.id]:e.name})).reduce((a,b)=>({...a,...b}),{})
 

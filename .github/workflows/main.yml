@@ -40,4 +40,4 @@ jobs:
         PUBLIC_FM_ACCEPT_MEMBERSHIP: ${{ vars.PUBLIC_FM_ACCEPT_MEMBERSHIP }}
         FM_IS_ONLINE: ${{ vars.FM_IS_ONLINE }}
     - name: Reload PM2 process
-      run: pm2 reload client-webshop
+      run: pm2 reload client-webshop --update-env

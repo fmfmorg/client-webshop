@@ -159,6 +159,7 @@ export interface ISitemapProductDetails {
     productSubType:string;
     inStock:boolean;
     images:string[];
+    lifestyleImages:string[];
 }
 
 export interface ISitemapShippingDetails {
