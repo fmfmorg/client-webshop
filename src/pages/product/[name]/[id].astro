@@ -1,5 +1,6 @@
 ---
 import Product from '@components/product-page/index.astro';
+import { productSchema } from '@components/product-page/schema'
 import Layout from '@components/layout/index.astro'
 import type { IProduct } from '@components/catalogue-item/interfaces';
 import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
@@ -66,10 +67,9 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 const productName = productMap[id].name
 
-let preloadImageFilename = '', preloadImageExt = ''
+let preloadImageFilename = ''
 if (!!productMap[id].images && !!productMap[id].images.length) {
     preloadImageFilename = productMap[id].images[0].name + '_768x768'
-    preloadImageExt = productMap[id].images[0].ext
 }
 
 const href = Astro.url.href.replaceAll('http://','https://')
@@ -78,6 +78,7 @@ const inStock = (!!productMap[id].stockQuantities && !!productMap[id].stockQuant
 
 const origin = Astro.url.origin.replaceAll('http://','https://')
 
+/*
 const productSchema = {
   "@context": "https://schema.org",
   "@graph":[
@@ -197,6 +198,7 @@ const productSchema = {
     }
   ]
 }
+*/
 ---
 
 <Layout {...{
@@ -215,8 +217,7 @@ const productSchema = {
     price:productMap[id].discountedPrice,
     inStock:(!!productMap[id].stockQuantities && !!productMap[id].stockQuantities.length) ? !!productMap[id].stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false,
     preloadImageFilename,
-    preloadImageExt,
-    schema:JSON.stringify(productSchema)
+    schema:productSchema(productMap[id],Astro.url)
 }}>
     <Product 
         id={id} 

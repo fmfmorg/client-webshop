@@ -30,7 +30,6 @@ interface Props {
   price?:number;
   inStock?:boolean;
   preloadImageFilename?:string;
-  preloadImageExt?:string;
   schema?:string;
 }
 
@@ -53,7 +52,6 @@ const {
   price = 0,
   inStock = false,
   preloadImageFilename = '',
-  preloadImageExt = '',
   schema = '',
 } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
@@ -79,7 +77,7 @@ const href = Astro.url.href.replaceAll('http://','https://')
 
   <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin>
 
-  {!!preloadImageFilename && !!preloadImageExt && <>
+  {!!preloadImageFilename && <>
     {FM_IS_ONLINE === 'true' && <>
       <link rel="preconnect" href={PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}>
       <link rel="dns-prefetch" href={PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}>
