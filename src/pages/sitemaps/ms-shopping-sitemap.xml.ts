@@ -71,6 +71,7 @@ export async function GET({url}:{url:URL}) {
                             <g:age_group>adult</g:age_group>
                             <g:adult>no</g:adult>
                             <g:is_bundle>no</g:is_bundle>
+                            ${shippingStr}
                         </item>
                     `.trim()
                 }).join('')}
