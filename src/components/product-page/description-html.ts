@@ -1,4 +1,5 @@
-import type { IProduct, IProductMeasurement } from '@components/catalogue-item/interfaces';
+import type { IProduct } from '@components/catalogue-item/interfaces';
+import type { IProductMeasurement } from '@misc/interfaces';
 import { marked } from 'marked';
 import sanitizeHtml from 'sanitize-html';
 
