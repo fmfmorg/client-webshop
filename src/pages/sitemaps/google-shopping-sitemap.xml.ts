@@ -1,9 +1,7 @@
-import { getMeasurement, httpRequestHeader, httpToHttps } from '@misc'
+import { getMeasurement, httpRequestHeader, httpToHttps, measurementToSitemapStr } from '@misc'
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client'
 import type { ISitemapProductDetails } from '@misc/interfaces'
-
-
 
 export async function GET({url}:{url:URL}) {
     const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/sitemap/google-shopping`,{
@@ -43,9 +41,9 @@ export async function GET({url}:{url:URL}) {
                                 ).join('')
                             }
                             ${p.lifestyleImages.filter(e=>!!e).map((img)=>`<g:lifestyle_image_link>${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX + img}</g:lifestyle_image_link>`).join('')}
-                            ${!!width ? `<g:product_width>${(width * 0.1).toFixed(1).replace('.0)','')} cm</g:product_width>` : ''}
-                            ${!!depth ? `<g:product_length>${(depth * 0.1).toFixed(1).replace('.0)','')} cm</g:product_length>` : ''}
-                            ${!!height ? `<g:product_height>${(height * 0.1).toFixed(1).replace('.0)','')} cm</g:product_height>` : ''}
+                            ${!!width ? `<g:product_width>${measurementToSitemapStr(width)} cm</g:product_width>` : ''}
+                            ${!!depth ? `<g:product_length>${measurementToSitemapStr(depth)} cm</g:product_length>` : ''}
+                            ${!!height ? `<g:product_height>${measurementToSitemapStr(height)} cm</g:product_height>` : ''}
                             ${!!weight ? `<g:product_weight>${weight} g</g:product_weight>` : ''}
                             <g:condition>new</g:condition>
                             <g:google_product_category>194</g:google_product_category>

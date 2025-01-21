@@ -24,6 +24,7 @@ import type {
     IShopAddress,
     IShopAddressMap,
 } from './interfaces'
+import { measurementToSitemapStr } from './measurement-to-sitemap-string'
 import { sessionCookieOption } from './session-cookie-option'
 import { sessionLost } from './session-lost'
 import { setLoading } from './set-loading'
@@ -66,4 +67,5 @@ export {
     catalogueItemsOnResize,
     httpToHttps,
     getMeasurement,
+    measurementToSitemapStr,
 }

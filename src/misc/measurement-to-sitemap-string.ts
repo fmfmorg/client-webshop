@@ -1,0 +1,1 @@
+export const measurementToSitemapStr = (m:number) => (m * 0.1).toFixed(1).replace('.0','')
