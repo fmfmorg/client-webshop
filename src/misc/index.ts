@@ -1,6 +1,7 @@
 import { catalogueItemsOnResize } from './catalogue-items-on-resize'
 import { dispatchInternalEvent } from './dispatch-internal-event'
 import { formatPrice, formatPriceInteger } from './format-price'
+import { getMeasurement } from './get-measurement'
 import { httpRequestHeader, type IHttpRequestHeader } from './http-request-header'
 import { httpToHttps } from './http-to-https'
 import type { 
@@ -64,4 +65,5 @@ export {
     sleep,
     catalogueItemsOnResize,
     httpToHttps,
+    getMeasurement,
 }

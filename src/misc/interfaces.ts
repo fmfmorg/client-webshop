@@ -147,6 +147,14 @@ export interface IShopAddressMap {
     [k:string]:IShopAddress;
 }
 
+export interface IProductMeasurement {
+    id?:string;
+    width:number;
+    depth:number;
+    height:number;
+    weight:number;
+}
+
 export interface ISitemapProductDetails {
     productID:string;
     name:string;
@@ -160,6 +168,8 @@ export interface ISitemapProductDetails {
     inStock:boolean;
     images:string[];
     lifestyleImages:string[];
+    measurements:IProductMeasurement[];
+    soldAsPair:boolean;
 }
 
 export interface ISitemapShippingDetails {

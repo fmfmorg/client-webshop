@@ -1,13 +1,14 @@
 ---
 interface Props {
     title:string;
+    open?:boolean;
 }
 
-const { title } = Astro.props as Props
+const { title, open = false } = Astro.props as Props
 const inputID = title.toLowerCase().replace(' ','-')
 ---
 <div>
-    <input type="checkbox" hidden id={inputID} class="peer product-subtext-checkbox" />
+    <input type="checkbox" hidden id={inputID} checked={!!open} class="peer product-subtext-checkbox" />
     <label for={inputID} class="flex justify-between cursor-pointer peer-checked:[&>svg>line:first-child]:hidden">
         <h2 class="font-serif py-3 uppercase [letter-spacing:0.3rem] text-sm sm:text-base md:text-lg">{title}</h2>
         <svg viewBox="0 0 100 100" class="w-4 h-4 my-auto" stroke="black" stroke-width="0.4em">

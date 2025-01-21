@@ -1,3 +1,5 @@
+import type { IProductMeasurement } from "@misc/interfaces";
+
 export interface IProductImages {
     name:string;
     ext:string;
@@ -15,7 +17,6 @@ export interface IProduct {
     name:string;
     description:string;
     metaDescription:string;
-    specification?:string;
     price:number;
     discountedPrice:number;
     url:string;
@@ -25,4 +26,7 @@ export interface IProduct {
     relatedProducts:IProduct[];
     totalSales:number;
     createdAt:number;
+    measurements:IProductMeasurement[];
+    soldAsPair:boolean;
+    metalColor:string;
 }

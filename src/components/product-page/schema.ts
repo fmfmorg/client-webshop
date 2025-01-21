@@ -1,5 +1,5 @@
 import type { IProduct } from '@components/catalogue-item/interfaces'
-import { httpToHttps } from '@misc'
+import { getMeasurement, httpToHttps } from '@misc'
 import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client'
 
 export const productSchema = (p:IProduct, url:URL) => {
@@ -7,6 +7,11 @@ export const productSchema = (p:IProduct, url:URL) => {
     const origin = httpToHttps(url.origin)
     const shippingInfoPagePathname = '/terms/delivery'
     const inStock = (!!p.stockQuantities && !!p.stockQuantities.length) ? !!p.stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false
+    
+    const width = getMeasurement(p.measurements,'width',p.soldAsPair)
+    const depth = getMeasurement(p.measurements,'depth',p.soldAsPair)
+    const height = getMeasurement(p.measurements,'height',p.soldAsPair)
+    const weight = getMeasurement(p.measurements,'weight',p.soldAsPair)
 
     return JSON.stringify({
         "@context": "https://schema.org",
@@ -14,18 +19,23 @@ export const productSchema = (p:IProduct, url:URL) => {
           {
             "@type": "Product",
             "name": p.name,
-            "description": p.description.replaceAll('<p>','').replaceAll('</p>','').trim(),
+            "description": p.description.trim(),
             "brand": {
               "@type": "Brand",
               "name": PUBLIC_FM_COMPANY_NAME_SHORT
             },
-            "image": p.snippetImages.map(e=>PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX+e),
+            ...!!p.snippetImages && !!p.snippetImages.length && {"image": p.snippetImages.map(e=>PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX+e)},
             "size": "Standard",
             "sku": p.id,
             "audience":{
               "@type": "PeopleAudience",
               "suggestedGender": "female"
             },
+            "color":p.metalColor,
+            ...!!width && {"width":{type:"@QuantitativeValue","unitText":"mm","value":width}},
+            ...!!depth && {"depth":{type:"@QuantitativeValue","unitText":"mm","value":depth}},
+            ...!!height && {"height":{type:"@QuantitativeValue","unitText":"mm","value":height}},
+            ...!!weight && {"weight":{type:"@QuantitativeValue","unitText":"g","value":weight}},
             "offers": {
               "@type": "Offer",
               "priceCurrency": "GBP",

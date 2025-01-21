@@ -4,6 +4,7 @@ import SubText from './sub-text.astro';
 import type { IProduct } from '@components/catalogue-item/interfaces';
 import ClickCollectBtn from './click-collect-btn';
 import LoadingSmall from '@components/layout/header/icons/loading-small.astro';
+import { descriptionHTML } from './description-html';
 
 interface Props {
     productDetails:IProduct;
@@ -12,12 +13,12 @@ interface Props {
 const { productDetails } = Astro.props
 const {
     name,
-    description,
-    specification = '',
     price,
     discountedPrice,
     id
 } = productDetails
+
+const descriptionHTMLStr = descriptionHTML(productDetails)
 ---
 
 <div class="divide-y gap-y-4">
@@ -55,12 +56,8 @@ const {
         </div>
     </div>
     <ClickCollectBtn product={productDetails} client:only="solid-js" />
-    <SubText title="Description">
-        <div set:html={description} />
-        {!!specification && <>
-            <p><br /></p>
-            <div set:html={specification} />
-        </>}
+    <SubText title="Description" open>
+        <div set:html={descriptionHTMLStr} class="[&>ul>li]:list-disc [&>ul>li]:list-inside [&>ul]:mt-2 [&>ol>li]:list-decimal [&>ol>li]:list-inside [&>ol]:mt-2" />
     </SubText>
     <SubText title="How to Care">
         <p class="mb-2">To keep your earrings looking beautiful:</p>
