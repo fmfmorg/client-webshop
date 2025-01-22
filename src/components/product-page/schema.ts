@@ -32,10 +32,10 @@ export const productSchema = (p:IProduct, url:URL) => {
               "suggestedGender": "female"
             },
             "color":p.metalColor,
-            ...!!width && {"width":{type:"@QuantitativeValue","unitText":"mm","value":width}},
-            ...!!depth && {"depth":{type:"@QuantitativeValue","unitText":"mm","value":depth}},
-            ...!!height && {"height":{type:"@QuantitativeValue","unitText":"mm","value":height}},
-            ...!!weight && {"weight":{type:"@QuantitativeValue","unitText":"g","value":weight}},
+            ...!!width && {"width":{"@type":"QuantitativeValue","unitText":"mm","value":width}},
+            ...!!depth && {"depth":{"@type":"QuantitativeValue","unitText":"mm","value":depth}},
+            ...!!height && {"height":{"@type":"QuantitativeValue","unitText":"mm","value":height}},
+            ...!!weight && {"weight":{"@type":"QuantitativeValue","unitText":"g","value":weight}},
             "offers": {
               "@type": "Offer",
               "priceCurrency": "GBP",
