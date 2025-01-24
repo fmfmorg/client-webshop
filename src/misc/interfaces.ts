@@ -163,8 +163,6 @@ export interface ISitemapProductDetails {
     discountedPrice:number;
     slug:string;
     metalColor:string;
-    productMainType:string;
-    productSubType:string;
     inStock:boolean;
     images:string[];
     lifestyleImages:string[];
