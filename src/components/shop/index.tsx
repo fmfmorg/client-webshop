@@ -29,8 +29,8 @@ const Shop = (p:{
         e[item.id] = item
         if (!e[item.id].quantity) e[item.id] = undefined
     }))
-    const onCartQtyUpdate = (e:CustomEvent) => {
-        const { id:_id, qtyInCart:_qtyInCart } = e.detail as {id:string;qtyInCart:number}
+    const onCartQtyUpdate = (ev:CustomEvent) => {
+        const { id:_id, qtyInCart:_qtyInCart } = ev.detail as {id:string;qtyInCart:number}
         setCartItemMap(produce(c=>{
             if (!!c[_id]) c[_id].quantity = _qtyInCart
             else c[_id] = {
@@ -40,7 +40,7 @@ const Shop = (p:{
                 finalPrice:0
             }
 
-            if (!c[_id].quantity) e[_id] = undefined
+            if (!c[_id].quantity) c[_id] = undefined
         }))
     }
 
@@ -57,8 +57,8 @@ const Shop = (p:{
         }))
     }
 
-    const onWsCartUpdate = (e:CustomEvent) => {
-        const { cartItemMap:_cartItemMap } = e.detail as IAddToBagResponse
+    const onWsCartUpdate = (ev:CustomEvent) => {
+        const { cartItemMap:_cartItemMap } = ev.detail as IAddToBagResponse
         setCartItemMap(produce(e=>{
             e = {..._cartItemMap}
         }))
