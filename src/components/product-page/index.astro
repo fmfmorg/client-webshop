@@ -1,7 +1,7 @@
 ---
 import ImagesHorizontal from "./images-horizontal.astro";
 import ImagesVertical from "./images-vertical.astro";
-import CatalogueItem from '@components/catalogue-item/index.astro'
+import CatalogueItem from '@components/catalogue-item-related-product/index.astro'
 import Text from './text.astro'
 import type { ICartItemMap } from "@components/cart/interfaces";
 import type { ICatalogueMap } from "@misc";
@@ -118,8 +118,6 @@ import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap, cart
             super();
 
             const id = this.dataset.id
-            const productName = this.dataset.name
-            const discountedPrice = +this.dataset.price * 0.01
             const relatedProductIDs = JSON.parse(this.dataset.relatedProducts) as string[]
 
             const stockQuantityMap = new Map((JSON.parse(this.dataset.stockQuantities) as IStockQuantity[]).map(e=>([e.address,e.quantity])))

@@ -2,7 +2,7 @@ export const catalogueItemsOnResize = () => {
     const { innerWidth } = window
     const isTouchScreen = window.matchMedia && matchMedia("(pointer:coarse)").matches;
 
-    const elems = document.getElementsByTagName('astro-carousel-image')
+    const elems = document.getElementsByClassName('carousel-image')
     const elemsLen = elems.length
     
     for (let i=0; i<elemsLen; i++){

@@ -1,5 +1,5 @@
 ---
-import ShopContent from '@components/shop/intro.astro'
+import ShopContent from '@components/shop'
 import Layout from '../components/layout/index.astro'
 import type { IProduct } from '@components/catalogue-item/interfaces';
 import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
@@ -70,5 +70,5 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     headerCarouselTexts,
     metaDescription:'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.'
 }}>
-    <ShopContent productIDs={productIDs || []} productObj={productMap} cartItemObj={cartItemMap} />
+    <ShopContent productIDs={productIDs || []} productMap={productMap} cartItemMap={cartItemMap} client:load />
 </Layout>

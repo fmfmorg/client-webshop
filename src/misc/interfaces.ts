@@ -1,4 +1,4 @@
-import type { ICartContent, ICartItem, ICartItemMap } from "@components/cart/interfaces";
+import type { ICartContent, ICartItemMap } from "@components/cart/interfaces";
 import type { IProduct } from "@components/catalogue-item/interfaces";
 import type { CountryCode } from "@revolut/checkout/types/types";
 
@@ -8,7 +8,7 @@ export interface IAddressStockLevelMap {
 
 export interface IMdwResponse {
     cartContent:ICartContent;
-    cartItemMap:{[k:string]:ICartItem};
+    cartItemMap:ICartItemMap;
     cartProductDetailsMap:{[k:string]:IProduct};
     expiresAt:number;
     sessionID:string;
