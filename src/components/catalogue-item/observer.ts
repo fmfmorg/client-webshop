@@ -1,5 +1,3 @@
-import { catalogueItemsOnResize } from "@misc"
-
 const observerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
     entries.forEach(entry=>{
         if (entry.isIntersecting){
@@ -17,7 +15,6 @@ const observerCallback = (entries: IntersectionObserverEntry[], observer: Inters
             }
 
             observer.unobserve(entry.target)
-            catalogueItemsOnResize()
         }
     })
 }

@@ -1,7 +1,7 @@
-import { createMemo, Show, Index, useContext, createSignal } from 'solid-js'
+import { createMemo, Show, Index, useContext, createSignal, onMount } from 'solid-js'
 import ShoppingBag from '@components/layout/header/icons/shopping-bag';
 import LoadingSmall from '@components/layout/header/icons/loading-small';
-import { formatPrice } from '@misc';
+import { catalogueItemsOnResize, formatPrice } from '@misc';
 import Image from './image';
 import CatalogueItemContext from './context';
 
@@ -80,6 +80,10 @@ const Product = (p:{
             else imageRightward()
         }
     }
+
+    onMount(()=>{
+        catalogueItemsOnResize()
+    })
 
     return (
         <div class="relative bg-white rounded-lg mouse:hover:shadow-gray-200 mouse:hover:shadow-lg mouse:hover:p-4 mouse:hover:m-[-1rem] transition-all mouse:hover:z-10 duration-300 group" onMouseLeave={onMouseLeave}>
