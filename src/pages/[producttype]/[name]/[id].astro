@@ -13,8 +13,8 @@ interface IApiResponse {
     productMap:{[k:string]:IProduct};
 }
 
-let { name, id } = Astro.params;
-if (id !== id.toUpperCase()) return Astro.redirect(`/product/${name}/${id.toUpperCase()}`)
+let { producttype, name, id } = Astro.params;
+if (id !== id.toUpperCase()) return Astro.redirect(`/${producttype}/${name}/${id.toUpperCase()}`)
 
 const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
@@ -49,8 +49,8 @@ let {
     apiResponse:IApiResponse;
 }
 
-let finalName = productMap[id].url
-if (finalName !== name) return Astro.redirect(`/product/${finalName}/${id}`)
+let finalUrl = productMap[id].url, mainType = productMap[id].mainType
+if (finalUrl !== name || mainType !== producttype) return Astro.redirect(`/${mainType}/${finalUrl}/${id}`)
 
 Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
 

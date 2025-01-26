@@ -22,8 +22,8 @@ export async function GET({url}:{url:URL}) {
                 <loc>${origin}</loc>
                 <lastmod>${currentDT}</lastmod>
             </url>
-            ${products.map(({id,url:_url,images})=>`<url>
-              <loc>${origin + '/product/' + _url + '/' + id }</loc>
+            ${products.map(({mainType,id,url:_url,images})=>`<url>
+              <loc>${origin + '/' + mainType + '/' + _url + '/' + id }</loc>
               <lastmod>${currentDT}</lastmod>
               <changefreq>weekly</changefreq>
               <image:image>

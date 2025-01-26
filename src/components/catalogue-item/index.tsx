@@ -34,6 +34,7 @@ const CatalogueItem = (
     const maxStockQty = createMemo(()=>Math.max(...productMap[p.id].stockQuantities.map(e=>e.quantity)))
     const qtyAvailable = createMemo(()=>!!currentCollectionPoint() ? (productMap[p.id].stockQuantities.find(e=>e.address === currentCollectionPoint())?.quantity || 0) : maxStockQty())
     const url = createMemo(()=>productMap[p.id].url)
+    const mainType = createMemo(()=>productMap[p.id].mainType)
     const group = createMemo(()=>productIdOrderMap[p.id]?.group || 0)
     const observe = createMemo(()=>!!productIdOrderMap[p.id]?.observe)
     const showBuyBtn = createMemo(()=>!$otherClientPaymentInProcess() && maxStockQty() > qtyInCart())
@@ -105,7 +106,7 @@ const CatalogueItem = (
                 when={!group()}
                 children={
                     <>
-                    <a ref={linkRef} href={`/product/${url()}/${p.id}`}>
+                    <a ref={linkRef} href={`/${mainType()}/${url()}/${p.id}`}>
                         <Product {...{
                             ...p,
                             addToBag,

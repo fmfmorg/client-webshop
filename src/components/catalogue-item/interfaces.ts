@@ -29,6 +29,7 @@ export interface IProduct {
     measurements:IProductMeasurement[];
     soldAsPair:boolean;
     metalColor:string;
+    mainType:string;
 }
 
 export interface IProductIdOrderItem {

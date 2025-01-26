@@ -45,7 +45,7 @@ export async function GET({url}:{url:URL}) {
                             <g:id>${p.productID}</g:id>
                             <g:title>${p.name}</g:title>
                             <g:description>${p.description}</g:description>
-                            <g:link>${origin + '/product/' + p.slug + '/' + p.productID}</g:link>
+                            <g:link>${origin + '/' + p.mainType + '/' + p.slug + '/' + p.productID}</g:link>
                             ${
                                 p.images.map((img,i)=>
                                     !!i 

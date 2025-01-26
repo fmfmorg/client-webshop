@@ -168,6 +168,7 @@ export interface ISitemapProductDetails {
     lifestyleImages:string[];
     measurements:IProductMeasurement[];
     soldAsPair:boolean;
+    mainType:string;
 }
 
 export interface ISitemapShippingDetails {

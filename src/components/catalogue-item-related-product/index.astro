@@ -1,9 +1,9 @@
 ---
 import Product from './product.astro'
-import type { IProduct } from './interfaces';
 import type { ICartItem } from '@components/cart/interfaces';
 import ShoppingBag from '@components/layout/header/icons/shopping-bag.astro';
 import LoadingSmall from '@components/layout/header/icons/loading-small.astro';
+import type { IProduct } from '@components/catalogue-item/interfaces';
 
 interface Props {
     id:string;
@@ -21,7 +21,8 @@ const {
     images,
     stockQuantities,
     name,
-    discountedPrice
+    discountedPrice,
+    mainType,
 } = productDetails
 
 const imageLen = images.filter(e=>e.catalogue).length
@@ -39,7 +40,7 @@ const imageLen = images.filter(e=>e.catalogue).length
     data-name={name}
     data-price={discountedPrice}
 >
-    <a href=`/product/${url}/${id}`>
+    <a href=`/${mainType}/${url}/${id}`>
         <Product id={id} productDetails={productDetails} renderImages={!group} />
     </a>
     <div class="absolute top-0 right-0 p-1 mouse:hidden">
@@ -54,10 +55,11 @@ const imageLen = images.filter(e=>e.catalogue).length
 import { zaraz }  from 'zaraz-ts'
 import type { IAddToBagResponse } from "@components/cart/interfaces";
 import { dispatchInternalEvent, formatPrice, httpRequestHeader, sessionLost, showErrorModal } from "@misc";
-import type { IProduct, IStockQuantity } from "./interfaces";
+import type { IStockQuantity } from "./interfaces";
 import { selectedCollectionPoint, otherClientPaymentInProcess, shopNameMap, cartID } from "@stores";
 import { ADD_TO_BAG_FROM_CATALOGUE, CART_QTY_UPDATE, CART_UPDATE, PRODUCT_UPDATE } from "@misc/event-keys";
 import { observer } from "./observer";
+import type { IProduct } from '@components/catalogue-item/interfaces';
 
     class Product extends HTMLElement {
         constructor(){

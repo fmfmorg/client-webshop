@@ -15,13 +15,13 @@ interface Props {
 }
 
 const { id, productObj, cartItemObj, relatedProductIDs } = Astro.props
-const { images, stockQuantities, name, url } = productObj[id]
+const { images, stockQuantities, name, url, mainType } = productObj[id]
 const qtyInCart = cartItemObj[id]?.quantity || 0
 
 const breadcrumbItems:ILink[] = [
     {name:"Home",url:"/"},
     {name:"Shop",url:"/shop"},
-    {name:name,url:`/product/${url}/${id}`}
+    {name:name,url:`/${mainType}/${url}/${id}`}
 ]
 ---
 

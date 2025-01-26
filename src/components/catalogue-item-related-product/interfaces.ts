@@ -11,22 +11,3 @@ export interface IStockQuantity {
     quantity:number;
     address:number;
 }
-
-export interface IProduct {
-    id:string;
-    name:string;
-    description:string;
-    metaDescription:string;
-    price:number;
-    discountedPrice:number;
-    url:string;
-    images:IProductImages[];
-    snippetImages:string[];
-    stockQuantities:IStockQuantity[];
-    relatedProducts:IProduct[];
-    totalSales:number;
-    createdAt:number;
-    measurements:IProductMeasurement[];
-    soldAsPair:boolean;
-    metalColor:string;
-}
