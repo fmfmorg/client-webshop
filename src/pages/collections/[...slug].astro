@@ -11,6 +11,9 @@ interface IApiResponse {
     productMap:{[k:string]:IProduct};
 }
 
+const { slug } = Astro.params;
+if (slug !== 'earrings') return Astro.redirect('/collections/earrings')
+
 const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)

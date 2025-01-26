@@ -129,7 +129,7 @@ export const productSchema = (p:IProduct, url:URL) => {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Shop",
-                "item": `${origin}/shop`
+                "item": `${origin}/collections/earrings`
               },
               {
                 "@type": "ListItem",
