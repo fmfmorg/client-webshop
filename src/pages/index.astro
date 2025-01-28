@@ -37,6 +37,7 @@ let {
         minSpendForFreeShipping,
         firstName,
         headerCarouselTexts,
+        collectionMenuMap,
     },
     apiResponse:{
         productIDs,
@@ -98,6 +99,7 @@ const organizationalSchema = {
     preloadImageFilename:'banner-2000x673',
     preloadImageExt:'.jpg',
     schema:JSON.stringify(organizationalSchema),
+    collectionMenuMap,
 }}>
     <Homepage productIDs={productIDs || []} productObj={productMap} cartItemObj={cartItemMap}  />
 </Layout>

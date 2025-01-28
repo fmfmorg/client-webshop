@@ -1,0 +1,14 @@
+---
+interface Props {
+    slug:string;
+    name:string;
+}
+const { slug, name } = Astro.props as Props
+---
+<li class="my-2">
+    <a 
+        href={`/collections/earrings${!!slug ? '/' + slug : ''}`} 
+        title={name}
+        class=`${!!slug ? 'font-light' : 'font-semibold'} text-sm tracking-wider py-1.5 relative inline-block after:absolute after:bottom-1 after:bg-black after:h-px after:left-0 after:w-0 after:duration-300 mouse:hover:after:left-0 mouse:hover:after:w-full`
+    >{name}</a>
+</li>

@@ -1,0 +1,25 @@
+---
+import SidebarSubmenuBackChevron from "../../icons/sidebar-submenu-back-chevron.astro";
+
+interface Props {
+    title:string;
+}
+
+const { title } = Astro.props as Props
+---
+
+<input type="checkbox" hidden class="peer/earrings sidebar-submenu-checkbox" id="sidebar-earrings-menu-checkbox" />
+<div class="bg-white absolute top-0 right-full w-full h-full peer-checked/earrings:translate-x-full duration-300">
+    <div class="flex justify-between">
+        <label for="sidebar-earrings-menu-checkbox" class="cursor-pointer p-2">
+            <SidebarSubmenuBackChevron />
+        </label>
+        <div class="flex flex-col justify-center">
+            <p class="uppercase tracking-widest text-sm font-semibold">{title}</p>
+        </div>
+        <div style="width:calc(2.5em + 1rem)" />
+    </div>
+    <div class="px-6 grid divide-y divide-gray-300 [&>div:not(:first-child)]:pt-3 sidebar-sub-menu-content-container overflow-y-scroll hide-scrollbar">
+        <slot />
+    </div>
+</div>

@@ -20,6 +20,7 @@ export interface IMdwResponse {
     minSpendForFreeShipping:number;
     firstName:string;
     headerCarouselTexts:string[];
+    collectionMenuMap:{[c:string]:{[d:string]:string[]}};
 }
 
 export interface ICountry {

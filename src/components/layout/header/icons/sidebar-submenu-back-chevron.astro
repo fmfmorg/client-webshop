@@ -1,0 +1,12 @@
+---
+interface Props {
+    height?:string;
+    strokeWidth?:string;
+}
+
+const { height = '2.5em', strokeWidth = '0.2rem' } = Astro.props as Props
+---
+
+<svg viewBox="0 0 100 100" height={height} fill="none" stroke-linecap="round" stroke="black" stroke-width={strokeWidth}>
+    <polyline points="60,30 40,50, 60,70" />
+</svg>

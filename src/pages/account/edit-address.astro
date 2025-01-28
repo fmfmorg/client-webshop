@@ -46,6 +46,7 @@ const {
         minSpendForFreeShipping,
         firstName,
         headerCarouselTexts,
+        collectionMenuMap,
     },
     apiResponse:{
         address,
@@ -80,6 +81,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     firstName,
     title:'Edit Address',
     headerCarouselTexts,
+    collectionMenuMap,
 }}>
     <div class="max-w-96 mx-auto mt-4">
         <h1 class="font-display text-2xl [word-spacing:0.3rem]">Edit Address</h1>

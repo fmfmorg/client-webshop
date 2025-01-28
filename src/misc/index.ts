@@ -4,6 +4,7 @@ import { formatPrice, formatPriceInteger } from './format-price'
 import { getMeasurement } from './get-measurement'
 import { httpRequestHeader, type IHttpRequestHeader } from './http-request-header'
 import { httpToHttps } from './http-to-https'
+import { capitalizeEveryWord } from './capitalize-every-word'
 import type { 
     ICountry, 
     IDeliveryMethod, 
@@ -32,6 +33,7 @@ import { showErrorModal } from './show-error-modal'
 import { sleep } from './sleep'
 import { submitBtnClass } from './submit-btn-class'
 import { whiteBtnClass } from './white-btn-class'
+import { getCollectionPageTitle } from './get-collection-page-title'
 
 export {
     formatPrice,
@@ -68,4 +70,6 @@ export {
     httpToHttps,
     getMeasurement,
     measurementToSitemapStr,
+    capitalizeEveryWord,
+    getCollectionPageTitle,
 }

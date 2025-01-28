@@ -40,6 +40,7 @@ const {
         minSpendForFreeShipping,
         firstName,
         headerCarouselTexts,
+        collectionMenuMap,
     },
     apiResponse:{
         addresses
@@ -72,6 +73,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     firstName,
     title:'Manage My Addresses',
     headerCarouselTexts,
+    collectionMenuMap,
 }}>
     <NoAddress hide={!!addresses.length} />
     <AddressList {...{addresses}} />

@@ -1,14 +1,14 @@
 [
     {
-        "name":"Shop",
+        "name":"shop",
         "path":"/collections/earrings"
     },
     {
-        "name":"About",
+        "name":"about",
         "path":"/about-us"
     },
     {
-        "name":"Contact",
+        "name":"contact",
         "path":"/contact"
     }
 ]

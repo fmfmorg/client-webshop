@@ -46,6 +46,7 @@ let {
         shopAddressMap,
         minSpendForFreeShipping,
         headerCarouselTexts,
+        collectionMenuMap,
     },
     apiResponse:{
         firstName,
@@ -84,6 +85,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     firstName,
     title:'Manage My Account',
     headerCarouselTexts,
+    collectionMenuMap,
 }}>
     <div id="profile-container" class="h-full flex flex-col justify-center max-w-96 mx-auto">
         <AccountProfileContainer title="Personal Information" modalCheckboxID='profile-personal-info'>

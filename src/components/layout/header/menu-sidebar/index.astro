@@ -1,0 +1,100 @@
+---
+import CloseSidebarIcon from "../icons/close-sidebar-icon.astro"
+import pages from '../pages.json'
+import MenuItem from "./menu-item.astro"
+import Earrings from "./sub-menu/earrings.astro"
+
+interface Props {
+    collectionMenuMap:{[c:string]:{[d:string]:string[]}};
+}
+
+const { collectionMenuMap } = Astro.props as Props
+---
+
+<input type="checkbox" hidden id="menu-sidebar-checkbox" class="peer/menu" />
+<div id="menu-sidebar" class="fixed top-0 right-full peer-checked/menu:translate-x-full h-full w-full max-w-[300px] bg-white shadow-lg transition-all duration-300 z-50">
+    <div class="flex flex-row-reverse" id="menu-sidebar-top-bar">
+        <label for="menu-sidebar-checkbox" class="cursor-pointer p-2 z-[60]">
+            <CloseSidebarIcon />
+        </label>
+    </div>
+    <nav>
+        <ul class="font-display text-xl uppercase">
+            {pages.map(({name,path})=>(
+                <MenuItem {...{name,path,labelFor:name==='shop' ? "sidebar-earrings-menu-checkbox" : ''}} />
+            ))}
+        </ul>
+    </nav>
+    <Earrings {...{collectionMenuMap}} />
+</div>
+
+<script>
+    const checkbox = document.getElementById("menu-sidebar-checkbox") as HTMLInputElement
+    const overlay = document.getElementById('menu-overlay');
+    const htmlTag = document.querySelector('html')
+    const sidebarSubmenuCheckboxes = document.getElementsByClassName('sidebar-submenu-checkbox') as HTMLCollectionOf<HTMLInputElement>
+    const sidebarSubmenuCheckboxesLen = sidebarSubmenuCheckboxes.length
+    
+    const showOverlay = (e:Event) => {
+        const show = (e.target as HTMLInputElement).checked
+        overlay.classList.toggle('hidden', !show);
+        document.body.classList.toggle("overflow-y-hidden",show)
+        htmlTag.classList.toggle("overflow-y-hidden",show)
+        if (show) window.addEventListener('resize', onResize,true);
+        else window.removeEventListener('resize', onResize,true);
+
+        if (!show) {
+            for (let i=0; i<sidebarSubmenuCheckboxesLen; i++){
+                const checked = sidebarSubmenuCheckboxes.item(i).checked
+                if (checked) setTimeout(()=>sidebarSubmenuCheckboxes.item(i).click(),300)
+            }
+        }
+    }
+    
+    const uncheckCheckbox = () => {
+        if (checkbox.checked) checkbox.click()
+        window.removeEventListener('resize', onResize,true);
+        overlay.classList.toggle('hidden', true);
+        document.body.classList.toggle("overflow-y-hidden",false)
+        htmlTag.classList.toggle("overflow-y-hidden",false)
+    }
+    overlay.addEventListener('click',uncheckCheckbox,true)
+    
+    let resizeTimeout;
+    const resize = () => {
+        const { innerWidth } = window
+        if (innerWidth > 768 && checkbox.checked) uncheckCheckbox()
+    }
+    const onResize = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(resize, 200);
+    }
+
+    checkbox.addEventListener('change',showOverlay,true)
+
+
+
+    const topBar = document.getElementById("menu-sidebar-top-bar") as HTMLDivElement
+    const subMenuContentContainer = document.getElementsByClassName("sidebar-sub-menu-content-container") as HTMLCollectionOf<HTMLDivElement>
+    const subMenuContentContainerLen = subMenuContentContainer.length
+
+    if (!!topBar && !!subMenuContentContainerLen){
+        let resizeTimeout
+        const resizeContainers = () => {
+            const { innerHeight } = window
+            const { height: topBarHeight } = topBar.getBoundingClientRect()
+
+            for (let i=0; i<subMenuContentContainerLen; i++){
+                subMenuContentContainer.item(i).style.maxHeight = `${innerHeight - topBarHeight}px`
+            }
+        }
+
+        const onResize = () => {
+            clearTimeout(resizeTimeout)
+            resizeTimeout = setTimeout(resizeContainers,100)
+        }
+
+        window.addEventListener('load',resizeContainers,{once:true})
+        window.addEventListener('resize',onResize,true)
+    }
+</script>

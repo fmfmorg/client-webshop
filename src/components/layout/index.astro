@@ -31,6 +31,7 @@ interface Props {
   inStock?:boolean;
   preloadImageFilename?:string;
   schema?:string;
+  collectionMenuMap?:{[c:string]:{[d:string]:string[]}};
 }
 
 const { 
@@ -53,6 +54,7 @@ const {
   inStock = false,
   preloadImageFilename = '',
   schema = '',
+  collectionMenuMap = {},
 } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
 const isContactPage = Astro.url.pathname === '/contact'
@@ -139,7 +141,7 @@ const href = httpToHttps(Astro.url.href)
   data-member-total={total}
 >
   <SvgSets />
-  <Header {...{showUserIcon,shoppingBagProp,firstName,signedIn,headerCarouselTexts}} />
+  <Header {...{showUserIcon,shoppingBagProp,firstName,signedIn,headerCarouselTexts,collectionMenuMap}} />
   <main class={`${isCheckoutPage ? 'bg-gray-100' : 'bg-white'} w-full ${!!headerCarouselTexts.length ? 'mt-[64px] xs:mt-[72px] md:mt-[88px]' : 'mt-[40px] xs:mt-[48px] md:mt-[64px]'}`}>
     <slot />
   </main>
@@ -183,6 +185,7 @@ const href = httpToHttps(Astro.url.href)
   const header = document.getElementsByTagName('header')[0] as HTMLDivElement
   const main = document.getElementsByTagName('main')[0] as HTMLDivElement
   const footer = document.getElementsByTagName('footer')[0] as HTMLDivElement
+  const collectionMenuDropdown = document.getElementById('collection-dropdown') as HTMLDivElement
   
   pageToken.set('crypto' in window ? crypto.randomUUID() : Math.random().toString())
   
@@ -193,6 +196,11 @@ const href = httpToHttps(Astro.url.href)
     const { height: footerHeight } = footer.getBoundingClientRect()
     main.style.minHeight = `${ innerHeight - headerHeight - footerHeight }px`
     main.style.marginTop = `${ headerHeight }px`
+
+    if (!!collectionMenuDropdown) {
+      collectionMenuDropdown.classList.add('fixed')
+      collectionMenuDropdown.style.bottom = `${innerHeight - headerHeight}px`
+    }
   }
   const onResize = () => {
     clearTimeout(resizeTimeout)

@@ -1,0 +1,18 @@
+---
+interface Props {
+    name:string;
+    path:string;
+}
+const { name, path } = Astro.props as Props
+const isShopLink = name==='shop'
+---
+<a href={path} {...isShopLink && {class:'touchscreen:hidden'}}>
+    <span class="relative inline-block after:absolute after:bottom-0 after:bg-black after:h-px after:left-1/2 after:w-0 after:duration-300 mouse:hover:after:left-0 mouse:hover:after:w-full">
+        {name}
+    </span>
+</a>
+{isShopLink && <label id="collection-dropdown-checkbox-label" for="collection-dropdown-checkbox" class="py-5 mouse:hidden">
+    <span class="relative inline-block after:absolute after:bottom-0 after:bg-black after:h-px after:left-1/2 after:w-0 after:duration-300 mouse:hover:after:left-0 mouse:hover:after:w-full">
+        {name}
+    </span>
+</label>}

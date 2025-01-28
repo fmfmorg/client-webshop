@@ -1,0 +1,28 @@
+---
+interface Props {
+    path?:string;
+    name:string;
+    labelFor?:string
+}
+const { path = '', name, labelFor = '' } = Astro.props as Props
+---
+<li>
+    {
+        !!labelFor
+        ?
+        <label for={labelFor} class="flex py-2 px-6 justify-between cursor-pointer group">
+            <span class="relative inline-block after:absolute after:bottom-0 after:bg-black after:h-px after:left-0 after:w-0 after:duration-300 touchscreen:after:hidden mouse:group-hover:after:w-full">
+                {name}
+            </span>
+            <svg viewBox="0 0 50 100" class="fill-none stroke-black stroke-[10] h-3 my-auto">
+                <polyline points="3,3 45,50 3,97" />
+            </svg>
+        </label>
+        :
+        <a href={path} class="flex py-2 px-6 group">
+            <span class="relative inline-block after:absolute after:bottom-0 after:bg-black after:h-px after:left-0 after:w-0 after:duration-300 touchscreen:after:hidden mouse:group-hover:after:w-full">
+                {name}
+            </span>
+        </a>
+    }
+</li>

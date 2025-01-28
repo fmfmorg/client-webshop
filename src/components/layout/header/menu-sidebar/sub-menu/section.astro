@@ -1,0 +1,35 @@
+---
+import SectionItem from './section-item.astro';
+
+
+interface Props {
+    title:string;
+    slugs:string[];
+    strFormat:(v:string)=>string;
+    mainType:string;
+    browseAll?:string;
+    subMenuSlug:string;
+}
+
+const { title, slugs, strFormat, mainType, browseAll = '', subMenuSlug } = Astro.props as Props
+const checkboxID = `menu-sidebar-${mainType}-${subMenuSlug}-checkbox`
+---
+
+<div class="[&:not(:has(:checked))]:mb-3">
+    <input id={checkboxID} type="checkbox" hidden checked class="peer" />
+    <label for={checkboxID} class="flex justify-between peer-checked:[&>svg>line:last-child]:hidden cursor-pointer">
+        <p class="font-serif font-semibold tracking-wide">{title}</p>
+        <svg viewBox="0 0 100 100" class="h-3 w-3 fill-none stroke-black my-auto" stroke-width="0.5rem">
+            <line x1="5" y1="50" x2="95" y2="50" />
+            <line x1="50" y1="5" x2="50" y2="95" />
+        </svg>
+    </label>
+    <ul class="overflow-y-hidden max-h-0 peer-checked:max-h-fit">
+        {slugs.map(e=>(
+            <SectionItem path={`/collections/${mainType}/${e}`} name={strFormat(e)} />
+        ))}
+        {!!browseAll && <li>
+            <SectionItem path={`/collections/${mainType}`} name={browseAll} highlight />
+        </li>}
+    </ul>
+</div>

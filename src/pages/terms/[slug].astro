@@ -41,6 +41,7 @@ const {
     minSpendForFreeShipping,
     firstName,
     headerCarouselTexts,
+    collectionMenuMap,
 } = mdwResponse
 
 Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
@@ -123,6 +124,7 @@ switch (slug) {
     headerCarouselTexts,
     metaDescription,
     schema,
+    collectionMenuMap,
 }}>
     <Terms {...{text}} />
 </Layout>

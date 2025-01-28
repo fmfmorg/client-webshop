@@ -36,6 +36,7 @@ const {
         minSpendForFreeShipping,
         firstName,
         headerCarouselTexts,
+        collectionMenuMap,
     }, apiResponse:{order}
 } = await resp.json() as {mdwResponse: IMdwResponse; apiResponse:IApiResponse; }
 
@@ -61,7 +62,8 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     firstName,
     title:`Track My Order | ${PUBLIC_FM_COMPANY_NAME_SHORT}`,
     headerCarouselTexts,
-    metaDescription:'Track your jewelry order in real-time. Enter your order number and email address to check delivery status for your purchase.'
+    metaDescription:'Track your jewelry order in real-time. Enter your order number and email address to check delivery status for your purchase.',
+    collectionMenuMap,
 }}>
     <TrackOrderForm {...{fetchedOrder:!!order,orderID}} />
     <OrderContainer {...{order,orderID}} />

@@ -1,0 +1,85 @@
+---
+import MenuItem from './menu-item.astro';
+import { capitalizeEveryWord } from '@misc'
+import SubMenuTitle from './sub-menu-title.astro';
+
+interface Props {
+    collectionMenuMap:{[c:string]:{[d:string]:string[]}};
+}
+
+const { collectionMenuMap: { earrings:{ subType, metalColor, material } } } = Astro.props as Props
+---
+
+<input type="checkbox" hidden id="collection-dropdown-checkbox" class="peer/collectionmenu" />
+<div id="collection-dropdown-backdrop" class="fixed bottom-0 left-0 w-full h-full hidden z-10" />
+<label for="collection-dropdown-checkbox" class="fixed w-screen h-screen top-0 left-0 hidden peer-checked/collectionmenu:block z-[15] before:absolute before:w-full before:h-full before:backdrop-blur-sm" />
+<div id="collection-dropdown" class="hidden md:flex pb-4 justify-center shadow w-full h-fit left-0 bg-white z-20 duration-300 peer-checked/collectionmenu:translate-y-full [&>div]:w-48">
+    {!!subType.length && <div>
+        <SubMenuTitle name='Shop by Category' />
+        <ul>
+            {subType.map(e=>(
+                <MenuItem slug={e} name={capitalizeEveryWord(e.replaceAll('-', ' '))} />
+            ))}
+            <MenuItem slug="" name="Shop All Categories" />
+        </ul>
+    </div>}
+    {!!metalColor.length && <div>
+        <SubMenuTitle name='Shop by Colour' />
+        <ul>
+            {metalColor.map(e=>(
+                <MenuItem slug={e} name={`${capitalizeEveryWord(e.replaceAll('-', ' '))} Earrings`} />
+            ))}
+        </ul>
+    </div>}
+    {!!material.length && <div>
+        <SubMenuTitle name='Shop by Material' />
+        <ul>
+            {material.map(e=>(
+                <MenuItem slug={e} name={`${capitalizeEveryWord(e.replaceAll('-', ' '))} Earrings`} />
+            ))}
+        </ul>
+    </div>}
+</div>
+
+
+<script>
+    const checkbox = document.getElementById("collection-dropdown-checkbox") as HTMLInputElement
+    const dropdown = document.getElementById('collection-dropdown') as HTMLDivElement
+    const backdrop = document.getElementById('collection-dropdown-backdrop') as HTMLLabelElement
+    const labelInMenu = document.getElementById("collection-dropdown-checkbox-label") as HTMLLabelElement
+    let timeout
+
+    if (!!checkbox && !!dropdown && !!backdrop){
+        const onMouseLeave = (e:MouseEvent) => {
+            const isShopMenuOption = (e.target as HTMLElement).closest('#desktop-shop-li')
+            if (!isShopMenuOption && checkbox.checked) checkbox.click()
+        }
+
+        const onClick = (e:MouseEvent) => {
+            const checked = (e.target as HTMLInputElement).checked
+            if (checked) backdrop.classList.remove('hidden')
+            else {
+                clearTimeout(timeout)
+                timeout = setTimeout(()=>backdrop.classList.add('hidden'),100)
+            }
+        }
+
+        dropdown.addEventListener('mouseleave',onMouseLeave)
+        checkbox.addEventListener('click',onClick)
+
+        if (!!labelInMenu){
+            const onTouchEnd = (e:TouchEvent) => {
+                e.preventDefault()
+                checkbox.click()
+            }
+            labelInMenu.addEventListener('touchend',onTouchEnd,true)
+
+            const onTouchEndOutside = (e:TouchEvent) => {
+                if (!checkbox.checked) return
+                const target = e.changedTouches[0].target as HTMLElement
+                if (!target.closest(`#${labelInMenu.id}`) && !target.closest(`#${dropdown.id}`)) checkbox.click()
+            }
+            document.addEventListener('touchend',onTouchEndOutside,true)
+        }
+    }
+</script>

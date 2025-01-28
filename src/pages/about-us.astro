@@ -31,6 +31,7 @@ const {
     minSpendForFreeShipping,
     firstName,
     headerCarouselTexts,
+    collectionMenuMap,
 } = mdwResponse
 
 Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
@@ -56,7 +57,8 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     firstName,
     title:`About Us | ${PUBLIC_FM_COMPANY_NAME_SHORT}`,
     headerCarouselTexts,
-    metaDescription:'Meet the Edinburgh couple bringing affordable, quality fashion jewellery to the UK. Hand-picked designs with fast local shipping. Family business with heart.'
+    metaDescription:'Meet the Edinburgh couple bringing affordable, quality fashion jewellery to the UK. Hand-picked designs with fast local shipping. Family business with heart.',
+    collectionMenuMap,
 }}>
     <About {...{text}} />
 </Layout>

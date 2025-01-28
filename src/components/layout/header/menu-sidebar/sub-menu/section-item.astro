@@ -1,0 +1,15 @@
+---
+interface Props {
+    highlight?:boolean;
+    path:string;
+    name:string;
+}
+
+const { highlight, path, name } = Astro.props as Props
+const className = `${!!highlight ? 'font-semibold' : 'font-light'} text-sm tracking-wider py-1 relative inline-block after:absolute after:bottom-1 after:bg-black after:h-px after:left-0 after:w-0 after:duration-300 mouse:group-hover:after:left-0 mouse:group-hover:after:w-full`
+---
+<li class="my-2">
+    <a href={path} class="w-full block group pl-4">
+        <span class={className}>{name}</span>
+    </a>
+</li>

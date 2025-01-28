@@ -31,6 +31,7 @@ const {
     minSpendForFreeShipping,
     firstName,
     headerCarouselTexts,
+    collectionMenuMap,
 } = mdwResponse
 
 Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
@@ -56,6 +57,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     firstName,
     title:'Promotion',
     headerCarouselTexts,
+    collectionMenuMap,
 }}>
     <Promotion {...{text}} />
 </Layout>

@@ -11,9 +11,9 @@ const { id, show = true } = Astro.props as Props
 
 <astro-sidebar data-id={id} data-show={show ? '1' : '0'}>
     {!!show && <input type="checkbox" class="peer" hidden id={`${id}-checkbox`} />}
-    <div class="overlay fixed bottom-0 left-0 w-full h-full hidden transition-opacity duration-300 z-10" />
+    <div class="overlay fixed bottom-0 left-0 w-full h-full hidden duration-300 z-10" />
     <label id={`${id}-overlay`} for={`${id}-checkbox`} class="fixed w-screen h-screen top-0 left-0 hidden z-[25] before:absolute before:w-full before:h-full before:backdrop-blur-sm" />
-    <div id={id} class='sidebar fixed right-[-410px] bottom-0 peer-checked:right-0 w-full max-w-[400px] bg-white shadow-lg transition-all duration-300 z-30'>
+    <div id={id} class='sidebar fixed left-full bottom-0 peer-checked:-translate-x-full w-full max-w-[400px] bg-white shadow-lg transition-all duration-300 z-30'>
         <div class='sidebar-header absolute w-full top-0 left-0 flex justify-between'>
             <div class="w-full grow flex flex-col justify-center">
                 <slot name="header" />
@@ -37,7 +37,7 @@ const { id, show = true } = Astro.props as Props
                 const id = this.dataset.id;
                 const sidebar = document.getElementById(id);
                 const checkbox = document.getElementById(`${id}-checkbox`) as HTMLInputElement;
-                const overlay = document.getElementsByClassName('overlay')[0] as HTMLDivElement;
+                const overlay = this.getElementsByClassName('overlay')[0] as HTMLDivElement;
                 const overlayLabel = document.getElementById(`${id}-overlay`);
                 const header = document.querySelector('header');
                 const iconButton = document.getElementById(`${id}-icon-button`);
@@ -82,15 +82,10 @@ const { id, show = true } = Astro.props as Props
                     if (productCollectionPointSidebarIsOn()) return
                     toggleSidebar(true,true)
                 };
-                const handleMouseLeave = (e:MouseEvent) => {
+                const handleMouseLeave = (ev:MouseEvent) => {
                     if (productCollectionPointSidebarIsOn()) return
                     if (!checkbox.disabled){
-                        const 
-                            { clientX, clientY } = e,
-                            sidebarStayOpen = [iconButton,sidebar].some(elem=>{
-                                const { top, bottom, left, right } = elem.getBoundingClientRect()
-                                return clientX > left && clientX < right - 1 && clientY >= top && clientY <= bottom
-                            })
+                        const sidebarStayOpen = [iconButton,sidebar].some(e=>(ev.relatedTarget as HTMLElement).closest(`#${e.id}`))
                         toggleSidebar(sidebarStayOpen,true)
                     }
                 }

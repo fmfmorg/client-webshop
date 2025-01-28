@@ -39,6 +39,7 @@ let {
         minSpendForFreeShipping,
         firstName,
         headerCarouselTexts,
+        collectionMenuMap,
     },
     apiResponse:{
         relatedProductIDs,
@@ -89,7 +90,8 @@ if (!!productMap[id].images && !!productMap[id].images.length) {
     price:productMap[id].discountedPrice,
     inStock:(!!productMap[id].stockQuantities && !!productMap[id].stockQuantities.length) ? !!productMap[id].stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false,
     preloadImageFilename,
-    schema:productSchema(productMap[id],Astro.url)
+    schema:productSchema(productMap[id],Astro.url),
+    collectionMenuMap,
 }}>
     <Product 
         id={id} 

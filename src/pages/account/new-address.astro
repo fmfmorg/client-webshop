@@ -40,6 +40,7 @@ const {
         minSpendForFreeShipping,
         firstName,
         headerCarouselTexts,
+        collectionMenuMap,
     },
     apiResponse:{
         userAlreadyHasAddress,
@@ -74,6 +75,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     firstName,
     title:'New Address',
     headerCarouselTexts,
+    collectionMenuMap,
 }}>
     <div class="max-w-96 mx-auto mt-4">
         <h1 class="font-display text-2xl [word-spacing:0.3rem]">Add New Address</h1>

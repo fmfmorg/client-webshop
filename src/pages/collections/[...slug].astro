@@ -2,25 +2,33 @@
 import ShopContent from '@components/shop'
 import Layout from '@components/layout/index.astro'
 import type { IProduct } from '@components/catalogue-item/interfaces';
-import { httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
+import { getCollectionPageTitle, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 
 interface IApiResponse {
     productIDs:string[];
     productMap:{[k:string]:IProduct};
+    correctSlugArr:string[];
 }
 
 const { slug } = Astro.params;
-if (slug !== 'earrings') return Astro.redirect('/collections/earrings')
+const searchParams = Astro.url.search
 
 const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
 const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/shop-page-init${Astro.url.search}`,{
-    headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff)
+    method:'POST',
+    headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff),
+    body:JSON.stringify({
+        slug,
+        searchParams,
+    })
 })
 if (!resp.ok) return new Response(null,{status:500})
+
+
 
 const json = await resp.json()
 let {
@@ -38,15 +46,21 @@ let {
         minSpendForFreeShipping,
         firstName,
         headerCarouselTexts,
+        collectionMenuMap,
     },
     apiResponse:{
         productIDs,
         productMap,
+        correctSlugArr, 
     }
 } = json as {
     mdwResponse:IMdwResponse;
     apiResponse:IApiResponse;
 }
+
+const correctSlug = correctSlugArr.join('/')
+if (slug !== correctSlug) return Astro.redirect(`/collections/${correctSlug}${searchParams}`)
+
 Astro.cookies.set('sessionID',sessionID,sessionCookieOption(isOnline,expiresAt))
 
 productMap = {...productMap,...cartProductDetailsMap}
@@ -69,9 +83,10 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     shopAddressMap,
     signedIn,
     firstName,
-    title:'Shop Jewellery for Her',
+    title:`Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap)} for Her`,
     headerCarouselTexts,
-    metaDescription:'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.'
+    metaDescription:'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.',
+    collectionMenuMap,
 }}>
     <ShopContent productIDs={productIDs || []} productMap={productMap} cartItemMap={cartItemMap} client:load />
 </Layout>
