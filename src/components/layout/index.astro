@@ -215,7 +215,8 @@ const href = httpToHttps(Astro.url.href)
     [
       'shopping-bag-sidebar-checkbox',
       'user-sidebar-checkbox',
-      "menu-sidebar-checkbox"
+      "menu-sidebar-checkbox",
+      "collection-dropdown-checkbox"
     ].forEach(e=>{
       const checkbox = document.getElementById(e) as HTMLInputElement
       if (!!checkbox && checkbox.checked) checkbox.click()
