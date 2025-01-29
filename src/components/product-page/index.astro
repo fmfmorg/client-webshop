@@ -4,7 +4,7 @@ import ImagesVertical from "./images-vertical.astro";
 import CatalogueItem from '@components/catalogue-item-related-product/index.astro'
 import Text from './text.astro'
 import type { ICartItemMap } from "@components/cart/interfaces";
-import type { ICatalogueMap } from "@misc";
+import { capitalizeEveryWord, type ICatalogueMap } from "@misc";
 import type { ILink } from "@components/layout/footer/interfaces";
 
 interface Props {
@@ -15,13 +15,14 @@ interface Props {
 }
 
 const { id, productObj, cartItemObj, relatedProductIDs } = Astro.props
-const { images, stockQuantities, name, url, mainType } = productObj[id]
+const { images, stockQuantities, name, url, mainType, subType } = productObj[id]
 const qtyInCart = cartItemObj[id]?.quantity || 0
 
 const breadcrumbItems:ILink[] = [
     {name:"Home",url:"/"},
-    {name:"Shop",url:"/collections/earrings"},
-    {name:name,url:`/${mainType}/${url}/${id}`}
+    {name:capitalizeEveryWord(mainType),url:`/collections/${mainType}`},
+    {name:capitalizeEveryWord(subType.replaceAll('-',' ')),url:`/collections/${mainType}/${subType}`},
+    {name:name,url:`/collections/${mainType}/${url}/${id}`}
 ]
 ---
 

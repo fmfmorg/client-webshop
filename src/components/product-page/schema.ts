@@ -1,5 +1,5 @@
 import type { IProduct } from '@components/catalogue-item/interfaces'
-import { getMeasurement, httpToHttps } from '@misc'
+import { capitalizeEveryWord, getMeasurement, httpToHttps } from '@misc'
 import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, PUBLIC_FM_COMPANY_NAME_SHORT } from 'astro:env/client'
 
 export const productSchema = (p:IProduct, url:URL) => {
@@ -128,12 +128,18 @@ export const productSchema = (p:IProduct, url:URL) => {
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Shop",
-                "item": `${origin}/collections/earrings`
+                "name": capitalizeEveryWord(p.mainType),
+                "item": `${origin}/collections/${p.mainType}`
               },
               {
                 "@type": "ListItem",
                 "position": 3,
+                "name": capitalizeEveryWord(p.subType.replaceAll('-',' ')),
+                "item": `${origin}/collections/${p.mainType}/${p.subType}`
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
                 "name": p.name,
                 "item": href
               }

@@ -30,6 +30,7 @@ export interface IProduct {
     soldAsPair:boolean;
     metalColor:string;
     mainType:string;
+    subType:string;
 }
 
 export interface IProductIdOrderItem {
