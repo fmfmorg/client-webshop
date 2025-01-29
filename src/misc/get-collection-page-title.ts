@@ -17,8 +17,7 @@ export const getCollectionPageTitle = (
         arr = [
             ...metalColor.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' ')),,
             ...material.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' ')),
-            ...subType.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-earrings','').replaceAll('-',' ')),
-            'earrings'
+            ...subType.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' '))
         ]
     }
     return capitalizeEveryWord(arr.join(' '))
