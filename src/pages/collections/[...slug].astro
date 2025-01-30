@@ -2,7 +2,7 @@
 import ShopContent from '@components/shop'
 import Layout from '@components/layout/index.astro'
 import type { IProduct } from '@components/catalogue-item/interfaces';
-import { getCollectionPageTitle, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
+import { capitalizeEveryWord, getCollectionPageTitle, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 
@@ -27,8 +27,6 @@ const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/shop-page-init$
     })
 })
 if (!resp.ok) return new Response(null,{status:500})
-
-
 
 const json = await resp.json()
 let {
@@ -58,6 +56,8 @@ let {
     apiResponse:IApiResponse;
 }
 
+const mainTypeSlug = correctSlugArr[0]
+
 const correctSlug = correctSlugArr.join('/')
 if (slug !== correctSlug) return Astro.redirect(`/collections/${correctSlug}${searchParams}`)
 
@@ -83,7 +83,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     shopAddressMap,
     signedIn,
     firstName,
-    title:`Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap)} for Her`,
+    title:`Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap) || capitalizeEveryWord(mainTypeSlug.replaceAll('-', ' '))} for Her`,
     headerCarouselTexts,
     metaDescription:'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.',
     collectionMenuMap,
