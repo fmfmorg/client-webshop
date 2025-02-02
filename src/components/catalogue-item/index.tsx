@@ -25,7 +25,7 @@ const CatalogueItem = (
     const { productMap, cartItemMap, productIdOrderMap, observerCallback } = useContext(CatalogueItemContext)
 
     const [loading,setLoading] = createSignal(false)
-    const observer = new IntersectionObserver(observerCallback,{rootMargin:'200px'})
+    // const observer = new IntersectionObserver(observerCallback,{rootMargin:'200px'})
 
     const $cartID = useStore(cartID)
     const $shopNameMap = useStore(shopNameMap)
