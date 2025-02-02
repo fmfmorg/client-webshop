@@ -20,12 +20,11 @@ const CatalogueItem = (
         updateCartQty:(item:ICartItem) => void;
     }
 ) => {
-    let linkRef, containerRef
+    let linkRef, containerRef, observer:IntersectionObserver
 
     const { productMap, cartItemMap, productIdOrderMap, observerCallback } = useContext(CatalogueItemContext)
 
     const [loading,setLoading] = createSignal(false)
-    // const observer = new IntersectionObserver(observerCallback,{rootMargin:'200px'})
 
     const $cartID = useStore(cartID)
     const $shopNameMap = useStore(shopNameMap)
@@ -38,7 +37,6 @@ const CatalogueItem = (
     const mainType = createMemo(()=>productMap[p.id].mainType)
     const group = createMemo(()=>productIdOrderMap[p.id]?.group || 0)
     const observe = createMemo(()=>!!productIdOrderMap[p.id]?.observe)
-    const [observerStarted,setObserverStarted] = createSignal(false)
     const showBuyBtn = createMemo(()=>!$otherClientPaymentInProcess() && maxStockQty() > qtyInCart())
 
     const addToBag = async (e:Event) => {
@@ -94,18 +92,18 @@ const CatalogueItem = (
         }
     }
 
-    // createEffect(()=>{
-    //     if (observe()){
-    //         observer.observe(containerRef)
-    //         setObserverStarted(true)
-    //     } else if (observerStarted()) observer.unobserve(containerRef)
-    // })
+    createEffect(()=>{
+        if (observe()){
+            if (!observer) observer = new IntersectionObserver(observerCallback,{rootMargin:'200px'})
+            observer.observe(containerRef)
+        } else if (!!observer) observer.unobserve(containerRef)
+    })
 
-    // onMount(()=>{
-    //     onCleanup(()=>{
-    //         if (observerStarted()) observer.disconnect()
-    //     })
-    // })
+    onMount(()=>{
+        onCleanup(()=>{
+            if (!!observer) observer.disconnect()
+        })
+    })
 
     return (
         <div ref={containerRef} class={`relative${!!p.productPageRelatedProduct ? ' related-product' : ''}${!!p.homepageBestseller ? ' homepage-bestseller' : ''}`.trim()}>
