@@ -109,9 +109,7 @@ const Shop = (p:{
 
         const availableSlugs = Object.keys(_facetCountMap)
         let finalSlugArr = _correctSlugArr.filter(e=>availableSlugs.includes(e))
-
-        console.log(newURL.search)
-
+        
         setCurrentURL(produce(e=>{
             e.pathname = `/collections/${[p.mainProductType, ...finalSlugArr].join('/')}`
             e.search = newURL.search

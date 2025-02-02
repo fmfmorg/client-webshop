@@ -2,7 +2,7 @@ import { zaraz }  from 'zaraz-ts'
 import type { IAddToBagResponse, ICartItem } from '@components/cart/interfaces';
 import ShoppingBag from '@components/layout/header/icons/shopping-bag';
 import LoadingSmall from '@components/layout/header/icons/loading-small';
-import { Show, createMemo, createSignal, useContext, onMount, onCleanup, createEffect } from 'solid-js'
+import { Show, createMemo, createSignal, useContext, onMount, onCleanup } from 'solid-js'
 import { useStore } from '@nanostores/solid';
 import { cartID, otherClientPaymentInProcess, selectedCollectionPoint, shopNameMap } from '@stores';
 import { dispatchInternalEvent, httpRequestHeader, sessionLost, showErrorModal } from '@misc';
@@ -25,7 +25,6 @@ const CatalogueItem = (
     const { productMap, cartItemMap, productIdOrderMap, observerCallback } = useContext(CatalogueItemContext)
 
     const [loading,setLoading] = createSignal(false)
-    const observer = new IntersectionObserver(observerCallback,{rootMargin:'200px'})
 
     const $cartID = useStore(cartID)
     const $shopNameMap = useStore(shopNameMap)
@@ -38,7 +37,6 @@ const CatalogueItem = (
     const mainType = createMemo(()=>productMap[p.id].mainType)
     const group = createMemo(()=>productIdOrderMap[p.id]?.group || 0)
     const observe = createMemo(()=>!!productIdOrderMap[p.id]?.observe)
-    const [observerStarted,setObserverStarted] = createSignal(false)
     const showBuyBtn = createMemo(()=>!$otherClientPaymentInProcess() && maxStockQty() > qtyInCart())
 
     const addToBag = async (e:Event) => {
@@ -94,21 +92,11 @@ const CatalogueItem = (
         }
     }
 
-    createEffect(()=>{
-        if (observe()){
-            observer.observe(containerRef)
-            setObserverStarted(true)
-        } else if (observerStarted()) observer.unobserve(containerRef)
-    })
-
     onMount(()=>{
-        // const observer = new IntersectionObserver(observerCallback,{rootMargin:'200px'})
-        // if (observe()) {
-        //     observer.observe(containerRef)
-        //     setObserverStarted(true)
-        // }
+        const observer = new IntersectionObserver(observerCallback,{rootMargin:'200px'})
+        if (observe()) observer.observe(containerRef)
         onCleanup(()=>{
-            if (observerStarted()) observer.disconnect()
+            if (observe()) observer.disconnect()
         })
     })
 
