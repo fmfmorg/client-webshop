@@ -83,12 +83,14 @@ const Filter = () => {
         if (!relatedTargetElem || !relatedTargetElem.closest(`#${filterHeaderContainerID}`) && !relatedTargetElem.closest(`#${desktopFilterContainerID}`)) hideDesktopFilter()
     }
 
+    const onLoad = () => {
+        const { bottom: _containerBottom } = containerRef.getBoundingClientRect()
+        desktopFilterContainer.style.top = `${_containerBottom}px`
+    }
+
     onMount(()=>{
         // show filter on scroll down
         setLastScrollY(window.scrollY)
-
-        const { bottom: _containerBottom } = containerRef.getBoundingClientRect()
-        desktopFilterContainer.style.top = `${_containerBottom}px`
 
         const header = document.getElementsByTagName('header')[0] as HTMLElement
 
@@ -147,8 +149,8 @@ const Filter = () => {
             resizeTimeout = setTimeout(repositionColumns,100)
         }
 
-
-        repositionColumns()
+        setTimeout(onLoad,100)
+        setTimeout(repositionColumns,100)
         
         const attrHeaderObserver = new MutationObserver(attrHeaderMutationCallback)
         filterRenderAttr().forEach(({desktopHeaderLabelID})=>{
