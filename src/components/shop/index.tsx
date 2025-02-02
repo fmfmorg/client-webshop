@@ -27,14 +27,13 @@ const Shop = (p:{
 
     const createProductIdOrderMap = (arr:string[]):IProductIdOrderMap => arr
         .map((id,i)=>{
-            const group = Math.floor(i/itemPerGroup)
             const obj = {[id]:{
                 id,
                 order:i,
-                group,
+                group:Math.floor(i/itemPerGroup),
                 observe:i % itemPerGroup === itemPerGroup - 1
             }}
-            console.log(group,obj[id].group)
+            console.log(obj[id].group)
             return obj
         })
         .reduce((a,b)=>({...a,...b}),{})
