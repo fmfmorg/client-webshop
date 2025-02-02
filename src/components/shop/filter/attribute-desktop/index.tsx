@@ -9,7 +9,7 @@ const AttributeContainer = (p:{
 }) => (
     <div>
         <input name='desktop-filter-attr' hidden type='radio' id={p.desktopRadioInput} class='filterattr peer' />
-        <ul id={p.desktopULID} class="hidden peer-checked:flex flex flex-col flex-wrap max-h-full absolute top-0">
+        <ul id={p.desktopULID} class="hidden peer-checked:flex flex flex-col flex-wrap gap-x-6 max-h-full absolute top-0">
             <For 
                 each={p.attributes}
                 children={e=><Option attr={e} />}

@@ -87,8 +87,8 @@ const Filter = () => {
         // show filter on scroll down
         setLastScrollY(window.scrollY)
 
-        const { bottom: containerBottom } = containerRef.getBoundingClientRect()
-        desktopFilterContainer.style.top = `${containerBottom}px`
+        const { bottom: _containerBottom } = containerRef.getBoundingClientRect()
+        desktopFilterContainer.style.top = `${_containerBottom}px`
 
         const header = document.getElementsByTagName('header')[0] as HTMLElement
 
