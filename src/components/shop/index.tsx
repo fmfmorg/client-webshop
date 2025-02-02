@@ -26,7 +26,15 @@ const Shop = (p:{
     let resizeTimeout
 
     const createProductIdOrderMap = (arr:string[]):IProductIdOrderMap => arr
-        .map((id,i)=>({[id]:{id,order:i,group:Math.floor(i/itemPerGroup),observe:i % itemPerGroup === itemPerGroup - 1}}))
+        .map((id,i)=>{
+            console.log(id,i,itemPerGroup,Math.floor(i/itemPerGroup))
+            return {[id]:{
+                id,
+                order:i,
+                group:Math.floor(i/itemPerGroup),
+                observe:i % itemPerGroup === itemPerGroup - 1
+            }}
+        })
         .reduce((a,b)=>({...a,...b}),{})
 
     const [productIdOrderMap,setProductIdOrderMap] = createStore<IProductIdOrderMap>(createProductIdOrderMap(p.productIDs))
@@ -104,9 +112,6 @@ const Shop = (p:{
                 })
             }
         }))
-
-        console.log(newProductIdOrderMap)
-        console.log(productIdOrderMap)
 
         const availableSlugs = Object.keys(_facetCountMap)
         let finalSlugArr = _correctSlugArr.filter(e=>availableSlugs.includes(e))
