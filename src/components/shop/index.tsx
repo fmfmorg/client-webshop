@@ -94,7 +94,7 @@ const Shop = (p:{
 
             if (!!newKeys.length){
                 Object.values(newProductIdOrderMap).forEach(e=>{
-                    curr[e.id] = e
+                    curr[e.id] = {...e}
                 })
             }
 
@@ -170,7 +170,8 @@ const Shop = (p:{
         entries.forEach(entry=>{
             if (entry.isIntersecting){
                 setProductIdOrderMap(produce(e=>{
-                    productIDs().forEach(c=>{
+                    const ids = Object.keys(e)
+                    ids.forEach(c=>{
                         e[c].group = Math.max(0, e[c].group - 1)
                     })
                 }))
