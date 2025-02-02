@@ -93,8 +93,8 @@ const Shop = (p:{
             const keysToDelete = !!newKeys.length ? Object.keys(curr).filter(e=>!newKeys.includes(e)) : Object.keys(curr)
 
             if (!!newKeys.length){
-                Object.values(newProductIdOrderMap).forEach(e=>{
-                    curr[e.id] = {...e}
+                newKeys.forEach(e=>{
+                    curr[e] = newProductIdOrderMap[e]
                 })
             }
 
@@ -195,7 +195,8 @@ const Shop = (p:{
         } catch { return }
     }
 
-    createEffect(()=>console.log(Object.values(productIdOrderMap).sort((a,b)=>a.order - b.order)))
+    // createEffect(()=>console.log(Object.values(productIdOrderMap).sort((a,b)=>a.order - b.order)))
+    createEffect(()=>console.log(productIdOrderMap))
 
     onMount(()=>{
         catalogueItemsOnResize()
