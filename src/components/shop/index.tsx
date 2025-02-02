@@ -33,7 +33,7 @@ const Shop = (p:{
                 group:Math.floor(i/itemPerGroup),
                 observe:i % itemPerGroup === itemPerGroup - 1
             }}
-            console.log(obj[id].group)
+            console.log(obj)
             return obj
         })
         .reduce((a,b)=>({...a,...b}),{})
