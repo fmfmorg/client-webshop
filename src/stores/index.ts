@@ -54,3 +54,4 @@ export const canShowPayBtn = computed(
         && (_signedIn ? _userAlreadyHasAddress : true)
 )
 export const cartID = atom('')
+export const headerScrollLimit = atom(10)

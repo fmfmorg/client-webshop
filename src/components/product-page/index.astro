@@ -22,7 +22,7 @@ const breadcrumbItems:ILink[] = [
     {name:"Home",url:"/"},
     {name:capitalizeEveryWord(mainType),url:`/collections/${mainType}`},
     {name:capitalizeEveryWord(subType.replaceAll('-',' ')),url:`/collections/${mainType}/${subType}`},
-    {name:name,url:`/collections/${mainType}/${url}/${id}`}
+    {name:name,url:`/${mainType}/${url}/${id}`}
 ]
 ---
 

@@ -1,15 +1,15 @@
-import { For, onMount, onCleanup, createMemo, Show } from 'solid-js'
+import { For, onMount, onCleanup, createMemo, Show, createSignal } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import CatalogueItemContext from '@components/catalogue-item/context'
 import type { IAddToBagResponse, ICartItem, ICartItemMap } from "@components/cart/interfaces";
-import { catalogueItemsOnResize, dispatchInternalEvent, httpRequestHeader, type ICatalogueMap } from "@misc";
+import { catalogueItemsOnResize, dispatchInternalEvent, httpRequestHeader, httpToHttps, sessionLost, type ICatalogueMap } from "@misc";
 import CatalogueItem from '@components/catalogue-item';
 import type { IProduct, IProductIdOrderMap } from '@components/catalogue-item/interfaces';
 import { CART_QTY_UPDATE, CART_UPDATE, PRODUCT_UPDATE } from '@misc/event-keys';
 import NoItemAvailable from './no-item-available';
 import {FilterMasterContext} from './filter/context';
 import Filter from './filter';
-import type { IFilterFacetCountMap, IUrl } from '@misc/interfaces';
+import type { ICollectionPageResponse, IFilterFacetCountMap, IUrl } from '@misc/interfaces';
 
 const itemPerGroup = 24
 
@@ -33,16 +33,95 @@ const Shop = (p:{
     const productIDs = createMemo(()=>!!Object.values(productIdOrderMap).length ? Object.values(productIdOrderMap).sort((a,b)=>a.order - b.order).map(({id})=>id) : [])
     const [productMap, setProductMap] = createStore(p.productMap)
     const [cartItemMap, setCartItemMap] = createStore(p.cartItemMap)
-    const [currentURL, setCurrentURL] = createStore<IUrl>({pathname:p.pathname,search:p.search})
+    const pathnamePrefixArr = createMemo(()=>['','collections',p.mainProductType])
+    const [currentURL, setCurrentURL] = createStore<IUrl>({
+        pathname:p.pathname,
+        search:p.search,
+        slugOrder:p.pathname.split('/').filter(e=>!pathnamePrefixArr().includes(e)),
+    })
     const [facetCountMap, setFacetCountMap] = createStore<IFilterFacetCountMap>(p.facetCountMap)
 
-    const updateURL = (s:string) => {
-        const newURL = new URL(s)
-        setCurrentURL(produce(e=>{
-            e.pathname = newURL.pathname
-            e.search = newURL.search
+    const updateURL = async (s:string, slug:string) => {
+        const newURL = new URL(s.startsWith('http') ? s : httpToHttps(window.location.origin) + s)
+
+        const resp = await fetch('/api/webshop/shop-page-init',{
+            method:'POST',
+            headers:httpRequestHeader(false,'client',true),
+            body:JSON.stringify({
+                slug:newURL.pathname,
+                searchParams:newURL.search,
+            })
+        })
+
+        if (!resp.ok){
+            await sessionLost(resp.status)
+            return
+        }
+
+        window.scrollTo({top:0,left:0,behavior:'smooth'})
+
+        const { apiResponse:{
+            productIDs:_productIDs,
+            productMap:_productMap,
+            correctSlugArr:_correctSlugArr,
+            facetCountMap:_facetCountMap
+        }} = await resp.json() as {apiResponse: ICollectionPageResponse}
+
+        setProductMap(produce(curr=>{
+            Object.values(_productMap).forEach(newItem=>{
+                curr[newItem.id] = newItem
+            })
         }))
-        window.history.pushState(null,null,s)
+
+        setFacetCountMap(produce(curr=>{
+            const newKeys = Object.keys(_facetCountMap)
+            const keysToDelete = !!newKeys.length ? Object.keys(curr).filter(e=>!newKeys.includes(e)) : Object.keys(curr)
+
+            if (!!newKeys.length){
+                Object.entries(_facetCountMap).forEach(([k,v])=>{
+                    curr[k] = v
+                })
+            }
+
+            if (!!keysToDelete.length) keysToDelete.forEach(e=>{
+                curr[e] = undefined
+            })
+        }))
+
+        const newProductIdOrderMap = createProductIdOrderMap(_productIDs)
+
+        setProductIdOrderMap(produce(curr=>{
+            const newKeys = Object.keys(newProductIdOrderMap)
+            const keysToDelete = !!newKeys.length ? Object.keys(curr).filter(e=>!newKeys.includes(e)) : Object.keys(curr)
+
+            if (!!newKeys.length){
+                Object.values(newProductIdOrderMap).forEach(e=>{
+                    curr[e.id] = e
+                })
+            }
+
+            if (!!keysToDelete.length){
+                keysToDelete.forEach(e=>{
+                    curr[e] = undefined
+                })
+            }
+        }))
+
+        const availableSlugs = Object.keys(_facetCountMap)
+        let finalSlugArr = _correctSlugArr.filter(e=>availableSlugs.includes(e))
+
+        console.log(newURL.search)
+
+        setCurrentURL(produce(e=>{
+            e.pathname = `/collections/${[p.mainProductType, ...finalSlugArr].join('/')}`
+            e.search = newURL.search
+            if (!!slug){
+                e.slugOrder = e.slugOrder.includes(slug) ? e.slugOrder.filter(c=>c!==slug) : [...e.slugOrder,slug]
+                e.slugOrder = e.slugOrder.filter(e=>availableSlugs.includes(e))
+            }
+        }))
+
+        window.history.pushState(null,null,`/collections/${[p.mainProductType, ...finalSlugArr].join('/')}${newURL.search}`)
     }
 
     const updateCartQty = (item:ICartItem) => setCartItemMap(produce(e=>{
@@ -144,6 +223,7 @@ const Shop = (p:{
                     currentURL,
                     updateURL,
                     facetCountMap,
+                    pathnamePrefixArr:pathnamePrefixArr(),
                 }}
                 children={<Filter />}
             />

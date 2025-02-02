@@ -19,6 +19,7 @@ export const getCollectionPageTitle = (
             ...!!material && material.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' ')),
             ...!!subType && subType.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' '))
         ]
+        if (!subType || !subType.filter(e=>slugs.includes(e)).length) arr.push(mainType)
     }
     return capitalizeEveryWord(arr.join(' '))
 }

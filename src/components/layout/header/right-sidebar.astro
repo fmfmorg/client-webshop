@@ -85,6 +85,10 @@ const { id, show = true } = Astro.props as Props
                 const handleMouseLeave = (ev:MouseEvent) => {
                     if (productCollectionPointSidebarIsOn()) return
                     if (!checkbox.disabled){
+                        if (!ev.relatedTarget) {
+                            toggleSidebar(false,true)
+                            return
+                        }
                         const sidebarStayOpen = [iconButton,sidebar].some(e=>(ev.relatedTarget as HTMLElement).closest(`#${e.id}`))
                         toggleSidebar(sidebarStayOpen,true)
                     }

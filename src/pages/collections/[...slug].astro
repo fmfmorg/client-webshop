@@ -1,19 +1,10 @@
 ---
 import ShopContent from '@components/shop'
 import Layout from '@components/layout/index.astro'
-import type { IProduct } from '@components/catalogue-item/interfaces';
-import { capitalizeEveryWord, getCollectionPageTitle, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import { capitalizeEveryWord, getCollectionPageTitle, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
-import type { IFilterFacetCountMap } from '@misc/interfaces';
-
-interface IApiResponse {
-    productIDs:string[];
-    productMap:{[k:string]:IProduct};
-    correctSlugArr:string[];
-    facetCountMap:IFilterFacetCountMap;
-}
+import type { ICollectionPageResponse } from '@misc/interfaces';
 
 const { slug } = Astro.params;
 const searchParams = Astro.url.search
@@ -21,7 +12,7 @@ const searchParams = Astro.url.search
 const isOnline = FM_IS_ONLINE === 'true'
 const initialSessionID = Astro.cookies.get("sessionID")?.value || ""
 const headerCarouselOff = Astro.cookies.has(PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY)
-const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/shop-page-init${Astro.url.search}`,{
+const resp = await fetch(`${ FM_CLIENT_WEBSHOP_API_URL }/webshop/shop-page-init`,{
     method:'POST',
     headers:httpRequestHeader(true,'SSR',true,initialSessionID,Astro.clientAddress,!headerCarouselOff),
     body:JSON.stringify({
@@ -57,10 +48,18 @@ let {
     }
 } = json as {
     mdwResponse:IMdwResponse;
-    apiResponse:IApiResponse;
+    apiResponse:ICollectionPageResponse;
 }
 
 const mainTypeSlug = correctSlugArr[0]
+const slugs = correctSlugArr.slice(1)
+
+const availableSlugs = Object.values(collectionMenuMap[mainTypeSlug]).flat()
+const hasUnavailableSlugs = slugs.some(e=>!availableSlugs.includes(e))
+if (hasUnavailableSlugs){
+    const arr = slugs.filter(e=>availableSlugs.includes(e))
+    return Astro.redirect(`/collections/${[mainTypeSlug, ...arr].join('/')}${searchParams}`)
+}
 
 const correctSlug = correctSlugArr.join('/')
 if (slug !== correctSlug) return Astro.redirect(`/collections/${correctSlug}${searchParams}`)
@@ -87,8 +86,7 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     shopAddressMap,
     signedIn,
     firstName,
-    title:`Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap) || capitalizeEveryWord(mainTypeSlug.replaceAll('-', ' '))} for Her`,
-    title:`Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap) || capitalizeEveryWord(mainTypeSlug.replaceAll('-', ' '))} for Her`,
+    title:`Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap)} for Her`,
     headerCarouselTexts,
     metaDescription:'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.',
     collectionMenuMap,

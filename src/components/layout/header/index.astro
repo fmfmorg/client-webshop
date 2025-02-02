@@ -76,6 +76,8 @@ const isCheckoutPage = Astro.url.pathname === '/checkout'
 </>}
 
 <script>
+import { headerScrollLimit } from "@stores";
+
     const header = document.querySelector('header');
     const shoppingBagCheckbox = document.getElementById('shopping-bag-sidebar-checkbox') as HTMLInputElement;
     const userCheckbox = document.getElementById('user-sidebar-checkbox') as HTMLInputElement;
@@ -83,12 +85,13 @@ const isCheckoutPage = Astro.url.pathname === '/checkout'
     const desktopShopLI = document.getElementById('desktop-shop-li') as HTMLLIElement
     const desktopMenuCheckbox = document.getElementById("collection-dropdown-checkbox") as HTMLInputElement
     const desktopMenuDropdown = document.getElementById('collection-dropdown') as HTMLDivElement
+    const _headerScrollLimit = headerScrollLimit.get()
 
     let lastScrollY = window.scrollY;
 
     const onScroll = () => {
         const headerHeight = header.getBoundingClientRect().height
-        if (Math.abs(window.scrollY - lastScrollY) > 10) {
+        if (Math.abs(window.scrollY - lastScrollY) > _headerScrollLimit) {
             const collectionPointSidebarCheckbox = document.getElementById('product-collection-points-sidebar-checkbox') as HTMLInputElement
             if (window.scrollY < lastScrollY) {
                 // Scrolling down

@@ -185,9 +185,23 @@ export interface IPathnameSlugOrderItem {
 }
 
 export interface IUrl {
-    [k:string]:string;
+    pathname:string;
+    search:string;
+    slugOrder:string[];
 }
 
 export interface IFilterFacetCountMap {
     [k:string]:number;
+}
+
+export interface ICollectionPageResponse {
+    productIDs:string[];
+    productMap:{[k:string]:IProduct};
+    correctSlugArr:string[];
+    facetCountMap:IFilterFacetCountMap;
+}
+
+export interface ISortOrderItem {
+    name:string;
+    slug:string;
 }
