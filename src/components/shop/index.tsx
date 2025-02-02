@@ -96,6 +96,8 @@ const Shop = (p:{
 
         const newProductIdOrderMap = createProductIdOrderMap(_productIDs)
 
+        console.log("first: ", newProductIdOrderMap)
+
         setProductIdOrderMap(produce(curr=>{
             const newKeys = Object.keys(newProductIdOrderMap)
             const keysToDelete = !!newKeys.length ? Object.keys(curr).filter(e=>!newKeys.includes(e)) : Object.keys(curr)
@@ -112,6 +114,8 @@ const Shop = (p:{
                 })
             }
         }))
+
+        console.log("second: ", newProductIdOrderMap)
 
         const availableSlugs = Object.keys(_facetCountMap)
         let finalSlugArr = _correctSlugArr.filter(e=>availableSlugs.includes(e))
