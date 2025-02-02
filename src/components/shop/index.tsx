@@ -25,20 +25,16 @@ const Shop = (p:{
 }) => {
     let resizeTimeout
 
-    const createProductIdOrderMap = (arr:string[]):IProductIdOrderMap => arr
-        .map((id,i)=>{
-            const obj = {[id]:{
+    const [productIdOrderMap,setProductIdOrderMap] = createStore<IProductIdOrderMap>(
+        p.productIDs
+            .map((id,i)=>({[id]:{
                 id,
                 order:i,
                 group:Math.floor(i/itemPerGroup),
                 observe:i % itemPerGroup === itemPerGroup - 1
-            }}
-            console.log(obj)
-            return obj
-        })
-        .reduce((a,b)=>({...a,...b}),{})
-
-    const [productIdOrderMap,setProductIdOrderMap] = createStore<IProductIdOrderMap>(createProductIdOrderMap(p.productIDs))
+            }}))
+            .reduce((a,b)=>({...a,...b}),{})
+    )
     const productIDs = createMemo(()=>!!Object.values(productIdOrderMap).length ? Object.values(productIdOrderMap).sort((a,b)=>a.order - b.order).map(({id})=>id) : [])
     const [productMap, setProductMap] = createStore(p.productMap)
     const [cartItemMap, setCartItemMap] = createStore(p.cartItemMap)
@@ -95,7 +91,18 @@ const Shop = (p:{
             })
         }))
 
-        const newProductIdOrderMap = createProductIdOrderMap(_productIDs)
+        const newProductIdOrderMap = _productIDs
+            .map((id,i)=>{
+                const obj = {[id]:{
+                    id,
+                    order:i,
+                    group:Math.floor(i/itemPerGroup),
+                    observe:i % itemPerGroup === itemPerGroup - 1
+                }}
+                console.log(obj)
+                return obj
+            })
+            .reduce((a,b)=>({...a,...b}),{})
 
         console.log("first: ", newProductIdOrderMap)
 
