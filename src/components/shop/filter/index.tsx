@@ -1,4 +1,4 @@
-import { createEffect, createMemo, createSignal, For, onCleanup, onMount, useContext } from 'solid-js'
+import { createMemo, createSignal, For, onCleanup, onMount, useContext } from 'solid-js'
 import {FilterMasterContext, FilterSubContext} from './context'
 import DesktopFilterHeader from './desktop-filter-header'
 import DesktopAttributeContainer from './attribute-desktop'
@@ -12,7 +12,7 @@ import DesktopSortMenu from './sort-desktop'
 const filterHeaderContainerID = 'filter-header-container'
 const desktopFilterContainerID = 'desktop-filter-container'
 
-const Filter = () => {
+const Filter = (p:{loading:boolean;}) => {
     let 
         resizeTimeout, 
         containerRef, 
@@ -182,6 +182,7 @@ const Filter = () => {
                             each={filterRenderAttr()}
                             children={e=>(<DesktopAttributeContainer {...{...e}} />)}
                         />
+                        <div class={`absolute top-0 left-0 w-full h-full bg-white opacity-10 ${p.loading ? '' : 'hidden'}`.trim()} />
                     </div>
                     <div class="fixed z-[15] top-0 left-0 w-full h-full opacity-10 bg-black" />
                 </div>

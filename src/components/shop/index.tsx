@@ -35,6 +35,7 @@ const Shop = (p:{
             }}))
             .reduce((a,b)=>({...a,...b}),{})
     )
+    const [loading, setLoading] = createSignal(false)
     const productIDs = createMemo(()=>!!Object.values(productIdOrderMap).length ? Object.values(productIdOrderMap).sort((a,b)=>a.order - b.order).map(({id})=>id) : [])
     const [productMap, setProductMap] = createStore(p.productMap)
     const [cartItemMap, setCartItemMap] = createStore(p.cartItemMap)
@@ -47,6 +48,8 @@ const Shop = (p:{
     const [facetCountMap, setFacetCountMap] = createStore<IFilterFacetCountMap>(p.facetCountMap)
 
     const updateURL = async (s:string, slug:string) => {
+        setLoading(true)
+        
         const newURL = new URL(s.startsWith('http') ? s : httpToHttps(window.location.origin) + s)
 
         const resp = await fetch('/api/webshop/shop-page-init',{
@@ -60,6 +63,7 @@ const Shop = (p:{
 
         if (!resp.ok){
             await sessionLost(resp.status)
+            setLoading(false)
             return
         }
 
@@ -118,8 +122,6 @@ const Shop = (p:{
             }
         }))
 
-        console.log(productIdOrderMap)
-
         const availableSlugs = Object.keys(_facetCountMap)
         let finalSlugArr = _correctSlugArr.filter(e=>availableSlugs.includes(e))
         
@@ -135,6 +137,8 @@ const Shop = (p:{
         window.history.pushState(null,null,`/collections/${[p.mainProductType, ...finalSlugArr].join('/')}${newURL.search}`)
 
         window.scrollTo({top:0,left:0,behavior:'smooth'})
+
+        setLoading(false)
     }
 
     const updateCartQty = (item:ICartItem) => setCartItemMap(produce(e=>{
@@ -239,7 +243,7 @@ const Shop = (p:{
                     facetCountMap,
                     pathnamePrefixArr:pathnamePrefixArr(),
                 }}
-                children={<Filter />}
+                children={<Filter loading={loading()} />}
             />
             <Show 
                 when={!!productIDs().length} 
