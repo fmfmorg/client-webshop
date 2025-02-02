@@ -91,6 +91,7 @@ const Shop = (p:{
             })
         }))
 
+        /*
         const newProductIdOrderMap = _productIDs
             .map((id,i)=>{
                 const obj = {[id]:{
@@ -105,8 +106,35 @@ const Shop = (p:{
             .reduce((a,b)=>({...a,...b}),{})
 
         console.log("first: ", newProductIdOrderMap)
+        */
 
         setProductIdOrderMap(produce(curr=>{
+            const newProductLen = _productIDs.length
+            const keysToDelete = !!newProductLen ? Object.keys(curr).filter(e=>!_productIDs.includes(e)) : Object.keys(curr)
+
+            for (let i=0; i<newProductLen; i++){
+                const id = _productIDs[i]
+                if (!!curr[id]){
+                    curr[id].order = i
+                    curr[id].group = Math.floor(i / itemPerGroup)
+                    curr[id].observe = i % itemPerGroup === itemPerGroup - 1
+                } else {
+                    curr[id] = {
+                        id,
+                        order:i,
+                        group:Math.floor(i / itemPerGroup),
+                        observe:i % itemPerGroup === itemPerGroup - 1
+                    }
+                }
+            }
+
+            if (!!keysToDelete.length){
+                keysToDelete.forEach(e=>{
+                    curr[e] = undefined
+                })
+            }
+
+            /*
             const newKeys = Object.keys(newProductIdOrderMap)
             const keysToDelete = !!newKeys.length ? Object.keys(curr).filter(e=>!newKeys.includes(e)) : Object.keys(curr)
 
@@ -121,7 +149,10 @@ const Shop = (p:{
                     curr[e] = undefined
                 })
             }
+            */
         }))
+
+        console.log(productIdOrderMap)
 
         const availableSlugs = Object.keys(_facetCountMap)
         let finalSlugArr = _correctSlugArr.filter(e=>availableSlugs.includes(e))
