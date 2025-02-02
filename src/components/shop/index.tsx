@@ -34,7 +34,7 @@ const Shop = (p:{
                 group,
                 observe:i % itemPerGroup === itemPerGroup - 1
             }}
-            console.log(obj)
+            console.log(group,obj[id].group)
             return obj
         })
         .reduce((a,b)=>({...a,...b}),{})
