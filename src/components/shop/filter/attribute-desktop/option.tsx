@@ -1,9 +1,9 @@
-import { capitalizeEveryWord } from "@misc"
+import { capitalizeEveryWord, collectionPageNoIndex } from "@misc"
 import { createMemo, useContext } from "solid-js"
 import {FilterMasterContext, FilterSubContext} from "../context"
 
 const Option = (p:{attr:string;}) => {
-    const { currentURL, pathnamePrefixArr, updateURL, facetCountMap } = useContext(FilterMasterContext)
+    const { currentURL, pathnamePrefixArr, updateURL, facetCountMap, mainProductType, filterAttributes } = useContext(FilterMasterContext)
     const { slugOrder } = useContext(FilterSubContext)
     const slugsInCurrentPathname = createMemo(()=>currentURL.pathname.split('/').filter(e=>!pathnamePrefixArr.includes(e)))
     const isSelected = createMemo(()=>slugsInCurrentPathname().includes(p.attr))
@@ -14,21 +14,8 @@ const Option = (p:{attr:string;}) => {
         return [...pathnamePrefixArr,...slugs].join('/') + currentURL.search
     })
     
-    const nofollow = createMemo(()=>{
-        const slugs = href().split('/').filter(e=>!pathnamePrefixArr.includes(e))
-
-        // if 3 or more options across all attributes, do nofollow
-        if (slugs.length > 2) return true
-        const items = slugOrder.filter(({slug})=>slugs.includes(slug)).map(({attr})=>attr)
-        const countObj = items.reduce((acc,curr)=>{
-            acc[curr] = (acc[curr] || 0) + 1
-            return acc
-        },{})
-        const counts = Object.values(countObj) as number[]
-
-        // allow follow only if 2 or less attributes with only 1 option selected
-        return !!counts.length ? Math.max(...counts) > 1 : false
-    })
+    const nofollow = createMemo(()=>collectionPageNoIndex(href().split('?')[0],mainProductType,filterAttributes)
+    )
 
     const count = createMemo(()=>facetCountMap[p.attr] || 0)
 

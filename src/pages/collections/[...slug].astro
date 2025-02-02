@@ -1,7 +1,7 @@
 ---
 import ShopContent from '@components/shop'
 import Layout from '@components/layout/index.astro'
-import { capitalizeEveryWord, getCollectionPageTitle, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
+import { capitalizeEveryWord, collectionPageNoIndex, getCollectionPageTitle, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import type { ICollectionPageResponse } from '@misc/interfaces';
@@ -90,12 +90,13 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     headerCarouselTexts,
     metaDescription:'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.',
     collectionMenuMap,
+    noIndex:collectionPageNoIndex(Astro.url.pathname,mainTypeSlug,collectionMenuMap[mainTypeSlug])
 }}>
     <ShopContent 
         productIDs={productIDs || []} 
         productMap={productMap} 
         cartItemMap={cartItemMap} 
-        filterAttributes={collectionMenuMap[correctSlugArr[0]]}
+        filterAttributes={collectionMenuMap[mainTypeSlug]}
         mainProductType={correctSlugArr[0]}
         pathname={Astro.url.pathname}
         search={Astro.url.search}

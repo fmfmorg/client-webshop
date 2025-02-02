@@ -34,6 +34,7 @@ import { sleep } from './sleep'
 import { submitBtnClass } from './submit-btn-class'
 import { whiteBtnClass } from './white-btn-class'
 import { getCollectionPageTitle } from './get-collection-page-title'
+import { collectionPageNoIndex } from './collection-page-no-index'
 
 export {
     formatPrice,
@@ -72,4 +73,5 @@ export {
     measurementToSitemapStr,
     capitalizeEveryWord,
     getCollectionPageTitle,
+    collectionPageNoIndex,
 }

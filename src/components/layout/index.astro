@@ -32,6 +32,7 @@ interface Props {
   preloadImageFilename?:string;
   schema?:string;
   collectionMenuMap?:{[c:string]:{[d:string]:string[]}};
+  noIndex?:boolean;
 }
 
 const { 
@@ -55,6 +56,7 @@ const {
   preloadImageFilename = '',
   schema = '',
   collectionMenuMap = {},
+  noIndex = false,
 } = Astro.props
 const isCheckoutPage = Astro.url.pathname === '/checkout'
 const isContactPage = Astro.url.pathname === '/contact'
@@ -67,8 +69,7 @@ if (!!shoppingBagProp){
   if (!!cartItemMap) cartHasItems = !!Object.values(cartItemMap).map(e=>e.quantity).filter(e=>!!e).length
 } else cartHasItems = hasItemsInCart
 
-const href = httpToHttps(Astro.url.href)
-
+const href = httpToHttps(Astro.url.origin) + (Astro.url.pathname === '/' ? '' : Astro.url.pathname)
 ---
 
 <html lang="en-GB">
@@ -95,7 +96,11 @@ const href = httpToHttps(Astro.url.href)
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-  <link rel="canonical" href={href} />
+  {!!noIndex
+  ?
+  <meta name="robots" content="noindex,nofollow">
+  :
+  <link rel="canonical" href={href} />}
 
   {['og','twitter'].map(e=>(
     <meta property={`${e}:title`} content={title} />
