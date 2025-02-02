@@ -105,6 +105,9 @@ const Shop = (p:{
             }
         }))
 
+        console.log(newProductIdOrderMap)
+        console.log(productIdOrderMap)
+
         const availableSlugs = Object.keys(_facetCountMap)
         let finalSlugArr = _correctSlugArr.filter(e=>availableSlugs.includes(e))
         
@@ -194,9 +197,6 @@ const Shop = (p:{
             dispatchInternalEvent(PRODUCT_UPDATE,productDetails)
         } catch { return }
     }
-
-    // createEffect(()=>console.log(Object.values(productIdOrderMap).sort((a,b)=>a.order - b.order)))
-    createEffect(()=>console.log(productIdOrderMap))
 
     onMount(()=>{
         catalogueItemsOnResize()
