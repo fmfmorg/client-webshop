@@ -8,7 +8,7 @@ import { httpToHttps, type IShopAddressMap, type IShoppingBagSidebarProp } from 
 import LoadingOverlay from './loading-overlay.astro';
 import ErrorMsgModal from './error-msg-modal.astro';
 import CollectionPointOnQtyIncrease from './collection-point-on-qty-increase.astro'
-import { PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, FM_IS_ONLINE, PUBLIC_FM_ACCEPT_MEMBERSHIP } from 'astro:env/client'
+import { PUBLIC_FM_COMPANY_NAME_SHORT, PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX, FM_IS_ONLINE, PUBLIC_FM_ACCEPT_MEMBERSHIP, FM_AHREFS_ANALYTICS_KEY } from 'astro:env/client'
 import SvgSets from './svg-sets.astro'
 
 interface Props {
@@ -129,6 +129,7 @@ const href = httpToHttps(Astro.url.href)
   <meta name="theme-color" content="#ffffff">
 
   {(isContactPage || isCheckoutPage || PUBLIC_FM_ACCEPT_MEMBERSHIP === 'true') && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" defer></script>}
+  {FM_IS_ONLINE === 'true' && <script src="https://analytics.ahrefs.com/analytics.js" data-key={FM_AHREFS_ANALYTICS_KEY} async></script>}
 </head>
 <body 
   data-pip={paymentInProcess ? 1 : 0} 

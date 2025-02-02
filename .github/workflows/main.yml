@@ -39,5 +39,6 @@ jobs:
         PUBLIC_FM_CLIENT_WEBSHOP_REVOLUT_MODE: ${{ vars.PUBLIC_FM_CLIENT_WEBSHOP_REVOLUT_MODE }}
         PUBLIC_FM_ACCEPT_MEMBERSHIP: ${{ vars.PUBLIC_FM_ACCEPT_MEMBERSHIP }}
         FM_IS_ONLINE: ${{ vars.FM_IS_ONLINE }}
+        FM_AHREFS_ANALYTICS_KEY: ${{ secrets.FM_AHREFS_ANALYTICS_KEY }}
     - name: Reload PM2 process
       run: pm2 reload client-webshop --update-env

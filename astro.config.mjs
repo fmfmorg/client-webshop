@@ -84,6 +84,10 @@ export default defineConfig({
                 context:'client',
                 access:'public'
             }),
+            FM_AHREFS_ANALYTICS_KEY:envField.string({ 
+                context:'client',
+                access:'public'
+            })
             // for github action, cannot have envField with { context:'client', access:'public' }
         }
     },
