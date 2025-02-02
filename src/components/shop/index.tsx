@@ -1,4 +1,4 @@
-import { For, onMount, onCleanup, createMemo, Show, createSignal } from 'solid-js'
+import { For, onMount, onCleanup, createMemo, Show, createSignal, createEffect } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import CatalogueItemContext from '@components/catalogue-item/context'
 import type { IAddToBagResponse, ICartItem, ICartItemMap } from "@components/cart/interfaces";
@@ -193,6 +193,8 @@ const Shop = (p:{
             dispatchInternalEvent(PRODUCT_UPDATE,productDetails)
         } catch { return }
     }
+
+    createEffect(()=>console.log(Object.values(productIdOrderMap).sort((a,b)=>a.order - b.order)))
 
     onMount(()=>{
         catalogueItemsOnResize()
