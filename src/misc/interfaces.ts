@@ -177,3 +177,17 @@ export interface ISitemapShippingDetails {
     cost:number;
     threshold:number;
 }
+
+export interface IPathnameSlugOrderItem {
+    slug: string;
+    index: number;
+    attr:string;
+}
+
+export interface IUrl {
+    [k:string]:string;
+}
+
+export interface IFilterFacetCountMap {
+    [k:string]:number;
+}

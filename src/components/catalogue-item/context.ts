@@ -13,6 +13,7 @@ const CatalogueItemContext = createContext<{
     cartItemMap:{},
     productIdOrderMap:{},
     observerCallback:()=>{},
+
 })
 
 export default CatalogueItemContext

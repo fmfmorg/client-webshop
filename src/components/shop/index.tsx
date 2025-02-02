@@ -2,53 +2,26 @@ import { For, onMount, onCleanup, createMemo, Show } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import CatalogueItemContext from '@components/catalogue-item/context'
 import type { IAddToBagResponse, ICartItem, ICartItemMap } from "@components/cart/interfaces";
-import { catalogueItemsOnResize, dispatchInternalEvent, httpRequestHeader, whiteBtnClass, type ICatalogueMap } from "@misc";
+import { catalogueItemsOnResize, dispatchInternalEvent, httpRequestHeader, type ICatalogueMap } from "@misc";
 import CatalogueItem from '@components/catalogue-item';
 import type { IProduct, IProductIdOrderMap } from '@components/catalogue-item/interfaces';
 import { CART_QTY_UPDATE, CART_UPDATE, PRODUCT_UPDATE } from '@misc/event-keys';
+import NoItemAvailable from './no-item-available';
+import {FilterMasterContext} from './filter/context';
+import Filter from './filter';
+import type { IFilterFacetCountMap, IUrl } from '@misc/interfaces';
 
 const itemPerGroup = 24
-
-const NoItemAvailable = () => {
-    let ref, resizeTimeout
-
-    const resize = () => {
-        const { innerHeight } = window
-        const header = document.getElementsByTagName('header')[0] as HTMLDivElement
-        const footer = document.getElementsByTagName('footer')[0] as HTMLDivElement
-
-        const { height: headerHeight } = header.getBoundingClientRect()
-        const { height: footerHeight } = footer.getBoundingClientRect()
-
-        ref.style.minHeight = `${innerHeight - headerHeight - footerHeight}px`
-    }
-
-    const onResize = () => {
-        clearTimeout(resizeTimeout)
-        resizeTimeout = setTimeout(resize,100)
-    }
-    
-    onMount(()=>{
-        resize()
-        window.addEventListener('resize',onResize,true)
-
-        onCleanup(()=>{
-            window.removeEventListener('resize',onResize,true)
-        })
-    })
-
-    return (
-        <div ref={ref} class='m-auto w-fit flex flex-col justify-center'>
-            <p class='text-center font-light text-xl'>Oops... Nothing here.</p>
-            <a href='/collections/earrings' class={`${whiteBtnClass} px-4`}>Back to Shop</a>
-        </div>
-    )
-}
 
 const Shop = (p:{
     productIDs:string[];
     productMap:ICatalogueMap;
     cartItemMap:ICartItemMap;
+    filterAttributes:{[d:string]:string[]};
+    mainProductType:string;
+    pathname:string;
+    search:string;
+    facetCountMap:IFilterFacetCountMap;
 }) => {
     let resizeTimeout
 
@@ -60,6 +33,17 @@ const Shop = (p:{
     const productIDs = createMemo(()=>!!Object.values(productIdOrderMap).length ? Object.values(productIdOrderMap).sort((a,b)=>a.order - b.order).map(({id})=>id) : [])
     const [productMap, setProductMap] = createStore(p.productMap)
     const [cartItemMap, setCartItemMap] = createStore(p.cartItemMap)
+    const [currentURL, setCurrentURL] = createStore<IUrl>({pathname:p.pathname,search:p.search})
+    const [facetCountMap, setFacetCountMap] = createStore<IFilterFacetCountMap>(p.facetCountMap)
+
+    const updateURL = (s:string) => {
+        const newURL = new URL(s)
+        setCurrentURL(produce(e=>{
+            e.pathname = newURL.pathname
+            e.search = newURL.search
+        }))
+        window.history.pushState(null,null,s)
+    }
 
     const updateCartQty = (item:ICartItem) => setCartItemMap(produce(e=>{
         e[item.id] = item
@@ -152,33 +136,50 @@ const Shop = (p:{
     })
     
     return (
-        <Show 
-            when={!!productIDs().length} 
-            fallback={<NoItemAvailable />} 
-            children={
-                <div 
-                    class="pt-3 pb-5 px-3 md:px-4 grid grid-cols-2 gap-x-1 2xs:gap-x-2 sm:grid-cols-3 md:gap-x-4 2xl:grid-cols-4 gap-y-8"
-                >
-                    <CatalogueItemContext.Provider 
-                        value={{productMap,cartItemMap,productIdOrderMap,observerCallback}} 
-                        children={
-                            <For 
-                                each={productIDs()}
-                                children={(id,index)=>(
-                                    <CatalogueItem {...{
-                                        id,
-                                        productPageRelatedProduct:false,
-                                        index:index(),
-                                        isProductPage:true,
-                                        updateCartQty,
-                                    }} />
-                                )}
-                            />
-                        }
-                    />
-                </div>
-            }
-        />
+        <div>
+            <FilterMasterContext.Provider 
+                value={{
+                    filterAttributes:p.filterAttributes,
+                    mainProductType:p.mainProductType,
+                    currentURL,
+                    updateURL,
+                    facetCountMap,
+                }}
+                children={<Filter />}
+            />
+            <Show 
+                when={!!productIDs().length} 
+                fallback={<NoItemAvailable />} 
+                children={
+                    <div 
+                        class="pt-3 pb-5 px-3 md:px-4 grid grid-cols-2 gap-x-1 2xs:gap-x-2 sm:grid-cols-3 md:gap-x-4 2xl:grid-cols-4 gap-y-8"
+                    >
+                        <CatalogueItemContext.Provider 
+                            value={{
+                                productMap,
+                                cartItemMap,
+                                productIdOrderMap,
+                                observerCallback,
+                            }} 
+                            children={
+                                <For 
+                                    each={productIDs()}
+                                    children={(id,index)=>(
+                                        <CatalogueItem {...{
+                                            id,
+                                            productPageRelatedProduct:false,
+                                            index:index(),
+                                            isProductPage:true,
+                                            updateCartQty,
+                                        }} />
+                                    )}
+                                />
+                            }
+                        />
+                    </div>
+                }
+            />
+        </div>
     )
 }
 

@@ -15,9 +15,9 @@ export const getCollectionPageTitle = (
     if (mainType === 'earrings'){
         const { subType, metalColor, material } = subCollectionMap
         arr = [
-            ...metalColor.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' ')),,
-            ...material.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' ')),
-            ...subType.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' '))
+            ...!!metalColor && metalColor.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' ')),,
+            ...!!material && material.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' ')),
+            ...!!subType && subType.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' '))
         ]
     }
     return capitalizeEveryWord(arr.join(' '))

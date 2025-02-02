@@ -11,10 +11,10 @@ const { collectionMenuMap: { earrings:{ subType, metalColor, material } } } = As
 ---
 
 <input type="checkbox" hidden id="collection-dropdown-checkbox" class="peer/collectionmenu" />
-<div id="collection-dropdown-backdrop" class="fixed bottom-0 left-0 w-full h-full hidden z-10" />
-<label for="collection-dropdown-checkbox" class="fixed w-screen h-screen top-0 left-0 hidden peer-checked/collectionmenu:block z-[15] before:absolute before:w-full before:h-full before:backdrop-blur-sm" />
-<div id="collection-dropdown" class="hidden md:flex pb-4 justify-center shadow w-full h-fit left-0 bg-white z-20 duration-300 peer-checked/collectionmenu:translate-y-full [&>div]:w-48">
-    {!!subType.length && <div>
+<div id="collection-dropdown-backdrop" class="fixed bottom-0 left-0 w-full h-full hidden z-20" />
+<label for="collection-dropdown-checkbox" class="fixed w-screen h-screen top-0 left-0 hidden peer-checked/collectionmenu:block z-[25] before:absolute before:w-full before:h-full before:backdrop-blur-sm" />
+<div id="collection-dropdown" class="hidden md:flex pb-4 justify-center shadow w-full h-fit left-0 bg-white z-[28] duration-300 peer-checked/collectionmenu:translate-y-full [&>div]:w-48">
+    {!!subType && !!subType.length && <div>
         <SubMenuTitle name='Shop by Category' />
         <ul>
             {subType.map(e=>(
@@ -23,7 +23,7 @@ const { collectionMenuMap: { earrings:{ subType, metalColor, material } } } = As
             <MenuItem slug="" name="Shop All Categories" />
         </ul>
     </div>}
-    {!!metalColor.length && <div>
+    {!!metalColor && !!metalColor.length && <div>
         <SubMenuTitle name='Shop by Colour' />
         <ul>
             {metalColor.map(e=>(
@@ -31,7 +31,7 @@ const { collectionMenuMap: { earrings:{ subType, metalColor, material } } } = As
             ))}
         </ul>
     </div>}
-    {!!material.length && <div>
+    {!!material && !!material.length && <div>
         <SubMenuTitle name='Shop by Material' />
         <ul>
             {material.map(e=>(

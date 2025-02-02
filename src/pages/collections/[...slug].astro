@@ -3,13 +3,16 @@ import ShopContent from '@components/shop'
 import Layout from '@components/layout/index.astro'
 import type { IProduct } from '@components/catalogue-item/interfaces';
 import { capitalizeEveryWord, getCollectionPageTitle, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
+import { capitalizeEveryWord, getCollectionPageTitle, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
+import type { IFilterFacetCountMap } from '@misc/interfaces';
 
 interface IApiResponse {
     productIDs:string[];
     productMap:{[k:string]:IProduct};
     correctSlugArr:string[];
+    facetCountMap:IFilterFacetCountMap;
 }
 
 const { slug } = Astro.params;
@@ -50,6 +53,7 @@ let {
         productIDs,
         productMap,
         correctSlugArr, 
+        facetCountMap,
     }
 } = json as {
     mdwResponse:IMdwResponse;
@@ -84,9 +88,20 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     signedIn,
     firstName,
     title:`Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap) || capitalizeEveryWord(mainTypeSlug.replaceAll('-', ' '))} for Her`,
+    title:`Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap) || capitalizeEveryWord(mainTypeSlug.replaceAll('-', ' '))} for Her`,
     headerCarouselTexts,
     metaDescription:'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.',
     collectionMenuMap,
 }}>
-    <ShopContent productIDs={productIDs || []} productMap={productMap} cartItemMap={cartItemMap} client:load />
+    <ShopContent 
+        productIDs={productIDs || []} 
+        productMap={productMap} 
+        cartItemMap={cartItemMap} 
+        filterAttributes={collectionMenuMap[correctSlugArr[0]]}
+        mainProductType={correctSlugArr[0]}
+        pathname={Astro.url.pathname}
+        search={Astro.url.search}
+        facetCountMap={facetCountMap}
+        client:load 
+    />
 </Layout>
