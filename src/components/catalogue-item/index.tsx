@@ -94,23 +94,18 @@ const CatalogueItem = (
         }
     }
 
-    createEffect(()=>{
-        if (observe()){
-            observer.observe(containerRef)
-            setObserverStarted(true)
-        } else if (observerStarted()) observer.unobserve(containerRef)
-    })
+    // createEffect(()=>{
+    //     if (observe()){
+    //         observer.observe(containerRef)
+    //         setObserverStarted(true)
+    //     } else if (observerStarted()) observer.unobserve(containerRef)
+    // })
 
-    onMount(()=>{
-        // const observer = new IntersectionObserver(observerCallback,{rootMargin:'200px'})
-        // if (observe()) {
-        //     observer.observe(containerRef)
-        //     setObserverStarted(true)
-        // }
-        onCleanup(()=>{
-            if (observerStarted()) observer.disconnect()
-        })
-    })
+    // onMount(()=>{
+    //     onCleanup(()=>{
+    //         if (observerStarted()) observer.disconnect()
+    //     })
+    // })
 
     return (
         <div ref={containerRef} class={`relative${!!p.productPageRelatedProduct ? ' related-product' : ''}${!!p.homepageBestseller ? ' homepage-bestseller' : ''}`.trim()}>
