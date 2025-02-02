@@ -93,6 +93,7 @@ const CatalogueItem = (
     }
 
     onMount(()=>{
+        console.log(p.id)
         const observer = new IntersectionObserver(observerCallback,{rootMargin:'200px'})
         if (observe()) observer.observe(containerRef)
         onCleanup(()=>{
