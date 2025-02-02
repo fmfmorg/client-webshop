@@ -58,8 +58,6 @@ const Shop = (p:{
             return
         }
 
-        window.scrollTo({top:0,left:0,behavior:'smooth'})
-
         const { apiResponse:{
             productIDs:_productIDs,
             productMap:_productMap,
@@ -120,6 +118,8 @@ const Shop = (p:{
         }))
 
         window.history.pushState(null,null,`/collections/${[p.mainProductType, ...finalSlugArr].join('/')}${newURL.search}`)
+
+        window.scrollTo({top:0,left:0,behavior:'smooth'})
     }
 
     const updateCartQty = (item:ICartItem) => setCartItemMap(produce(e=>{
