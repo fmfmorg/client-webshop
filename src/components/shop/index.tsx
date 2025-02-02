@@ -27,13 +27,14 @@ const Shop = (p:{
 
     const createProductIdOrderMap = (arr:string[]):IProductIdOrderMap => arr
         .map((id,i)=>{
-            console.log(id,i,itemPerGroup,Math.floor(i/itemPerGroup))
-            return {[id]:{
+            const obj = {[id]:{
                 id,
                 order:i,
                 group:Math.floor(i/itemPerGroup),
                 observe:i % itemPerGroup === itemPerGroup - 1
             }}
+            console.log(obj)
+            return obj
         })
         .reduce((a,b)=>({...a,...b}),{})
 
@@ -114,8 +115,6 @@ const Shop = (p:{
                 })
             }
         }))
-
-        console.log("second: ", newProductIdOrderMap)
 
         const availableSlugs = Object.keys(_facetCountMap)
         let finalSlugArr = _correctSlugArr.filter(e=>availableSlugs.includes(e))
