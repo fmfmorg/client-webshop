@@ -176,7 +176,7 @@ const Filter = (p:{loading:boolean;}) => {
             }} 
             children={
                 <>
-                <div class="hidden [&:has(.filterattr:checked)]:block">
+                <div class="hidden md:[&:has(.filterattr:checked)]:block">
                     <div id={desktopFilterContainerID} ref={desktopFilterContainer} onMouseLeave={onMouseLeave} class="z-[17] fixed w-screen bg-white h-32">
                         <For 
                             each={filterRenderAttr()}
@@ -187,8 +187,8 @@ const Filter = (p:{loading:boolean;}) => {
                     <div class="fixed z-[15] top-0 left-0 w-full h-full opacity-10 bg-black" />
                 </div>
                 <Breadcrumb />
-                <div ref={containerRef} id={filterHeaderContainerID} onMouseLeave={onMouseLeave} class="hidden md:flex bg-white justify-between px-4 w-screen mb-1 z-20 sticky transition-all duration-300">
-                    <div class="flex gap-x-6 [&>*]:pt-2 [&>*]:pb-1">
+                <div ref={containerRef} id={filterHeaderContainerID} onMouseLeave={onMouseLeave} class="flex bg-white justify-between px-4 w-full mb-1 z-20 sticky transition-all duration-300">
+                    <div class="hidden md:flex gap-x-6 [&>*]:pt-2 [&>*]:pb-1">
                         <p class="text-gray-400 tracking-widest font-normal text-xs uppercase">Filter by:</p>
                         <For 
                             each={filterRenderAttr()}
@@ -197,12 +197,12 @@ const Filter = (p:{loading:boolean;}) => {
                             )}
                         />
                     </div>
-                    <div class="flex gap-x-4 pr-4">
+                    <div class="hidden md:flex gap-x-4 pr-4">
                         <p class="text-gray-400 tracking-widest font-normal text-xs uppercase pt-2 pb-1">Sort by:</p>
                         <DesktopSortMenu />
                     </div>
                 </div>
-                <div ref={chipsContainer} class="bg-white sticky duration-300 z-[15] transition-all duration-300 px-4 pt-2">
+                <div ref={chipsContainer} class="hidden md:block bg-white sticky duration-300 z-[15] transition-all duration-300 px-4 pt-2">
                     <ChipsContainer />
                 </div>
                 </>
