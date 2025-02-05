@@ -23,7 +23,7 @@ const Shop = (p:{
     search:string;
     facetCountMap:IFilterFacetCountMap;
 }) => {
-    let resizeTimeout
+    let resizeTimeout, mobileFilterDivCheckboxRef
 
     const [productIdOrderMap,setProductIdOrderMap] = createStore<IProductIdOrderMap>(
         p.productIDs
@@ -282,6 +282,8 @@ const Shop = (p:{
                     </div>
                 }
             />
+            <input ref={mobileFilterDivCheckboxRef} type="checkbox" hidden class="peer/mobilefilterdiv" />
+            <div class="hidden sticky bottom-0 w-full h-20 bg-red-300 peer-checked/mobilefilterdiv:translate-y-full duration-300"></div>
         </div>
     )
 }
