@@ -54,7 +54,7 @@ const DesktopSortMenu = () => {
             <ul class="absolute hidden peer-checked:block bg-white w-full py-1">
                 <For 
                     each={sortOrder as ISortOrderItem[]}
-                    children={(e,i)=><SortItem {...e} />}
+                    children={e=><SortItem {...e} />}
                 />
             </ul>
         </div>

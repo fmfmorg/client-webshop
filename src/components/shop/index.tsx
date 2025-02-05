@@ -47,6 +47,8 @@ const Shop = (p:{
     })
     const [facetCountMap, setFacetCountMap] = createStore<IFilterFacetCountMap>(p.facetCountMap)
 
+    const updateLoading = (v:boolean) => setLoading(v)
+
     const updateURL = async (s:string, slug:string) => {
         setLoading(true)
         
@@ -64,7 +66,7 @@ const Shop = (p:{
         if (!resp.ok){
             await sessionLost(resp.status)
             setLoading(false)
-            return
+            return false
         }
 
         const { apiResponse:{
@@ -139,6 +141,8 @@ const Shop = (p:{
         window.scrollTo({top:0,left:0,behavior:'smooth'})
 
         setLoading(false)
+
+        return true
     }
 
     const updateCartQty = (item:ICartItem) => setCartItemMap(produce(e=>{
@@ -242,8 +246,9 @@ const Shop = (p:{
                     updateURL,
                     facetCountMap,
                     pathnamePrefixArr:pathnamePrefixArr(),
+                    updateLoading,
                 }}
-                children={<Filter loading={loading()} />}
+                children={<Filter loading={loading()} productCount={productIDs().length} />}
             />
             <Show 
                 when={!!productIDs().length} 

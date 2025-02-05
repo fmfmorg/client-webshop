@@ -8,11 +8,12 @@ import { useStore } from '@nanostores/solid'
 import { headerScrollLimit } from '@stores'
 import ChipsContainer from './chips'
 import DesktopSortMenu from './sort-desktop'
+import { FilterHybrid, SortHybridWrapper } from './filter-hybrid'
 
 const filterHeaderContainerID = 'filter-header-container'
 const desktopFilterContainerID = 'desktop-filter-container'
 
-const Filter = (p:{loading:boolean;}) => {
+const Filter = (p:{loading:boolean;productCount:number;}) => {
     let 
         resizeTimeout, 
         containerRef, 
@@ -54,6 +55,7 @@ const Filter = (p:{loading:boolean;}) => {
         desktopRadioInput:`desktop-filter-attribute-${e.toLowerCase()}`,
         desktopHeaderLabelID:`desktop-filter-attribute-${e.toLowerCase()}-label`,
         desktopULID:`desktop-filter-attribute-${e.toLowerCase()}-ul`,
+        tabletHeaderLabelID:`tablet-filter-attribute-${e.toLowerCase()}`,
         mobileRadioInput:`mobile-filter-attribute-${e.toLowerCase()}`,
         mobileHeaderLabelID:`mobile-filter-attribute-${e.toLowerCase()}-label`,
         attributes:filterAttributes[e],
@@ -136,6 +138,9 @@ const Filter = (p:{loading:boolean;}) => {
                 const { left } = label.getBoundingClientRect()
                 ul.style.left = `${left}px`
             }
+
+            const desktopRadioInput = document.querySelector('input[name="desktop-filter-attr"]:checked') as HTMLInputElement
+            if (!!desktopRadioInput && window.innerWidth < 768) desktopRadioInput.checked = false
         }
     
         const attrHeaderMutationCallback = (mutationList:MutationRecord[],_) => {
@@ -146,7 +151,10 @@ const Filter = (p:{loading:boolean;}) => {
     
         const onResize = () => {
             clearTimeout(resizeTimeout)
-            resizeTimeout = setTimeout(repositionColumns,100)
+            resizeTimeout = setTimeout(()=>{
+                onLoad()
+                repositionColumns()
+            },100)
         }
 
         setTimeout(onLoad,100)
@@ -173,6 +181,7 @@ const Filter = (p:{loading:boolean;}) => {
         <FilterSubContext.Provider 
             value={{
                 slugOrder:slugOrder(),
+                filterRenderAttr:filterRenderAttr(),
             }} 
             children={
                 <>
@@ -180,14 +189,14 @@ const Filter = (p:{loading:boolean;}) => {
                     <div id={desktopFilterContainerID} ref={desktopFilterContainer} onMouseLeave={onMouseLeave} class="z-[17] fixed w-screen bg-white h-32">
                         <For 
                             each={filterRenderAttr()}
-                            children={e=>(<DesktopAttributeContainer {...{...e}} />)}
+                            children={e=>(<DesktopAttributeContainer {...e} />)}
                         />
                         <div class={`absolute top-0 left-0 w-full h-full bg-white opacity-10 ${p.loading ? '' : 'hidden'}`.trim()} />
                     </div>
                     <div class="fixed z-[15] top-0 left-0 w-full h-full opacity-10 bg-black" />
                 </div>
                 <Breadcrumb />
-                <div ref={containerRef} id={filterHeaderContainerID} onMouseLeave={onMouseLeave} class="flex bg-white justify-between px-4 w-full mb-1 z-20 sticky transition-all duration-300">
+                <div ref={containerRef} id={filterHeaderContainerID} onMouseLeave={onMouseLeave} class="hidden xs:grid xs:grid-cols-2 xs:gap-4 md:flex bg-white md:justify-between p-2 md:px-4 md:py-0 w-full mb-1 z-20 sticky transition-all duration-300">
                     <div class="hidden md:flex gap-x-6 [&>*]:pt-2 [&>*]:pb-1">
                         <p class="text-gray-400 tracking-widest font-normal text-xs uppercase">Filter by:</p>
                         <For 
@@ -201,10 +210,16 @@ const Filter = (p:{loading:boolean;}) => {
                         <p class="text-gray-400 tracking-widest font-normal text-xs uppercase pt-2 pb-1">Sort by:</p>
                         <DesktopSortMenu />
                     </div>
+                    <label for="filter-tablet-checkbox" class="hidden xs:block md:hidden text-center border border-black text-xs uppercase tracking-widest py-1 cursor-pointer">Filter</label>
+                    <SortHybridWrapper 
+                        children={<span>Sort</span>}
+                        labelClassName='hidden xs:block md:hidden text-center border border-black text-xs uppercase tracking-widest py-1 cursor-pointer'
+                    />
                 </div>
                 <div ref={chipsContainer} class="hidden md:block bg-white sticky duration-300 z-[15] transition-all duration-300 px-4 pt-2">
                     <ChipsContainer />
                 </div>
+                <FilterHybrid productCount={p.productCount} />
                 </>
             }
         />

@@ -14,8 +14,7 @@ const Option = (p:{attr:string;}) => {
         return [...pathnamePrefixArr,...slugs].join('/') + currentURL.search
     })
     
-    const nofollow = createMemo(()=>collectionPageNoIndex(href().split('?')[0],mainProductType,filterAttributes)
-    )
+    const nofollow = createMemo(()=>collectionPageNoIndex(href().split('?')[0],mainProductType,filterAttributes))
 
     const count = createMemo(()=>facetCountMap[p.attr] || 0)
 

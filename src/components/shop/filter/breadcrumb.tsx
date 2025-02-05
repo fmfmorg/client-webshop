@@ -30,7 +30,7 @@ const Breadcrumb = () => {
     })
 
     return (
-        <ul class="flex flex-wrap text-2xs 2xs:text-xs px-4 py-2 z-20 relative bg-white">
+        <ul class="flex flex-wrap text-2xs 2xs:text-xs px-2 md:px-4 pt-2 md:py-2 z-20 relative bg-white">
             <For 
                 each={breadcrumbItems()}
                 children={(e,i)=>(
