@@ -206,7 +206,7 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
                             )}
                         />
                     </div>
-                    <div class="hidden md:flex gap-x-4 pr-4">
+                    <div class="hidden md:flex gap-x-4">
                         <p class="text-gray-400 tracking-widest font-normal text-xs uppercase pt-2 pb-1">Sort by:</p>
                         <DesktopSortMenu />
                     </div>
