@@ -214,6 +214,7 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
                     <SortHybridWrapper 
                         children={<span>Sort</span>}
                         labelClassName='hidden xs:block md:hidden text-center border border-black text-xs uppercase tracking-widest py-1 cursor-pointer'
+                        containerClassName='relative hidden xs:block md:hidden'
                     />
                 </div>
                 <div ref={chipsContainer} class="hidden md:block bg-white sticky duration-300 z-[15] transition-all duration-300 px-4 pt-2">

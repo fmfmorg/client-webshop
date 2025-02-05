@@ -107,6 +107,7 @@ const FilterHybrid = (p:{productCount:number;}) => {
 const SortHybridWrapper = (p:{
     children:JSX.Element;
     labelClassName:string;
+    containerClassName:string;
 }) => {
     let selectRef
     const c = children(()=>p.children)
@@ -128,7 +129,7 @@ const SortHybridWrapper = (p:{
     }
 
     return (
-        <div class="relative">
+        <div class={p.containerClassName}>
             <select onInput={onInput} ref={selectRef} class="absolute top-0 w-full h-full opacity-0">
                 <For 
                     each={sortOrder}
