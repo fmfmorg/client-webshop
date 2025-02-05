@@ -212,22 +212,14 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
                     </div>
                     <label for="filter-tablet-checkbox" class="hidden xs:flex xs:justify-center md:hidden text-center border border-black text-xs uppercase tracking-widest py-1 cursor-pointer">
                         <span>Filter</span>
-                        <svg viewBox="0 0 20 20" class="ml-2 my-auto w-4 h-4 stroke-1 stroke-black fill-none" stroke-linecap="round">
-                            <line x1="0" y1="4" x2="20" y2="4" />
-                            <line x1="4" y1="10" x2="16" y2="10" />
-                            <line x1="8" y1="16" x2="12" y2="16" />
+                        <svg class="ml-2 my-auto w-4 h-4 stroke-1 stroke-black fill-none">
+                            <use href='#collection-filter' />
                         </svg>
                     </label>
                     <SortHybridWrapper 
                         children={<>
                         <span>Sort</span>
                         <svg viewBox="0 0 20 20" class="ml-2 my-auto w-4 h-4 stroke-1 stroke-black fill-none" stroke-linecap="round">
-                            <defs>
-                                <g id="sort-arrow">
-                                    <polyline points="6,9 10,5 14,9" />
-                                    <line x1="10" y1="5" x2="10" y2="15" />
-                                </g>
-                            </defs>
                             <use href="#sort-arrow" x="-3" y="-3" />
                             <g transform="translate(18,18) rotate(180)">
                                 <use href="#sort-arrow" x="-7" y="-5" />
