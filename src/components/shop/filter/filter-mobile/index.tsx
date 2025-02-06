@@ -52,7 +52,7 @@ const FilterMobile = () => {
 
     return (
         <div class='xs:hidden'>
-            <input onClick={checkboxOnClick} ref={checkboxRef} checked type="checkbox" id={bottomSheetFilterCheckboxID} hidden class="peer" />
+            <input onClick={checkboxOnClick} ref={checkboxRef} type="checkbox" id={bottomSheetFilterCheckboxID} hidden class="peer" />
             <div onClick={backdropOnClick} class="hidden fixed w-full h-full top-0 left-0 bg-black opacity-10 z-30 peer-checked:block" />
             <div 
                 ref={filterContainerRef}
