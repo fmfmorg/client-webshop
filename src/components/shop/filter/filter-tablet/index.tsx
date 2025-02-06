@@ -57,8 +57,8 @@ const FilterTablet = (p:{
                     <div class="border-y border-gray-300 divide-y divide-gray-300">{c()}</div>
                 </div>
                 <div ref={buttonRef} class="flex p-2 gap-2 absolute bottom-0 left-0 w-full text-xs">
-                <button onClick={showResultOnClick} class="flex-1 font-serif tracking-widest font-semibold text-center border-gray-600 border py-2 bg-gray-600 text-white mouse:hover:bg-black mouse:hover:border-black duration-300 cursor-pointer">Show {tempData.productCount} Items</button>
-                <button onClick={clearFilterOnClick} class="flex-none tracking-widest text-2xs uppercase relative after:absolute after:w-full after:h-0 after:bg-black after:left-0 after:bottom-2.5 mouse:hover:after:h-px touchscreen:after:hidden">Clear Filter</button>
+                    <button onClick={showResultOnClick} class="flex-1 font-serif tracking-widest font-semibold text-center border-gray-600 border py-2 bg-gray-600 text-white mouse:hover:bg-black mouse:hover:border-black duration-300 cursor-pointer">Show {tempData.productCount} Items</button>
+                    <button onClick={clearFilterOnClick} class="flex-none tracking-widest text-2xs uppercase relative after:absolute after:w-full after:h-0 after:bg-black after:left-0 after:bottom-2.5 mouse:hover:after:h-px touchscreen:after:hidden">Clear Filter</button>
                 </div>
             </div>
         </div>

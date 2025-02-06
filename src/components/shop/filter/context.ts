@@ -10,6 +10,7 @@ export const FilterMasterContext = createContext<{
     facetCountMap: IFilterFacetCountMap;
     pathnamePrefixArr:string[];
     updateLoading:(v:boolean)=>void;
+    bottomSheetFilterCheckboxID:string;
 }>({
     filterAttributes:{},
     mainProductType:'',
@@ -18,6 +19,7 @@ export const FilterMasterContext = createContext<{
     facetCountMap: {},
     pathnamePrefixArr:[],
     updateLoading:()=>{},
+    bottomSheetFilterCheckboxID:'',
 })
 
 export const FilterSubContext = createContext<{

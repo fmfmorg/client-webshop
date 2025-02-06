@@ -55,3 +55,4 @@ export const canShowPayBtn = computed(
 )
 export const cartID = atom('')
 export const headerScrollLimit = atom(10)
+export const bottomSheetScrollLimit = atom(100)

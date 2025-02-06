@@ -10,8 +10,15 @@ import NoItemAvailable from './no-item-available';
 import {FilterMasterContext} from './filter/context';
 import Filter from './filter';
 import type { ICollectionPageResponse, IFilterFacetCountMap, IUrl } from '@misc/interfaces';
+import { useStore } from '@nanostores/solid';
+import { headerScrollLimit } from '@stores';
+import { SortHybridWrapper } from './filter/filter-hybrid';
 
 const itemPerGroup = 24
+
+const bottomNavHeight = '40px'
+
+const bottomSheetFilterCheckboxID = 'bottom-sheet-filter-checkbox'
 
 const Shop = (p:{
     productIDs:string[];
@@ -23,7 +30,7 @@ const Shop = (p:{
     search:string;
     facetCountMap:IFilterFacetCountMap;
 }) => {
-    let resizeTimeout, mobileFilterDivCheckboxRef
+    let resizeTimeout, mobileFilterDivCheckboxRef, containerRef, mobileBottomNavRef
 
     const [productIdOrderMap,setProductIdOrderMap] = createStore<IProductIdOrderMap>(
         p.productIDs
@@ -35,7 +42,11 @@ const Shop = (p:{
             }}))
             .reduce((a,b)=>({...a,...b}),{})
     )
+    const _headerScrollLimit = useStore(headerScrollLimit)
+    const [lastScrollY,setLastScrollY] = createSignal(0)
     const [loading, setLoading] = createSignal(false)
+    const [screenWidth, setScreenWidth] = createSignal(0)
+    const [bottomNavSticky,setBottomNavSticky] = createSignal(false)
     const productIDs = createMemo(()=>!!Object.values(productIdOrderMap).length ? Object.values(productIdOrderMap).sort((a,b)=>a.order - b.order).map(({id})=>id) : [])
     const [productMap, setProductMap] = createStore(p.productMap)
     const [cartItemMap, setCartItemMap] = createStore(p.cartItemMap)
@@ -186,7 +197,10 @@ const Shop = (p:{
 
     const onResize = () => {
         clearTimeout(resizeTimeout)
-        resizeTimeout = setTimeout(catalogueItemsOnResize,200)
+        resizeTimeout = setTimeout(()=>{
+            setScreenWidth(window.innerWidth)
+            catalogueItemsOnResize()
+        },200)
     }
 
     const observerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
@@ -218,7 +232,32 @@ const Shop = (p:{
         } catch { return }
     }
 
+    const footerObserverCallback = (entries:IntersectionObserverEntry[]) => {
+        entries.forEach(entry=>{
+            setBottomNavSticky(!entry.isIntersecting)
+        })
+    }
+
+    const onScroll = () => {
+        if (Math.abs(window.scrollY - lastScrollY()) > _headerScrollLimit()){
+            const check = window.scrollY > lastScrollY()
+            if (mobileFilterDivCheckboxRef.checked !== check) mobileFilterDivCheckboxRef.checked = check
+        }
+        setLastScrollY(window.scrollY)
+    }
+
+    createEffect(()=>{
+        if (screenWidth() < 475 && bottomNavSticky()) window.addEventListener('scroll',onScroll);
+        else window.removeEventListener('scroll',onScroll);
+    })
+
     onMount(()=>{
+        const footer = document.getElementsByTagName('footer')[0] as HTMLElement
+        const footerObserver = new IntersectionObserver(footerObserverCallback,{rootMargin:bottomNavHeight})
+        footerObserver.observe(footer)
+
+        setLastScrollY(window.scrollY)
+        setScreenWidth(window.innerWidth)
         catalogueItemsOnResize()
         window.addEventListener('resize',onResize,true)
         window.addEventListener('online',onOnline,true)
@@ -228,8 +267,10 @@ const Shop = (p:{
         document.addEventListener(CART_UPDATE,onWsCartUpdate,true)
 
         onCleanup(()=>{
+            footerObserver.disconnect()
             window.removeEventListener('resize',onResize,true)
             window.removeEventListener('online',onOnline,true)
+            window.removeEventListener('scroll',onScroll);
             document.removeEventListener(CART_QTY_UPDATE,onCartQtyUpdate,true)
             document.removeEventListener(PRODUCT_UPDATE,onProductUpdate,true)
             document.removeEventListener(CART_UPDATE,onWsCartUpdate,true)
@@ -237,7 +278,7 @@ const Shop = (p:{
     })
     
     return (
-        <div>
+        <div ref={containerRef}>
             <FilterMasterContext.Provider 
                 value={{
                     filterAttributes:p.filterAttributes,
@@ -247,6 +288,7 @@ const Shop = (p:{
                     facetCountMap,
                     pathnamePrefixArr:pathnamePrefixArr(),
                     updateLoading,
+                    bottomSheetFilterCheckboxID,
                 }}
                 children={<Filter loading={loading()} productCount={productIDs().length} />}
             />
@@ -282,8 +324,53 @@ const Shop = (p:{
                     </div>
                 }
             />
-            <input ref={mobileFilterDivCheckboxRef} type="checkbox" hidden class="peer/mobilefilterdiv" />
-            <div class="hidden sticky bottom-0 w-full h-20 bg-red-300 peer-checked/mobilefilterdiv:translate-y-full duration-300"></div>
+            <input ref={mobileFilterDivCheckboxRef} type="checkbox" hidden class="peer/hidemobilefilterdiv" />
+            <div 
+                ref={mobileBottomNavRef} 
+                class="xs:hidden z-10 bottom-0 w-full bg-white border-t border-gray-300 divide-x grid grid-cols-2"
+                style={{height:bottomNavHeight}}
+                classList={{
+                    'sticky':bottomNavSticky(),
+                    'peer-checked/hidemobilefilterdiv:translate-y-full':bottomNavSticky(),
+                    'duration-300':bottomNavSticky(),
+                }}
+            >
+                <FilterMasterContext.Provider 
+                    value={{
+                        filterAttributes:p.filterAttributes,
+                        mainProductType:p.mainProductType,
+                        currentURL,
+                        updateURL,
+                        facetCountMap,
+                        pathnamePrefixArr:pathnamePrefixArr(),
+                        updateLoading,
+                        bottomSheetFilterCheckboxID,
+                    }}
+                    children={
+                        <SortHybridWrapper 
+                            children={
+                                <>
+                                <span class="my-auto">Sort</span>
+                                <svg viewBox="0 0 20 20" class="ml-2 my-auto w-4 h-4 stroke-1 stroke-black fill-none" stroke-linecap="round">
+                                    <use href="#sort-arrow" x="-3" y="-3" />
+                                    <g transform="translate(18,18) rotate(180)">
+                                        <use href="#sort-arrow" x="-7" y="-5" />
+                                    </g>
+                                </svg>
+                                </>
+                            }
+                            labelClassName='flex justify-center text-xs uppercase tracking-widest h-full'
+                            containerClassName='relative'
+                        />
+                    }
+                />
+                <label for={bottomSheetFilterCheckboxID} class="uppercase text-xs tracking-widest flex justify-center cursor-pointer">
+                    <span class="my-auto">Filter</span>
+                    <svg class="ml-2 my-auto w-4 h-4 stroke-1 stroke-black fill-none">
+                        <use href='#collection-filter' />
+                    </svg>
+                </label>
+            </div>
         </div>
     )
 }

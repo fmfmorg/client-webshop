@@ -7,6 +7,7 @@ import type { IFilterHybridTempData } from './interfaces'
 import { httpRequestHeader, sessionLost } from '@misc'
 import type { IFilterFacetCountMap } from '@misc/interfaces'
 import sortOrder from './sort-menu-options.json'
+import FilterMobile from './filter-mobile'
 
 const FilterHybrid = (p:{productCount:number;}) => {
     const { currentURL, pathnamePrefixArr, updateLoading, facetCountMap } = useContext(FilterMasterContext)
@@ -98,6 +99,7 @@ const FilterHybrid = (p:{productCount:number;}) => {
                         />
                     }
                 />
+                <FilterMobile />
                 </>
             }
         />

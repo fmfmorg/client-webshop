@@ -1,4 +1,4 @@
-import { createMemo, createSignal, For, onCleanup, onMount, useContext } from 'solid-js'
+import { createMemo, For, onCleanup, onMount, useContext } from 'solid-js'
 import sortOrder from '../sort-menu-options.json'
 import type { ISortOrderItem } from '@misc/interfaces'
 import SortItem from './sort-item'

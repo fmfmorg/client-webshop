@@ -1,4 +1,4 @@
-import { createMemo, createSignal, For, onCleanup, onMount, useContext } from 'solid-js'
+import { createEffect, createMemo, createSignal, For, onCleanup, onMount, useContext } from 'solid-js'
 import {FilterMasterContext, FilterSubContext} from './context'
 import DesktopFilterHeader from './desktop-filter-header'
 import DesktopAttributeContainer from './attribute-desktop'
@@ -18,12 +18,14 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
         resizeTimeout, 
         containerRef, 
         desktopFilterContainer,
-        chipsContainer
+        chipsContainer,
+        header
 
     const { filterAttributes, mainProductType } = useContext(FilterMasterContext)
         
     const [lastScrollY,setLastScrollY] = createSignal(0)
     const _headerScrollLimit = useStore(headerScrollLimit)
+    const [screenWidth, setScreenWidth] = createSignal(0)
 
     const headerNameMap = createMemo(()=>{
         const map = new Map<string,string>()
@@ -86,77 +88,81 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
     }
 
     const onLoad = () => {
+        setScreenWidth(window.innerWidth)
         const { bottom: _containerBottom } = containerRef.getBoundingClientRect()
         desktopFilterContainer.style.top = `${_containerBottom}px`
     }
+
+    const scrolling = (isDown:boolean) => {
+        if (!header) header = document.getElementsByTagName('header')[0] as HTMLElement
+        const { height: containerHeight, bottom: containerBottom } = containerRef.getBoundingClientRect()
+        const { height: headerHeight } = header.getBoundingClientRect()
+        if (isDown) {
+            containerRef.style.top = `${headerHeight}px`
+            chipsContainer.style.top = `${Math.max(containerBottom, headerHeight + containerHeight)}px`
+        } else {
+            const { height: chipContainerHeight } = chipsContainer.getBoundingClientRect()
+            containerRef.style.top = `-${containerHeight}px`
+            chipsContainer.style.top = `-${chipContainerHeight}px`
+            hideDesktopFilter()
+        }
+    }
+
+    const onScroll = () => {
+        if (Math.abs(window.scrollY - lastScrollY()) > _headerScrollLimit()){
+            scrolling(window.scrollY < lastScrollY())
+        }
+        setLastScrollY(window.scrollY)
+
+        if (!header) header = document.getElementsByTagName('header')[0] as HTMLElement
+        const { height: containerHeight, bottom: containerBottom } = containerRef.getBoundingClientRect()
+        const { height: headerHeight } = header.getBoundingClientRect()
+        desktopFilterContainer.style.top = `${Math.max(containerBottom, headerHeight + containerHeight)}px`
+    }
+
+    const repositionColumns = () => {
+        const len = filterRenderAttr().length
+
+        for (let i=0; i<len; i++){
+            const {desktopULID,desktopHeaderLabelID} = filterRenderAttr()[i]
+            const label = document.getElementById(desktopHeaderLabelID) as HTMLLabelElement
+            const ul = document.getElementById(desktopULID) as HTMLUListElement
+            if (!label || !ul) continue
+
+            const { left } = label.getBoundingClientRect()
+            ul.style.left = `${left}px`
+        }
+
+        const desktopRadioInput = document.querySelector('input[name="desktop-filter-attr"]:checked') as HTMLInputElement
+        if (!!desktopRadioInput && window.innerWidth < 768) desktopRadioInput.checked = false
+    }
+
+    const attrHeaderMutationCallback = (mutationList:MutationRecord[],_) => {
+        for (const mutation of mutationList){
+            if (mutation.type === 'attributes') repositionColumns()
+        }
+    }
+
+    const onResize = () => {
+        clearTimeout(resizeTimeout)
+        resizeTimeout = setTimeout(()=>{
+            onLoad()
+            repositionColumns()
+        },100)
+    }
+
+    createEffect(()=>{
+        if (screenWidth() >= 475) window.addEventListener('scroll',onScroll);
+        else window.removeEventListener('scroll',onScroll)
+    })
 
     onMount(()=>{
         // show filter on scroll down
         setLastScrollY(window.scrollY)
 
-        const header = document.getElementsByTagName('header')[0] as HTMLElement
-
-        const scrolling = (isDown:boolean) => {
-            const { height: containerHeight, bottom: containerBottom } = containerRef.getBoundingClientRect()
-            const { height: headerHeight } = header.getBoundingClientRect()
-            if (isDown) {
-                containerRef.style.top = `${headerHeight}px`
-                chipsContainer.style.top = `${Math.max(containerBottom, headerHeight + containerHeight)}px`
-            } else {
-                const { height: chipContainerHeight } = chipsContainer.getBoundingClientRect()
-                containerRef.style.top = `-${containerHeight}px`
-                chipsContainer.style.top = `-${chipContainerHeight}px`
-                hideDesktopFilter()
-            }
-        }
-
         scrolling(false)
-        
-        const onScroll = () => {
-            if (Math.abs(window.scrollY - lastScrollY()) > _headerScrollLimit()){
-                scrolling(window.scrollY < lastScrollY())
-            }
-            setLastScrollY(window.scrollY)
-
-            const { height: containerHeight, bottom: containerBottom } = containerRef.getBoundingClientRect()
-            const { height: headerHeight } = header.getBoundingClientRect()
-            desktopFilterContainer.style.top = `${Math.max(containerBottom, headerHeight + containerHeight)}px`
-        }
-
-        window.addEventListener('scroll',onScroll,true)
 
         // adjust column position in desktop filter
-        const repositionColumns = () => {
-            const len = filterRenderAttr().length
-    
-            for (let i=0; i<len; i++){
-                const {desktopULID,desktopHeaderLabelID} = filterRenderAttr()[i]
-                const label = document.getElementById(desktopHeaderLabelID) as HTMLLabelElement
-                const ul = document.getElementById(desktopULID) as HTMLUListElement
-                if (!label || !ul) continue
-    
-                const { left } = label.getBoundingClientRect()
-                ul.style.left = `${left}px`
-            }
-
-            const desktopRadioInput = document.querySelector('input[name="desktop-filter-attr"]:checked') as HTMLInputElement
-            if (!!desktopRadioInput && window.innerWidth < 768) desktopRadioInput.checked = false
-        }
-    
-        const attrHeaderMutationCallback = (mutationList:MutationRecord[],_) => {
-            for (const mutation of mutationList){
-                if (mutation.type === 'attributes') repositionColumns()
-            }
-        }
-    
-        const onResize = () => {
-            clearTimeout(resizeTimeout)
-            resizeTimeout = setTimeout(()=>{
-                onLoad()
-                repositionColumns()
-            },100)
-        }
-
         setTimeout(onLoad,100)
         setTimeout(repositionColumns,100)
         
@@ -170,7 +176,7 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
         window.addEventListener('touchend',onTouchEnd,true)
 
         onCleanup(()=>{
-            window.removeEventListener('scroll',onScroll,true)
+            window.removeEventListener('scroll',onScroll)
             attrHeaderObserver.disconnect()
             window.removeEventListener('resize',onResize,true)
             window.removeEventListener('touchend',onTouchEnd,true)
