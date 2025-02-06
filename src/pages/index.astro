@@ -66,20 +66,29 @@ const origin = httpToHttps(Astro.url.origin)
 
 const organizationalSchema = {
   "@context": "https://schema.org",
-  "@type": "OnlineStore",
-  "name": PUBLIC_FM_COMPANY_NAME_SHORT,
-  "legalName":PUBLIC_FM_COMPANY_NAME_FULL,
-  "url": origin,
-  "logo": `${origin}/logo.jpg`,
-  "description":"Based in Edinburgh, we offer beautiful, distinctive fashion jewellery at affordable prices.",
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "contactType": "Customer Service",
-    "url": `${origin}/contact`, 
-    "availableLanguage": ["English"]
-  },
-  "sameAs": [
-    "https://pinterest.com/fairymade_edi/"
+  "@graph":[
+    {
+        "@context" : "https://schema.org",
+        "@type" : "WebSite",
+        "name" : PUBLIC_FM_COMPANY_NAME_SHORT,
+        "url" : origin
+    },{
+        "@type": "OnlineStore",
+        "name": PUBLIC_FM_COMPANY_NAME_SHORT,
+        "legalName":PUBLIC_FM_COMPANY_NAME_FULL,
+        "url": origin,
+        "logo": `${origin}/logo.jpg`,
+        "description":"Based in Edinburgh, we offer beautiful, distinctive fashion jewellery at affordable prices.",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Service",
+            "url": `${origin}/contact`, 
+            "availableLanguage": ["English"]
+        },
+        "sameAs": [
+            "https://pinterest.com/fairymade_edi/"
+        ]
+    }
   ]
 }
 
