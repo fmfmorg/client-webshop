@@ -30,7 +30,7 @@ const isCheckoutPage = Astro.url.pathname === '/checkout'
 
 <header class={`bg-white shadow md:shadow-none z-30 top-0 left-0 w-full fixed transition-transform duration-300 ${isCheckoutPage ? 'shadow' : ''}`.trim()}>
     {!!headerCarouselTexts.length && <TextCarousel texts={headerCarouselTexts} client:load />}
-    <div class={isCheckoutPage ? 'flex justify-center' : 'px-4 flex justify-between items-center'}>
+    <div id="top-nav-container" class={isCheckoutPage ? 'flex justify-center' : 'px-4 flex justify-between items-center'}>
         <div class={isCheckoutPage ? 'hidden' : 'flex md:hidden'}>
             <label for="menu-sidebar-checkbox" id="menu-icon-button" class="cursor-pointer focus:outline-none h-full px-1 py-2 -ml-3 md:px-2 md:py-4 md:-ml-2">
                 <HamburgerIcon />
@@ -39,11 +39,11 @@ const isCheckoutPage = Astro.url.pathname === '/checkout'
                 <HamburgerIcon />
             </button> -->
         </div>
-        <a href="/" aria-label=`Homepage | ${PUBLIC_FM_COMPANY_NAME_SHORT}` class=`py-2 xs:py-3 w-[140px] md:w-[162px] ${isCheckoutPage ? 'flex flex-col justify-center h-10 md:h-12' : ''}`>
+        <a id="nav-logo" href="/" aria-label=`Homepage | ${PUBLIC_FM_COMPANY_NAME_SHORT}` class=`py-2 xs:py-3 w-[140px] md:w-[162px] ${isCheckoutPage ? 'flex flex-col justify-center h-10 md:h-12' : ''}`>
             <Logo className='h-[16.62px] md:h-[19.22px]' />
         </a>
         <nav class={isCheckoutPage ? 'hidden' : 'hidden md:block'}>
-            <ul class="flex space-x-8 font-display text-lg uppercase">
+            <ul id="desktop-nav-link-container" class="flex space-x-8 font-display text-lg uppercase">
                 {pages.map(({name,path})=>(
                     <li {...name === 'shop' ? {id:'desktop-shop-li'} : {class:'flex flex-col justify-center'}}>
                         {name==='shop' ? 
@@ -86,6 +86,8 @@ import { headerScrollLimit } from "@stores";
     const desktopMenuCheckbox = document.getElementById("collection-dropdown-checkbox") as HTMLInputElement
     const desktopMenuDropdown = document.getElementById('collection-dropdown') as HTMLDivElement
     const _headerScrollLimit = headerScrollLimit.get()
+    const logo = document.getElementById('nav-logo') as HTMLAnchorElement
+    const topNavContainer = document.getElementById('top-nav-container') as HTMLDivElement
 
     let lastScrollY = window.scrollY;
 
@@ -120,9 +122,27 @@ import { headerScrollLimit } from "@stores";
             if (!collectionMenuDropdownCheckbox.checked) collectionMenuDropdownCheckbox.click()
         }
         const onMouseLeave = (e:MouseEvent) => {
-            const isCollectionDropdown = (e.relatedTarget as HTMLElement).closest('#collection-dropdown')
+            const targetElem = e.relatedTarget as HTMLElement
+            const isCollectionDropdown = targetElem.closest('#collection-dropdown')
+            const isTopNavContainer = targetElem.closest('#top-nav-container')
+            const isDesktopNavLinksContainer = targetElem.closest('#desktop-nav-link-container')
+            const closeDropdown = !isCollectionDropdown && !isTopNavContainer || !!isDesktopNavLinksContainer
+
+            if (closeDropdown && collectionMenuDropdownCheckbox.checked) collectionMenuDropdownCheckbox.click()
+        }
+        const closeDropDown = () => {
+            if (collectionMenuDropdownCheckbox.checked) collectionMenuDropdownCheckbox.click()
+        }
+
+        const topNavOnMouseLeave = (e:MouseEvent) => {
+            const targetElem = e.relatedTarget as HTMLElement
+            const isCollectionDropdown = targetElem.closest('#collection-dropdown')
+
             if (!isCollectionDropdown && collectionMenuDropdownCheckbox.checked) collectionMenuDropdownCheckbox.click()
         }
+
+        logo.addEventListener('mouseenter',closeDropDown)
+        topNavContainer.addEventListener('mouseleave',topNavOnMouseLeave)
         desktopShopLI.addEventListener('mouseenter',onMouseEnter,true)
         desktopShopLI.addEventListener('mouseleave',onMouseLeave)
     }
