@@ -5,13 +5,14 @@ import type { IProductImages } from "@components/catalogue-item/interfaces";
 interface Props {
     id:string;
     images: IProductImages[];
+    name:string;
 }
 
-const { id, images } = Astro.props as Props
+const { id, images, name } = Astro.props as Props
 ---
 <astro-main-carousel data-id={id} data-len={images.length}>
     <div id=`main-carousel-${id}` class="w-full relative aspect-square group mb-8 2xs:mb-12">
-        <Carousel images={images} id={id} productPageKeyProduct renderImages />
+        <Carousel productName={name} images={images} id={id} productPageKeyProduct renderImages />
         <div class="touchscreen:hidden">
             <button aria-label="Previous Image" id="main-carousel-leftward" class="leftward absolute top-0 h-full left-0 w-2/12 peer/left">
                 <svg viewBox="0 0 70 100" stroke-width="0.8rem" stroke-linecap="round" stroke-linejoin="round" fill="none" class="absolute h-4 xs:h-6 sm:h-8 left-[15%] stroke-gray-700 duration-500 opacity-30 peer-hover/left:opacity-100 pointer-events-none" style="top:calc(50% - 0.5em)">

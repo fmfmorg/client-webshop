@@ -7,9 +7,10 @@ interface IProps {
     id:string;
     productPageKeyProduct:boolean;
     renderImages:boolean;
+    productName:string;
 }
 
-const { images, id, productPageKeyProduct, renderImages } = Astro.props as IProps
+const { images, id, productPageKeyProduct, renderImages, productName } = Astro.props as IProps
 
 ---
 
@@ -25,7 +26,8 @@ const { images, id, productPageKeyProduct, renderImages } = Astro.props as IProp
                 len:images.length,
                 productPageKeyProduct,
                 render:renderImages,
-                showRadio:images.length > 1
+                showRadio:images.length > 1,
+                productName,
             }} />
         ))
     }

@@ -15,7 +15,7 @@ interface Props {
 }
 
 const { id, productObj, cartItemObj, relatedProductIDs } = Astro.props
-const { images, stockQuantities, name, url, mainType, subType } = productObj[id]
+const { images, stockQuantities, name, mainType, subType, discountedPrice } = productObj[id]
 const qtyInCart = cartItemObj[id]?.quantity || 0
 
 const breadcrumbItems:ILink[] = [
@@ -56,13 +56,13 @@ const breadcrumbItems:ILink[] = [
     data-related-products={JSON.stringify(relatedProductIDs)} 
     data-stock-quantities={JSON.stringify(stockQuantities)} 
     data-qty-in-cart={qtyInCart}
-    data-name={productObj[id].name}
-    data-price={productObj[id].discountedPrice}
+    data-name={name}
+    data-price={discountedPrice}
 >
     <div id="product-container" class="space-y-2 md:space-y-0 md:w-screen md:-ml-4 md:grid md:grid-cols-5 md:gap-4 md:overflow-y-hidden lg:grid-cols-9">
         <div class="md:col-span-3 lg:col-span-5 md:overflow-y-auto hide-scrollbar">
             <div class="md:hidden">
-                <ImagesHorizontal id={id} images={images} />
+                <ImagesHorizontal name={name} id={id} images={images} />
             </div>
             <div class="vertical-image-container hidden md:block">
                 <ImagesVertical images={images} alt={name} />

@@ -12,10 +12,11 @@ const Image = (p:{
     isProductPage:boolean;
 }) => {
     const { productMap } = useContext(CatalogueItemContext)
-    const name = createMemo(()=>productMap[p.id].images.filter(e=>!!e.catalogue)[p.index].name)
+    const productName = createMemo(()=>productMap[p.id].name)
+    const filename = createMemo(()=>productMap[p.id].images.filter(e=>!!e.catalogue)[p.index].name)
     const ext = createMemo(()=>productMap[p.id].images.filter(e=>!!e.catalogue)[p.index].ext)
     const len = createMemo(()=>productMap[p.id].images.filter(e=>!!e.catalogue).length)
-    const filename = createMemo(()=>PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX + name())
+    const fullFilename = createMemo(()=>PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX + filename())
     const sizes = createMemo(()=>p.productPageKeyProduct ? '100vw' : '(min-width: 1536px) 25vw, (min-width: 640px) 33vw, 50vw')
     const showRadio = createMemo(()=>productMap[p.id].images.filter(e=>!!e.catalogue).length > 1)
     
@@ -29,7 +30,7 @@ const Image = (p:{
             <input 
                 type="radio" 
                 name={p.id} 
-                aria-label={name()} 
+                aria-label={filename()} 
                 checked={p.checked} 
                 disabled
                 class={`peer appearance-none border border-gray-400 rounded-full checked:bg-gray-400 absolute ${p.productPageKeyProduct ? '-bottom-5 w-1.5 h-1.5 2xs:-bottom-8 2xs:w-2 2xs:h-2' : 'z-10 bottom-2 w-1 h-1 xs:w-1.5 xs:h-1.5 mouse:hidden'} ${showRadio() ? '' : 'hidden'}`.trim()} 
@@ -38,16 +39,16 @@ const Image = (p:{
                 <picture>
                     {['.avif',ext()].map(e=>(
                         <source 
-                            srcset={`${filename()}_256x256${e} 256w, ${filename()}_768x768${e} 768w, ${filename()}${e} 2048w`} 
+                            srcset={`${fullFilename()}_256x256${e} 256w, ${fullFilename()}_768x768${e} 768w, ${fullFilename()}${e} 2048w`} 
                             type={e === '.jpg' ? 'image/jpeg' : `image/${e.replaceAll('.','')}`} 
-                            sizes={sizes}
+                            sizes={sizes()}
                         />
                     ))}
                     <img 
-                        src={`${filename()}_768x768${ext()}`} 
-                        srcset={`${filename()}_768x768${ext()} 768w, ${filename()}${ext()} 2048w`} 
-                        sizes={sizes}
-                        alt={name()} 
+                        src={`${fullFilename()}_768x768${ext()}`} 
+                        srcset={`${fullFilename()}_768x768${ext()} 768w, ${fullFilename()}${ext()} 2048w`} 
+                        sizes={sizes()}
+                        alt={productName()} 
                         width={768}
                         height={768}
                         class="object-cover object-center"

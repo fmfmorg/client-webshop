@@ -22,7 +22,7 @@ const ItemWithIssue = (
     }
 ) => (
     <li class='grid grid-flow-dense grid-cols-3 xs:grid-cols-4'>
-        <Image name={p.pd.image.name} ext={p.pd.image.ext} alt={p.pd.name} />
+        <Image name={p.pd.image.name} ext={p.pd.image.ext} alt={p.pd.name} imageSize={256} />
         <div class='col-span-2 xs:col-span-3 flex flex-col justify-center text-sm'>
             <p class='tracking-wide font-light'>{p.pd.name}</p>
             <p>{p.pd.qtyAvailable} of {p.qtyInCart} available</p>
