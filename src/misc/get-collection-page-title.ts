@@ -2,14 +2,11 @@ import { capitalizeEveryWord } from "./capitalize-every-word";
 
 export const getCollectionPageTitle = (
     slugs:string[],
-    collectionMenuMap: {
-        [c: string]: {
-            [d: string]: string[];
-        };
+    subCollectionMap: {
+        [d: string]: string[];
     }
 ) => {
     const mainType = slugs[0]
-    const subCollectionMap = collectionMenuMap[mainType]
     let arr:string[] = []
 
     if (mainType === 'earrings'){
@@ -22,5 +19,5 @@ export const getCollectionPageTitle = (
         
         if (!subType || !subType.filter(e=>slugs.includes(e)).length) arr.push(mainType)
     }
-    return capitalizeEveryWord(arr.join(' '))
+    return `Affordable ${capitalizeEveryWord(arr.join(' '))} for Her`
 }

@@ -2,7 +2,7 @@ import { For, onMount, onCleanup, createMemo, Show, createSignal, createEffect }
 import { createStore, produce } from 'solid-js/store'
 import CatalogueItemContext from '@components/catalogue-item/context'
 import type { IAddToBagResponse, ICartItem, ICartItemMap } from "@components/cart/interfaces";
-import { catalogueItemsOnResize, dispatchInternalEvent, httpRequestHeader, httpToHttps, sessionLost, type ICatalogueMap } from "@misc";
+import { catalogueItemsOnResize, dispatchInternalEvent, getCollectionPageTitle, httpRequestHeader, httpToHttps, sessionLost, type ICatalogueMap } from "@misc";
 import CatalogueItem from '@components/catalogue-item';
 import type { IProduct, IProductIdOrderMap } from '@components/catalogue-item/interfaces';
 import { CART_QTY_UPDATE, CART_UPDATE, PRODUCT_UPDATE } from '@misc/event-keys';
@@ -148,6 +148,9 @@ const Shop = (p:{
         }))
 
         window.history.pushState(null,null,`/collections/${[p.mainProductType, ...finalSlugArr].join('/')}${newURL.search}`)
+
+        const newTitle = getCollectionPageTitle([p.mainProductType, ...finalSlugArr],p.filterAttributes)
+        document.title = newTitle
 
         window.scrollTo({top:0,left:0,behavior:'smooth'})
 

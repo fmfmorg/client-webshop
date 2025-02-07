@@ -79,9 +79,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 
 Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 
-const title = `Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap)} for Her`
-
-console.log(title)
+const title = getCollectionPageTitle(correctSlugArr,collectionMenuMap[mainTypeSlug])
 const metaDescription = 'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.'
 
 let subCollectionSlug = '', subCollectionName = ''
