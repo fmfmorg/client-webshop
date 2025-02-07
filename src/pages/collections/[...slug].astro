@@ -1,10 +1,11 @@
 ---
 import ShopContent from '@components/shop'
 import Layout from '@components/layout/index.astro'
-import { capitalizeEveryWord, collectionPageNoIndex, getCollectionPageTitle, httpRequestHeader, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
+import { capitalizeEveryWord, collectionPageNoIndex, getCollectionPageTitle, httpRequestHeader, httpToHttps, sessionCookieOption, type IMdwResponse, type IShoppingBagSidebarProp } from '@misc';
 import { FM_CLIENT_WEBSHOP_API_URL } from 'astro:env/server'
 import { FM_IS_ONLINE, PUBLIC_FM_HEADER_CAROUSEL_OFF_COOKIE_KEY } from 'astro:env/client'
 import type { ICollectionPageResponse } from '@misc/interfaces';
+import { collectionPageSchema } from '@components/shop/schema';
 
 const { slug } = Astro.params;
 const searchParams = Astro.url.search
@@ -77,6 +78,27 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 }
 
 Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
+
+const title = `Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap)} for Her`
+
+console.log(title)
+const metaDescription = 'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.'
+
+let subCollectionSlug = '', subCollectionName = ''
+
+if (!!slugs.length){
+    subCollectionSlug = slugs[0]
+    const facetMap = collectionMenuMap[mainTypeSlug]
+    
+    switch (mainTypeSlug){
+        case 'earrings':
+            subCollectionName = Object.keys(facetMap).find(e=>facetMap[e].includes(subCollectionSlug)) === 'subType' ? subCollectionSlug.replaceAll('-',' ') : `${subCollectionSlug.replaceAll('-',' ')} ${mainTypeSlug}`
+            break
+        default: break
+    }
+
+    subCollectionName = capitalizeEveryWord(subCollectionName)
+}
 ---
 <Layout {...{
     shoppingBagProp,
@@ -86,11 +108,23 @@ Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOpt
     shopAddressMap,
     signedIn,
     firstName,
-    title:`Affordable ${getCollectionPageTitle(correctSlugArr,collectionMenuMap)} for Her`,
+    title,
     headerCarouselTexts,
-    metaDescription:'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.',
+    metaDescription,
     collectionMenuMap,
-    noIndex:collectionPageNoIndex(Astro.url.pathname,mainTypeSlug,collectionMenuMap[mainTypeSlug])
+    noIndex:collectionPageNoIndex(Astro.url.pathname,mainTypeSlug,collectionMenuMap[mainTypeSlug]),
+    schema:collectionPageSchema(
+        title,
+        metaDescription,
+        '',
+        subCollectionName,
+        productIDs,
+        productMap,
+        httpToHttps(Astro.url.origin),
+        mainTypeSlug,
+        subCollectionSlug,
+        subCollectionName,
+    )
 }}>
     <ShopContent 
         productIDs={productIDs || []} 
