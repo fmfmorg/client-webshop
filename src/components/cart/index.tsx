@@ -398,7 +398,7 @@ const CartList = (
                 </div>
             </div>
             <div ref={emptyBagRef} class={`${!!cartItemIDs().length || isCheckoutPage || $otherClientPaymentInProcess() ? 'hidden' : 'flex'} flex-col justify-center px-4 space-y-4`}>
-                <h3 class={`font-semibold text-lg tracking-wider [word-spacing:0.2rem] ${(!$acceptMembership() || $signedIn()) ? 'text-center' : ''}`}>Your shopping bag is empty!</h3>
+                <p class={`font-semibold text-lg tracking-wider [word-spacing:0.2rem] ${(!$acceptMembership() || $signedIn()) ? 'text-center' : ''}`}>Your shopping bag is empty!</p>
                 <Show when={$acceptMembership() && !$signedIn()} fallback={<ContinueShopping />} children={<SignInBtn />} />
             </div>
             <div ref={cartLockedRef} class={`${!isCheckoutPage && $otherClientPaymentInProcess() ? 'flex' : 'hidden'} flex-col justify-center`}>
