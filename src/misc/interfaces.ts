@@ -199,6 +199,10 @@ export interface ICollectionPageResponse {
     productMap:{[k:string]:IProduct};
     correctSlugArr:string[];
     facetCountMap:IFilterFacetCountMap;
+    aboveTheFold:string;
+    belowTheFold:string;
+    metaDescription:string;
+    ogImage:string;
 }
 
 export interface ISortOrderItem {

@@ -1,4 +1,6 @@
-export const collectionPageNoIndex = (pathname:string,mainProductType:string,filterAttributes: {[d: string]: string[]}) => {
+export const collectionPageNoIndex = (pathname:string,mainProductType:string,filterAttributes: {[d: string]: string[]}, productCount:number) => {
+    if (!productCount) return true
+    
     const pathnamePrefixArr = ['','collections',mainProductType]
     const slugs = pathname.split('/').filter(e=>!pathnamePrefixArr.includes(e))
 

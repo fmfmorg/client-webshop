@@ -13,6 +13,7 @@ import type { ICollectionPageResponse, IFilterFacetCountMap, IUrl } from '@misc/
 import { useStore } from '@nanostores/solid';
 import { headerScrollLimit } from '@stores';
 import { SortHybridWrapper } from './filter/filter-hybrid';
+import { BelowTheFold } from './filter/collection-description';
 
 const itemPerGroup = 24
 
@@ -29,6 +30,8 @@ const Shop = (p:{
     pathname:string;
     search:string;
     facetCountMap:IFilterFacetCountMap;
+    aboveTheFold:string;
+    belowTheFold:string;
 }) => {
     let resizeTimeout, mobileFilterDivCheckboxRef, containerRef, mobileBottomNavRef
 
@@ -49,6 +52,10 @@ const Shop = (p:{
     const [bottomNavSticky,setBottomNavSticky] = createSignal(false)
     const productIDs = createMemo(()=>!!Object.values(productIdOrderMap).length ? Object.values(productIdOrderMap).sort((a,b)=>a.order - b.order).map(({id})=>id) : [])
     const [productMap, setProductMap] = createStore(p.productMap)
+    const [descriptions, setDescriptions] = createStore({
+        aboveTheFold:p.aboveTheFold,
+        belowTheFold:p.belowTheFold
+    })
     const [cartItemMap, setCartItemMap] = createStore(p.cartItemMap)
     const pathnamePrefixArr = createMemo(()=>['','collections',p.mainProductType])
     const [currentURL, setCurrentURL] = createStore<IUrl>({
@@ -84,7 +91,9 @@ const Shop = (p:{
             productIDs:_productIDs,
             productMap:_productMap,
             correctSlugArr:_correctSlugArr,
-            facetCountMap:_facetCountMap
+            facetCountMap:_facetCountMap,
+            aboveTheFold:_aboveTheFold,
+            belowTheFold:_belowTheFold,
         }} = await resp.json() as {apiResponse: ICollectionPageResponse}
 
         setProductMap(produce(curr=>{
@@ -145,6 +154,11 @@ const Shop = (p:{
                 e.slugOrder = e.slugOrder.includes(slug) ? e.slugOrder.filter(c=>c!==slug) : [...e.slugOrder,slug]
                 e.slugOrder = e.slugOrder.filter(e=>availableSlugs.includes(e))
             }
+        }))
+
+        setDescriptions(produce(e=>{
+            e.aboveTheFold = _aboveTheFold
+            e.belowTheFold = _belowTheFold
         }))
 
         window.history.pushState(null,null,`/collections/${[p.mainProductType, ...finalSlugArr].join('/')}${newURL.search}`)
@@ -235,7 +249,7 @@ const Shop = (p:{
         } catch { return }
     }
 
-    const footerObserverCallback = (entries:IntersectionObserverEntry[]) => {
+    const bottomObserverCallback = (entries:IntersectionObserverEntry[]) => {
         entries.forEach(entry=>{
             setBottomNavSticky(!entry.isIntersecting)
         })
@@ -256,7 +270,7 @@ const Shop = (p:{
 
     onMount(()=>{
         const footer = document.getElementsByTagName('footer')[0] as HTMLElement
-        const footerObserver = new IntersectionObserver(footerObserverCallback,{rootMargin:bottomNavHeight})
+        const footerObserver = new IntersectionObserver(bottomObserverCallback,{rootMargin:bottomNavHeight})
         footerObserver.observe(footer)
 
         setLastScrollY(window.scrollY)
@@ -292,6 +306,8 @@ const Shop = (p:{
                     pathnamePrefixArr:pathnamePrefixArr(),
                     updateLoading,
                     bottomSheetFilterCheckboxID,
+                    descriptions,
+                    productIdOrderMap,
                 }}
                 children={<Filter loading={loading()} productCount={productIDs().length} />}
             />
@@ -299,9 +315,7 @@ const Shop = (p:{
                 when={!!productIDs().length} 
                 fallback={<NoItemAvailable />} 
                 children={
-                    <div 
-                        class="pt-3 pb-5 px-3 md:px-4 grid grid-cols-2 gap-x-1 2xs:gap-x-2 sm:grid-cols-3 md:gap-x-4 2xl:grid-cols-4 gap-y-8"
-                    >
+                    <div class="pt-3 pb-5 px-3 md:px-4 grid grid-cols-2 gap-x-1 2xs:gap-x-2 sm:grid-cols-3 md:gap-x-4 2xl:grid-cols-4 gap-y-8">
                         <CatalogueItemContext.Provider 
                             value={{
                                 productMap,
@@ -328,6 +342,21 @@ const Shop = (p:{
                 }
             />
             <input ref={mobileFilterDivCheckboxRef} type="checkbox" hidden class="peer/hidemobilefilterdiv" />
+            <FilterMasterContext.Provider 
+                value={{
+                    filterAttributes:p.filterAttributes,
+                    mainProductType:p.mainProductType,
+                    currentURL,
+                    updateURL,
+                    facetCountMap,
+                    pathnamePrefixArr:pathnamePrefixArr(),
+                    updateLoading,
+                    bottomSheetFilterCheckboxID,
+                    descriptions,
+                    productIdOrderMap,
+                }}
+                children={<BelowTheFold />}
+            />
             <div 
                 ref={mobileBottomNavRef} 
                 class="xs:hidden z-10 bottom-0 w-full bg-white border-t border-gray-300 divide-x grid grid-cols-2"
@@ -348,6 +377,8 @@ const Shop = (p:{
                         pathnamePrefixArr:pathnamePrefixArr(),
                         updateLoading,
                         bottomSheetFilterCheckboxID,
+                        descriptions,
+                        productIdOrderMap,
                     }}
                     children={
                         <SortHybridWrapper 

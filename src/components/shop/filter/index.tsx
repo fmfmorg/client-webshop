@@ -9,6 +9,7 @@ import { headerScrollLimit } from '@stores'
 import ChipsContainer from './chips'
 import DesktopSortMenu from './sort-desktop'
 import { FilterHybrid, SortHybridWrapper } from './filter-hybrid'
+import { AboveTheFold } from './collection-description'
 
 const filterHeaderContainerID = 'filter-header-container'
 const desktopFilterContainerID = 'desktop-filter-container'
@@ -18,10 +19,10 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
         resizeTimeout, 
         containerRef, 
         desktopFilterContainer,
-        chipsContainer,
+        desktopFilterMenuContainer,
         header
 
-    const { filterAttributes, mainProductType } = useContext(FilterMasterContext)
+    const { filterAttributes, mainProductType, currentURL } = useContext(FilterMasterContext)
         
     const [lastScrollY,setLastScrollY] = createSignal(0)
     const _headerScrollLimit = useStore(headerScrollLimit)
@@ -89,7 +90,7 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
 
     const onLoad = () => {
         setScreenWidth(window.innerWidth)
-        const { bottom: _containerBottom } = containerRef.getBoundingClientRect()
+        const { bottom: _containerBottom } = desktopFilterMenuContainer.getBoundingClientRect()
         desktopFilterContainer.style.top = `${_containerBottom}px`
     }
 
@@ -99,11 +100,8 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
         const { height: headerHeight } = header.getBoundingClientRect()
         if (isDown) {
             containerRef.style.top = `${headerHeight}px`
-            chipsContainer.style.top = `${Math.max(containerBottom, headerHeight + containerHeight)}px`
         } else {
-            const { height: chipContainerHeight } = chipsContainer.getBoundingClientRect()
             containerRef.style.top = `-${containerHeight}px`
-            chipsContainer.style.top = `-${chipContainerHeight}px`
             hideDesktopFilter()
         }
     }
@@ -115,7 +113,7 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
         setLastScrollY(window.scrollY)
 
         if (!header) header = document.getElementsByTagName('header')[0] as HTMLElement
-        const { height: containerHeight, bottom: containerBottom } = containerRef.getBoundingClientRect()
+        const { height: containerHeight, bottom: containerBottom } = desktopFilterMenuContainer.getBoundingClientRect()
         const { height: headerHeight } = header.getBoundingClientRect()
         desktopFilterContainer.style.top = `${Math.max(containerBottom, headerHeight + containerHeight)}px`
     }
@@ -163,7 +161,7 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
         scrolling(false)
 
         // adjust column position in desktop filter
-        setTimeout(onLoad,100)
+        setTimeout(onLoad,500)
         setTimeout(repositionColumns,100)
         
         const attrHeaderObserver = new MutationObserver(attrHeaderMutationCallback)
@@ -191,7 +189,7 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
             }} 
             children={
                 <>
-                <div class="hidden md:[&:has(.filterattr:checked)]:block">
+                <div class="hidden md:[&:has(.filterattr:checked)]:block peer">
                     <div id={desktopFilterContainerID} ref={desktopFilterContainer} onMouseLeave={onMouseLeave} class="z-[17] fixed w-screen bg-white h-32">
                         <For 
                             each={filterRenderAttr()}
@@ -202,41 +200,47 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
                     <div class="fixed z-[15] top-0 left-0 w-full h-full opacity-10 bg-black" />
                 </div>
                 <Breadcrumb />
-                <div ref={containerRef} id={filterHeaderContainerID} onMouseLeave={onMouseLeave} class="hidden xs:grid xs:grid-cols-2 xs:gap-4 md:flex bg-white md:justify-between p-2 md:px-4 md:py-0 w-full mb-1 z-20 sticky transition-all duration-300">
-                    <div class="hidden md:flex gap-x-6 [&>*]:pt-2 [&>*]:pb-1">
-                        <p class="text-gray-400 tracking-widest font-normal text-xs uppercase">Filter by:</p>
-                        <For 
-                            each={filterRenderAttr()}
-                            children={e=>(
-                                <DesktopFilterHeader {...e} />
-                            )}
+                <AboveTheFold />
+                <div id={filterHeaderContainerID} ref={containerRef} onMouseLeave={onMouseLeave} class="hidden xs:block w-full z-20 sticky transition-all duration-300 md:peer-[:has(.filterattr:checked)]:[&>#chips-container]:hidden">
+                    <div ref={desktopFilterMenuContainer} class="xs:grid xs:grid-cols-2 xs:gap-4 md:flex md:justify-between p-2 md:px-4 md:py-0 bg-white pb-1">
+                        <div class="hidden md:flex gap-x-6 [&>*]:pt-2 [&>*]:pb-1">
+                            <p class="text-gray-400 tracking-widest font-normal text-xs uppercase">Filter by:</p>
+                            <For 
+                                each={filterRenderAttr()}
+                                children={e=>(
+                                    <DesktopFilterHeader {...e} />
+                                )}
+                            />
+                        </div>
+                        <div class="hidden md:flex gap-x-4">
+                            <p class="text-gray-400 tracking-widest font-normal text-xs uppercase pt-2 pb-1">Sort by:</p>
+                            <DesktopSortMenu />
+                        </div>
+                        <label for="filter-tablet-checkbox" class="hidden xs:flex xs:justify-center md:hidden text-center border border-black text-xs uppercase tracking-widest py-1 cursor-pointer">
+                            <span>Filter</span>
+                            <svg class="ml-2 my-auto w-4 h-4 stroke-1 stroke-black fill-none">
+                                <use href='#collection-filter' />
+                            </svg>
+                        </label>
+                        <SortHybridWrapper 
+                            children={<>
+                            <span>Sort</span>
+                            <svg viewBox="0 0 20 20" class="ml-2 my-auto w-4 h-4 stroke-1 stroke-black fill-none" stroke-linecap="round">
+                                <use href="#sort-arrow" x="-3" y="-3" />
+                                <g transform="translate(18,18) rotate(180)">
+                                    <use href="#sort-arrow" x="-7" y="-5" />
+                                </g>
+                            </svg>
+                            </>}
+                            labelClassName='hidden xs:flex xs:justify-center md:hidden text-center border border-black text-xs uppercase tracking-widest py-1 cursor-pointer'
+                            containerClassName='relative hidden xs:block md:hidden'
                         />
                     </div>
-                    <div class="hidden md:flex gap-x-4">
-                        <p class="text-gray-400 tracking-widest font-normal text-xs uppercase pt-2 pb-1">Sort by:</p>
-                        <DesktopSortMenu />
+                    <div id='chips-container' class="hidden md:block bg-white">
+                        <ChipsContainer />
                     </div>
-                    <label for="filter-tablet-checkbox" class="hidden xs:flex xs:justify-center md:hidden text-center border border-black text-xs uppercase tracking-widest py-1 cursor-pointer">
-                        <span>Filter</span>
-                        <svg class="ml-2 my-auto w-4 h-4 stroke-1 stroke-black fill-none">
-                            <use href='#collection-filter' />
-                        </svg>
-                    </label>
-                    <SortHybridWrapper 
-                        children={<>
-                        <span>Sort</span>
-                        <svg viewBox="0 0 20 20" class="ml-2 my-auto w-4 h-4 stroke-1 stroke-black fill-none" stroke-linecap="round">
-                            <use href="#sort-arrow" x="-3" y="-3" />
-                            <g transform="translate(18,18) rotate(180)">
-                                <use href="#sort-arrow" x="-7" y="-5" />
-                            </g>
-                        </svg>
-                        </>}
-                        labelClassName='hidden xs:flex xs:justify-center md:hidden text-center border border-black text-xs uppercase tracking-widest py-1 cursor-pointer'
-                        containerClassName='relative hidden xs:block md:hidden'
-                    />
                 </div>
-                <div ref={chipsContainer} class="hidden md:block bg-white sticky duration-300 z-[15] transition-all duration-300 px-4 pt-2">
+                <div class='hidden invisible md:peer-[:has(.filterattr:checked)]:block'>
                     <ChipsContainer />
                 </div>
                 <FilterHybrid productCount={p.productCount} />

@@ -4,7 +4,6 @@ import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from "astro:env/client";
 export const collectionPageSchema = (
     title:string,
     description:string,
-    image:string,
     collectionName:string,
     productIDs:string[],
     productMap:ICatalogueMap,
@@ -34,6 +33,17 @@ export const collectionPageSchema = (
         "name": subCollectionName,
         "item": `${origin}/collections/${mainType}/${subCollectionSlug}`
     })
+
+    let image = ''
+
+    if (!!productIDs.length){
+        const id = productIDs[0]
+        if (!!productMap[id]){
+            const product = productMap[id]
+
+            image = (!!product.snippetImages && !!product.snippetImages.length) ? PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX + product.snippetImages[0] : ''
+        }
+    }
 
     return JSON.stringify({
         "@context":"http://schema.org",

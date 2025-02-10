@@ -1,0 +1,17 @@
+.product-desc {
+    ul {
+        margin-top: 0.5rem;
+        li {
+            list-style-type: disc;
+            list-style-position: inside;
+        }
+    }
+
+    ol {
+        margin-top: 0.5rem;
+        li {
+            list-style-type: decimal;
+            list-style-position: inside;
+        }
+    }
+}

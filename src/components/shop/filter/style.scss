@@ -1,0 +1,122 @@
+.above-the-fold {
+    & > div {
+        display: grid;
+        row-gap: 0.5rem;
+
+        h1 {
+            font-family: "Noto Serif JP", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+
+            @media (min-width: 475px) {
+                font-size: 1.875rem;
+                line-height: 2.25rem;
+            }
+        }
+
+        p {
+            font-weight: 300;
+            font-size: 0.75rem;
+            line-height: 1rem;
+            max-width: 28rem;
+
+            @media (min-width: 475px) {
+                font-size: 0.875rem;
+                line-height: 1.25rem;
+            }
+
+            @media (max-width: 474px) {
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3;
+                line-clamp: 3;
+            }
+        }
+    }
+
+    input:checked + div > p {
+        overflow: visible;
+        display: block;
+        -webkit-box-orient: horizontal;
+        -webkit-line-clamp: unset;
+        line-clamp: unset;
+    }
+}
+
+.below-the-fold {
+    & > div > div {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+
+    h2 {
+        font-family: "Noto Serif JP", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+        font-weight: 600;
+    }
+
+    h3 {
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+
+    p {
+        font-weight: 300;
+        margin-top: 0.25rem;
+        font-size: 0.75rem;
+        line-height: 1rem;
+
+        a {
+            text-decoration: underline;
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    @media (min-width: 475px) {
+        h2 {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+
+        h3 {
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+
+        p {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+    }
+
+    @media (min-width: 768px) {
+        & > div {
+            display: flex;
+
+            &:nth-of-type(odd){
+                flex-direction: row-reverse;
+            }
+
+            & > * {
+                width: 50%;
+            }
+
+            & > div {
+                padding: 2rem;
+            }
+        }
+    }
+}

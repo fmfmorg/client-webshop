@@ -136,6 +136,11 @@ import { headerScrollLimit } from "@stores";
 
         const topNavOnMouseLeave = (e:MouseEvent) => {
             const targetElem = e.relatedTarget as HTMLElement
+            if (!targetElem){
+                if (collectionMenuDropdownCheckbox.checked) collectionMenuDropdownCheckbox.click()
+                return
+            }
+
             const isCollectionDropdown = targetElem.closest('#collection-dropdown')
 
             if (!isCollectionDropdown && collectionMenuDropdownCheckbox.checked) collectionMenuDropdownCheckbox.click()

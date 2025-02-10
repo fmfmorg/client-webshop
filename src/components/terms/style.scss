@@ -1,0 +1,63 @@
+.terms {
+    font-weight: 300;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+
+    h1 {
+        word-spacing: 0.2rem;
+        letter-spacing: -0.05em;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        font-family: "Yuji Syuku", serif;
+    }
+
+
+    & > * >li {
+        &::first-line {
+            font-weight: 600;
+        }
+    }
+
+    & > * > li, & > p {
+        margin-top: 1rem;
+        a {
+            font-weight: 600;
+            text-decoration: underline;
+        }
+    }
+
+    ol > li {
+        list-style-type: decimal;
+        margin-left: 1rem;
+
+        &::marker {
+            font-weight: 600;
+        }
+    }
+
+    ul > li > ul > li {
+        list-style-position: inside;
+        list-style-type: disc;
+    }
+    
+    @media (min-width: 475px) {
+        font-size: 1rem;
+        line-height: 1.5rem;
+
+        h1 {
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+
+        ol > li {
+            margin-left: 1.25rem;
+        }
+    }
+}

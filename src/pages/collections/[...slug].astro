@@ -46,6 +46,10 @@ let {
         productMap,
         correctSlugArr, 
         facetCountMap,
+        aboveTheFold, 
+        belowTheFold, 
+        metaDescription,
+        ogImage
     }
 } = json as {
     mdwResponse:IMdwResponse;
@@ -80,7 +84,7 @@ const shoppingBagProp:IShoppingBagSidebarProp = {
 Astro.cookies.set("csrf_token",resp.headers.get("X-CSRF-TOKEN"),sessionCookieOption(isOnline))
 
 const title = getCollectionPageTitle(correctSlugArr,collectionMenuMap[mainTypeSlug])
-const metaDescription = 'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.'
+// const metaDescription = 'Beautiful jewellery from delicate to statement pieces. Mix and match any 3 for £20, plus free UK shipping on orders £20+. Stand out with our unique styles.'
 
 let subCollectionSlug = '', subCollectionName = ''
 
@@ -110,11 +114,11 @@ if (!!slugs.length){
     headerCarouselTexts,
     metaDescription,
     collectionMenuMap,
-    noIndex:collectionPageNoIndex(Astro.url.pathname,mainTypeSlug,collectionMenuMap[mainTypeSlug]),
+    noIndex:collectionPageNoIndex(Astro.url.pathname,mainTypeSlug,collectionMenuMap[mainTypeSlug],!!productIDs ? productIDs.length : 0),
+    imageURL:ogImage,
     schema:collectionPageSchema(
         title,
         metaDescription,
-        '',
         subCollectionName,
         productIDs,
         productMap,
@@ -133,6 +137,8 @@ if (!!slugs.length){
         pathname={Astro.url.pathname}
         search={Astro.url.search}
         facetCountMap={facetCountMap}
+        aboveTheFold={aboveTheFold}
+        belowTheFold={belowTheFold}
         client:load 
     />
 </Layout>

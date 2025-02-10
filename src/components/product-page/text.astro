@@ -5,6 +5,7 @@ import type { IProduct } from '@components/catalogue-item/interfaces';
 import ClickCollectBtn from './click-collect-btn';
 import LoadingSmall from '@components/layout/header/icons/loading-small.astro';
 import { descriptionHTML } from './description-html';
+import './style.scss'
 
 interface Props {
     productDetails:IProduct;
@@ -20,7 +21,6 @@ const {
 
 const descriptionHTMLStr = descriptionHTML(productDetails)
 ---
-
 <div class="divide-y gap-y-4">
     <div class="md:mb-8">
         <h1 class="font-display text-2xl [letter-spacing:-0.18rem] [word-spacing:0.3rem]">{name}</h1>
@@ -57,7 +57,7 @@ const descriptionHTMLStr = descriptionHTML(productDetails)
     </div>
     <ClickCollectBtn product={productDetails} client:only="solid-js" />
     <SubText title="Description" open>
-        <div set:html={descriptionHTMLStr} class="[&>ul>li]:list-disc [&>ul>li]:list-inside [&>ul]:mt-2 [&>ol>li]:list-decimal [&>ol>li]:list-inside [&>ol]:mt-2" />
+        <div set:html={descriptionHTMLStr} class="product-desc" />
     </SubText>
     <SubText title="How to Care">
         <p class="mb-2">To keep your earrings looking beautiful:</p>

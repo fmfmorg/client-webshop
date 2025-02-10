@@ -25,7 +25,7 @@ const FilterChip = (p:{slug:string;}) => {
 const ChipsContainer = () => {
     const { currentURL } = useContext(FilterMasterContext)
     return (
-        <ul class="flex flex-wrap">
+        <ul class="flex flex-wrap px-4 pt-2">
             <For 
                 each={currentURL.slugOrder}
                 children={e=><FilterChip slug={e} />}

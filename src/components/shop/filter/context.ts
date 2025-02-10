@@ -1,6 +1,7 @@
 import type { IFilterFacetCountMap, IPathnameSlugOrderItem, IUrl } from '@misc/interfaces';
 import { createContext } from 'solid-js'
 import type { IFilterHybridTempData, IFilterRenderItem } from './interfaces';
+import type { IProductIdOrderMap } from '@components/catalogue-item/interfaces';
 
 export const FilterMasterContext = createContext<{
     filterAttributes:{[d:string]:string[]};
@@ -11,6 +12,11 @@ export const FilterMasterContext = createContext<{
     pathnamePrefixArr:string[];
     updateLoading:(v:boolean)=>void;
     bottomSheetFilterCheckboxID:string;
+    descriptions:{
+        aboveTheFold:string;
+        belowTheFold:string;
+    };
+    productIdOrderMap:IProductIdOrderMap;
 }>({
     filterAttributes:{},
     mainProductType:'',
@@ -20,6 +26,11 @@ export const FilterMasterContext = createContext<{
     pathnamePrefixArr:[],
     updateLoading:()=>{},
     bottomSheetFilterCheckboxID:'',
+    descriptions:{
+        aboveTheFold:'',
+        belowTheFold:''
+    },
+    productIdOrderMap:{},
 })
 
 export const FilterSubContext = createContext<{

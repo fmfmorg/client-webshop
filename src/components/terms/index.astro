@@ -1,37 +1,10 @@
 ---
+import './style.scss'
+
 interface Props {
     text:string;
 }
 
 const { text } = Astro.props as Props
 ---
-<div 
-    set:html={text} 
-    class={`
-        font-light
-        max-w-3xl
-        mx-auto
-        px-4
-        py-8
-        text-sm
-        xs:text-base
-        [&>h1]:font-display
-        [&>h1]:text-xl
-        [&>h1]:xs:text-2xl
-        [&>h1]:tracking-tighter
-        [&>h1]:[word-spacing:0.2rem]
-        [&>ol>li]:list-decimal
-        [&>ol>li]:ml-4
-        [&>ol>li]:xs:ml-5
-        [&>*>li]:first-line:font-semibold
-        [&>ol>li]:marker:font-semibold
-        [&>*>li>a]:font-semibold
-        [&>*>li>a]:underline
-        [&>p>a]:font-semibold
-        [&>p>a]:underline
-        [&>*>li]:mt-4
-        [&>ul>li>ul>li]:list-disc
-        [&>ul>li>ul>li]:list-inside
-        [&>p]:mt-4
-    `.replaceAll('        ', ' ').replaceAll('\n','').trim()}
-/>
+<div set:html={text} class="terms" />

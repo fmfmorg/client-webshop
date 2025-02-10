@@ -3,7 +3,7 @@ import { createMemo, useContext } from "solid-js"
 import {FilterMasterContext, FilterSubContext} from "../context"
 
 const Option = (p:{attr:string;}) => {
-    const { currentURL, pathnamePrefixArr, updateURL, facetCountMap, mainProductType, filterAttributes } = useContext(FilterMasterContext)
+    const { currentURL, pathnamePrefixArr, updateURL, facetCountMap, mainProductType, filterAttributes, productIdOrderMap } = useContext(FilterMasterContext)
     const { slugOrder } = useContext(FilterSubContext)
     const slugsInCurrentPathname = createMemo(()=>currentURL.pathname.split('/').filter(e=>!pathnamePrefixArr.includes(e)))
     const isSelected = createMemo(()=>slugsInCurrentPathname().includes(p.attr))
@@ -14,7 +14,7 @@ const Option = (p:{attr:string;}) => {
         return [...pathnamePrefixArr,...slugs].join('/') + currentURL.search
     })
     
-    const nofollow = createMemo(()=>collectionPageNoIndex(href().split('?')[0],mainProductType,filterAttributes))
+    const nofollow = createMemo(()=>collectionPageNoIndex(href().split('?')[0],mainProductType,filterAttributes,Object.keys(productIdOrderMap).length))
 
     const count = createMemo(()=>facetCountMap[p.attr] || 0)
 
