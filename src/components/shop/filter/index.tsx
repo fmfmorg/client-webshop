@@ -20,7 +20,8 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
         containerRef, 
         desktopFilterContainer,
         desktopFilterMenuContainer,
-        header
+        header,
+        aboveTheFoldRef
 
     const { filterAttributes, mainProductType, currentURL } = useContext(FilterMasterContext)
         
@@ -173,11 +174,15 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
         window.addEventListener('resize',onResize,true)
         window.addEventListener('touchend',onTouchEnd,true)
 
+        const atfResizeObserver = new ResizeObserver(onLoad)
+        atfResizeObserver.observe(aboveTheFoldRef)
+
         onCleanup(()=>{
             window.removeEventListener('scroll',onScroll)
             attrHeaderObserver.disconnect()
             window.removeEventListener('resize',onResize,true)
             window.removeEventListener('touchend',onTouchEnd,true)
+            atfResizeObserver.disconnect()
         })
     })
 
@@ -200,7 +205,9 @@ const Filter = (p:{loading:boolean;productCount:number;}) => {
                     <div class="fixed z-[15] top-0 left-0 w-full h-full opacity-10 bg-black" />
                 </div>
                 <Breadcrumb />
-                <AboveTheFold />
+                <div ref={aboveTheFoldRef}>
+                    <AboveTheFold />
+                </div>
                 <div id={filterHeaderContainerID} ref={containerRef} onMouseLeave={onMouseLeave} class="hidden xs:block w-full z-20 sticky transition-all duration-300 md:peer-[:has(.filterattr:checked)]:[&>#chips-container]:hidden">
                     <div ref={desktopFilterMenuContainer} class="xs:grid xs:grid-cols-2 xs:gap-4 md:flex md:justify-between p-2 md:px-4 md:py-0 bg-white pb-1">
                         <div class="hidden md:flex gap-x-6 [&>*]:pt-2 [&>*]:pb-1">
