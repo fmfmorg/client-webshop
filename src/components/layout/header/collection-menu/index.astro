@@ -17,7 +17,7 @@ const { collectionMenuMap: { earrings:{ subType, metalColor, material } } } = As
     {!!subType && !!subType.length && <div>
         <SubMenuTitle name='Shop by Category' />
         <ul>
-            {subType.map(e=>(
+            {subType.filter(e=>!['ear-climbers','ear-jackets'].includes(e)).map(e=>(
                 <MenuItem slug={e} name={capitalizeEveryWord(e.replaceAll('-', ' '))} />
             ))}
             <MenuItem slug="" name="Shop All Categories" />
@@ -26,7 +26,7 @@ const { collectionMenuMap: { earrings:{ subType, metalColor, material } } } = As
     {!!metalColor && !!metalColor.length && <div>
         <SubMenuTitle name='Shop by Colour' />
         <ul>
-            {metalColor.map(e=>(
+            {metalColor.filter(e=>!['rose-gold','two-tone'].includes(e)).map(e=>(
                 <MenuItem slug={e} name={`${capitalizeEveryWord(e.replaceAll('-', ' '))} Earrings`} />
             ))}
         </ul>

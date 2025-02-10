@@ -25,7 +25,7 @@ const checkboxID = `menu-sidebar-${mainType}-${subMenuSlug}-checkbox`
         </svg>
     </label>
     <ul class="overflow-y-hidden max-h-0 peer-checked:max-h-fit">
-        {slugs.map(e=>(
+        {slugs.filter(e=>!['ear-climbers','ear-jackets','rose-gold','two-tone'].includes(e)).map(e=>(
             <SectionItem path={`/collections/${mainType}/${e}`} name={strFormat(e)} />
         ))}
         {!!browseAll && <li>
