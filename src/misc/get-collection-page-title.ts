@@ -16,6 +16,8 @@ export const getCollectionPageTitle = (
             ...!!material && material.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' ')),
             ...!!subType && subType.filter(e=>slugs.includes(e)).map(e=>e.replaceAll('-',' '))
         ]
+
+        if (!metalColor || !metalColor.some(e=>slugs.includes(e))) arr = ['Gold & Silver',...arr]
         
         if (!subType || !subType.filter(e=>slugs.includes(e)).length) arr.push(mainType)
     }
