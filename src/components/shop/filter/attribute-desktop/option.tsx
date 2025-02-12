@@ -3,7 +3,7 @@ import { createMemo, useContext } from "solid-js"
 import {FilterMasterContext, FilterSubContext} from "../context"
 
 const Option = (p:{attr:string;}) => {
-    const { currentURL, pathnamePrefixArr, updateURL, facetCountMap, mainProductType, filterAttributes, productIdOrderMap } = useContext(FilterMasterContext)
+    const { currentURL, pathnamePrefixArr, updateURL, facetCountMap, mainProductType, filterAttributes } = useContext(FilterMasterContext)
     const { slugOrder } = useContext(FilterSubContext)
     const slugsInCurrentPathname = createMemo(()=>currentURL.pathname.split('/').filter(e=>!pathnamePrefixArr.includes(e)))
     const isSelected = createMemo(()=>slugsInCurrentPathname().includes(p.attr))
@@ -13,10 +13,10 @@ const Option = (p:{attr:string;}) => {
         const slugs = [...slugsInCurrentPathname(),p.attr].map(e=>slugOrder.find(({slug})=>slug===e)).sort((a,b)=>a.index - b.index).map(({slug})=>slug)
         return [...pathnamePrefixArr,...slugs].join('/') + currentURL.search
     })
-    
-    const nofollow = createMemo(()=>collectionPageNoIndex(href().split('?')[0],mainProductType,filterAttributes,Object.keys(productIdOrderMap).length))
 
     const count = createMemo(()=>facetCountMap[p.attr] || 0)
+    
+    const nofollow = createMemo(()=>collectionPageNoIndex(href().split('?')[0],mainProductType,filterAttributes,count()))
 
     const onClick = (ev:Event) => {
         ev.preventDefault()

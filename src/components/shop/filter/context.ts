@@ -16,7 +16,6 @@ export const FilterMasterContext = createContext<{
         aboveTheFold:string;
         belowTheFold:string;
     };
-    productIdOrderMap:IProductIdOrderMap;
 }>({
     filterAttributes:{},
     mainProductType:'',
@@ -30,7 +29,6 @@ export const FilterMasterContext = createContext<{
         aboveTheFold:'',
         belowTheFold:''
     },
-    productIdOrderMap:{},
 })
 
 export const FilterSubContext = createContext<{

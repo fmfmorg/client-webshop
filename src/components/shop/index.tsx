@@ -307,7 +307,6 @@ const Shop = (p:{
                     updateLoading,
                     bottomSheetFilterCheckboxID,
                     descriptions,
-                    productIdOrderMap,
                 }}
                 children={<Filter loading={loading()} productCount={productIDs().length} />}
             />
@@ -353,7 +352,6 @@ const Shop = (p:{
                     updateLoading,
                     bottomSheetFilterCheckboxID,
                     descriptions,
-                    productIdOrderMap,
                 }}
                 children={<BelowTheFold />}
             />
@@ -378,7 +376,6 @@ const Shop = (p:{
                         updateLoading,
                         bottomSheetFilterCheckboxID,
                         descriptions,
-                        productIdOrderMap,
                     }}
                     children={
                         <SortHybridWrapper 
