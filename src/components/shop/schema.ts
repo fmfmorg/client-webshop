@@ -58,7 +58,15 @@ export const collectionPageSchema = (
             "itemListOrder":"ItemListUnordered",
             "itemListElement":productIDs.map((e,i)=>{
                 const p = productMap[e]
-                const inStock = (!!p.stockQuantities && !!p.stockQuantities.length) ? !!p.stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false
+                // const inStock = (!!p.stockQuantities && !!p.stockQuantities.length) ? !!p.stockQuantities.map(e=>e.quantity).reduce((a,b)=>a+b,0) : false
+
+                return {
+                    "@type":"ListItem",
+                    "position":i + 1,
+                    "url":[origin,p.mainType,p.url,p.id].join('/')
+                }
+
+                /*
                 return {
                     "@type":"ListItem",
                     "position":i + 1,
@@ -76,6 +84,7 @@ export const collectionPageSchema = (
                         }
                     }
                 }
+                */
             })
         },
         "breadcrumb":{
