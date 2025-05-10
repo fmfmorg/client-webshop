@@ -1,6 +1,6 @@
 ---
 import ShopNowButton from "./shop-now-button.astro";
-import CatalogueItem from '@components/catalogue-item-related-product/index.astro'
+// import CatalogueItem from '@components/catalogue-item-related-product/index.astro'
 import type { ICartItemMap } from '@components/cart/interfaces';
 import type { ICatalogueMap } from '@misc';
 import { PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX } from 'astro:env/client'
@@ -11,7 +11,7 @@ interface Props {
     cartItemObj?:ICartItemMap;
 }
 
-const { productIDs = [], productObj, cartItemObj } = Astro.props as Props
+// const { productIDs = [], productObj, cartItemObj } = Astro.props as Props
 const tempImageFilename = `${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}banner-2000x673`
 ---
 <style is:global>
@@ -21,7 +21,8 @@ const tempImageFilename = `${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}banner-2000x673`
       }
     }
 </style>
-<a href="/collections/earrings">
+<!-- <a href="/collections/earrings"> -->
+<a href="#">
     <div 
         id="banner-container" 
         class="w-full"
@@ -50,7 +51,7 @@ const tempImageFilename = `${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}banner-2000x673`
         </div>
     </div>
 </a>
-<div 
+<!-- <div 
     class={`
         py-3
         sm:py-4
@@ -86,7 +87,7 @@ const tempImageFilename = `${PUBLIC_FM_PUBLIC_IMAGE_URL_PREFIX}banner-2000x673`
             homepageBestseller
         />
     ))}
-</div>
+</div> -->
 
 <script>
     // image itself is 3361 x 2188

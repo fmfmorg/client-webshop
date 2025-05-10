@@ -44,7 +44,7 @@ const isCheckoutPage = Astro.url.pathname === '/checkout'
         </a>
         <nav class={isCheckoutPage ? 'hidden' : 'hidden md:block'}>
             <ul id="desktop-nav-link-container" class="flex space-x-8 font-display text-lg uppercase">
-                {pages.map(({name,path})=>(
+                {pages.filter(({name})=>name !== 'shop').map(({name,path})=>(
                     <li {...name === 'shop' ? {id:'desktop-shop-li'} : {class:'flex flex-col justify-center'}}>
                         {name==='shop' ? 
                         <div class="mouse:py-5">
